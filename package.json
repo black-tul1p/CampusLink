@@ -13,7 +13,10 @@
     "firebase": "^9.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+<<<<<<< HEAD
     "react-pdf": "^6.2.2",
+=======
+>>>>>>> e74232a (created non-functionality navigation bar - 3 hours)
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
