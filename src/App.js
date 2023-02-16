@@ -3,9 +3,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //import NavBar from './Components/NavBar';
 =======
 >>>>>>> 169361c (Added Basic Login Page)
+=======
+>>>>>>> d1088b8 (created non-functionality navigation bar - 3 hours)
 import "./App.css";
 import handleSubmitTest from "./Backend/handleSubmit-test";
 import { useRef } from "react";
@@ -75,6 +78,7 @@ import FAQ from "./Components/FAQ";
 const Container = styled.div`
   display: flex;
 `;
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 function App() {
@@ -193,6 +197,16 @@ import Register from "./Components/Register";
 import FAQ from "./Components/FAQ";
 =======
 >>>>>>> d603b06 (Integrated FAQ page)
+=======
+=======
+//import NavBar from './Components/NavBar';
+//import "./App.css";
+//import Login from "./Components/Login";
+import handleSubmitTest from "./Backend/handleSubmit-test";
+import { useRef } from "react";
+import CourseContent from "./Components/CourseContent"
+>>>>>>> 13af7b9 (created non-functionality navigation bar - 3 hours)
+>>>>>>> d1088b8 (created non-functionality navigation bar - 3 hours)
 
 function App() {
   return (
