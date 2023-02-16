@@ -1,0 +1,87 @@
+.navbar-container {
+    display: grid;
+    grid-template-columns: 12fr 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+.logo-container {
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.menu-logo-container {
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.notification-logo-container {
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.settings-logo-container {
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.user-logo-container {
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.menu-logo-container:hover {
+    background-color: lightblue;
+}
+
+.notification-logo-container:hover {
+    background-color: lightblue;
+}
+
+.settings-logo-container:hover {
+    background-color: lightblue;
+}
+
+.user-logo-container:hover {
+    background-color: lightblue;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+}
+
+.menu_logo {
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+    padding-left: 20px
+}
+
+.settings_logo {
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+
+.notification_logo {
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+.user_logo {
+    height: 40px;
+    width: 40px;
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
