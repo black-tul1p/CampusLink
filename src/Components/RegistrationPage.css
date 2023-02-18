@@ -9,6 +9,7 @@
 .RegistrationPage-header {
     background-color: #102e44;
 <<<<<<< HEAD
+<<<<<<< HEAD
     min-height: 100vmin;
     align-items: center;
     justify-content: center;
@@ -27,11 +28,18 @@
     min-height: 100vh;
     
 >>>>>>> 945068e (Added background and made banner scalable)
+=======
+    min-height: 100vmin;
+>>>>>>> 650e964 (Created first iteration of registration form)
     align-items: center;
     justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: calc(1px + 2vmin);
+    color: white;
 }
 
 .banner {
+<<<<<<< HEAD
 <<<<<<< HEAD
     height: 300px;
     width: 800;
@@ -42,4 +50,8 @@
     height: 30vmin;
     width: 60vmin;
 >>>>>>> 945068e (Added background and made banner scalable)
+=======
+    height: 10vmin;
+    width: 25vmin;
+>>>>>>> 650e964 (Created first iteration of registration form)
 }
