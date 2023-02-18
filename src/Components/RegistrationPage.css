@@ -1,10 +1,14 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 945068e (Added background and made banner scalable)
 .RegistrationPage {
     text-align: center;
 }
 
 .RegistrationPage-header {
     background-color: #102e44;
+<<<<<<< HEAD
     min-height: 100vmin;
     align-items: center;
     justify-content: center;
@@ -19,14 +23,23 @@
 =======
 .banner-container {
     justify-content: center;
+=======
+    min-height: 100vh;
+    
+>>>>>>> 945068e (Added background and made banner scalable)
     align-items: center;
-    cursor: pointer;
+    justify-content: center;
 }
 
 .banner {
+<<<<<<< HEAD
     height: 300px;
     width: 800;
     padding-bottom: 20px;
     text-align: center;
 >>>>>>> 816cbd1 (Added banner to registration page)
+=======
+    height: 30vmin;
+    width: 60vmin;
+>>>>>>> 945068e (Added background and made banner scalable)
 }

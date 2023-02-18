@@ -11,6 +11,7 @@ import "./RegistrationPage.css"
 function RegistrationPage() {
     return(
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div className="RegistrationPage">
             <header className="RegistrationPage-header">
                 <img src={banner} className="banner" alt="banner"/>
@@ -25,6 +26,13 @@ function RegistrationPage() {
         </div>
         </>
 >>>>>>> 816cbd1 (Added banner to registration page)
+=======
+        <div className="RegistrationPage">
+            <header className="RegistrationPage-header">
+                <img src={banner} className="banner" alt="banner"/>
+            </header>
+        </div>
+>>>>>>> 945068e (Added background and made banner scalable)
     )
 }
 
