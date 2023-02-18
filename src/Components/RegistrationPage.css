@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .RegistrationPage {
     text-align: center;
 }
@@ -15,4 +16,17 @@
 .banner {
     height: 10vmin;
     width: 25vmin;
+=======
+.banner-container {
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.banner {
+    height: 300px;
+    width: 800;
+    padding-bottom: 20px;
+    text-align: center;
+>>>>>>> 816cbd1 (Added banner to registration page)
 }

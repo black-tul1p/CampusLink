@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //import NavBar from './Components/NavBar';
 import "./App.css";
 import handleSubmitTest from "./Backend/handleSubmit-test";
@@ -8,6 +9,9 @@ import CourseContent from "./Components/CourseContent"
 import NavBar from "./Components/NavBar"
 import Login from "./Components/Login";
 import ClassListCC from "./Components/ClasslistCC";
+=======
+import RegistrationPage from './Components/RegistrationPage';
+>>>>>>> 816cbd1 (Added banner to registration page)
 
 function App() {
   /* Backend testing code
@@ -22,6 +26,7 @@ function App() {
   // For Backend testing only, will remove later
   /* if (!testBackend) return <Login />;
   return (
+<<<<<<< HEAD
     <div className="App">
       <form onSubmit={submithandler}>
         <input type="text" ref={dataRef} />
@@ -136,6 +141,10 @@ function App() {
         />
         <button type="submit">Remove</button>
       </form>
+=======
+    <div ClassName='App'>
+      <RegistrationPage></RegistrationPage>
+>>>>>>> 816cbd1 (Added banner to registration page)
     </div>
   );
 >>>>>>> 0c9d360 (Add backend testing code)
