@@ -1,9 +1,9 @@
-import NavBar from './Components/NavBar';
+import RegistrationPage from './Components/RegistrationPage';
 
 function App() {
   return (
     <div ClassName='App'>
-      <NavBar></NavBar>
+      <RegistrationPage></RegistrationPage>
     </div>
   );
 }

@@ -1,0 +1,12 @@
+.banner-container {
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.banner {
+    height: 300px;
+    width: 800;
+    padding-bottom: 20px;
+    text-align: center;
+}
