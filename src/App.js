@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //import NavBar from './Components/NavBar';
 import "./App.css";
 import handleSubmitTest from "./Backend/handleSubmit-test";
@@ -183,6 +184,25 @@ function App() {
       </Routes>
     </Router>
 >>>>>>> 4575726 (Update login page, added register page for testing)
+=======
+import NavBar from './Components/NavBar';
+import Courses_Student from './Pages/Courses_Student';
+import Settings from './Pages/Settings';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+function App() {
+  return (
+    <div ClassName='App'>
+      <Router>
+      <NavBar />
+      <Routes>
+        <Route exact path="/Courses_Student" element={<Courses_Student/>}/>
+        <Route exact path="/Settings" element={<Settings/>}/>
+      </Routes>
+      </Router>
+      
+    </div>
+>>>>>>> e212a60 (navigates to courses and settings pages - 1.5 hours)
   );
 <<<<<<< HEAD
 >>>>>>> 0c9d360 (Add backend testing code)
