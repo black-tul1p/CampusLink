@@ -4,11 +4,11 @@ import "./RegistrationPage.css"
 
 function RegistrationPage() {
     return(
-        <>
-        <div className = "banner">
-            <img src = {banner} className = "banner" alt = "banner"/>
+        <div className="RegistrationPage">
+            <header className="RegistrationPage-header">
+                <img src={banner} className="banner" alt="banner"/>
+            </header>
         </div>
-        </>
     )
 }
 
