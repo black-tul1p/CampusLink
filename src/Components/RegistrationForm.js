@@ -24,9 +24,18 @@ class RegistrationForm extends Component{
         });
     }
 
-    handleSubmit(event){
+    handleSubmit(event) {
         alert('First Name: ' + this.state.firstName + 'Last Name: ' + this.state.lastName + 'Email: ' + this.state.email + 'Username: ' + this.state.username + 'Password: ' + this.state.password)
         event.preventDefault();
+    }
+
+    showPassword(event) {
+        var x = document.getElementById("pswd");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
     }
     
     render() {
@@ -39,7 +48,8 @@ class RegistrationForm extends Component{
                         type="text"
                         value={this.state.firstName}
                         onChange={this.handleInputChange}
-                        />
+                        placeholder="First Name"
+                    />
                 </label>
                 <br/>
                 <label>
@@ -49,7 +59,8 @@ class RegistrationForm extends Component{
                         type="text"
                         value={this.state.lastName}
                         onChange={this.handleInputChange}
-                        />
+                        placeholder="Last Name"
+                    />
                 </label>
                 <br/>
                 <label>
@@ -59,7 +70,8 @@ class RegistrationForm extends Component{
                         type="text"
                         value={this.state.email}
                         onChange={this.handleInputChange}
-                        />
+                        placeholder="Email"
+                    />
                 </label>
                 <br/>
                 <label>
@@ -69,16 +81,25 @@ class RegistrationForm extends Component{
                         type="text"
                         value={this.state.username}
                         onChange={this.handleInputChange}
-                        />
+                        placeholder="Username"
+                    />
                 </label>
-                <br/><label>
+                <br/>
+                <label>
                     Password:
                     <input
+                        id="pswd"
                         name="password"
-                        type="text"
+                        type="password"
                         value={this.state.password}
                         onChange={this.handleInputChange}
-                        />
+                        placeholder="Password"
+                    />
+                    <input
+                        type='checkbox'
+                        onClick={this.showPassword}
+                    />
+                    <label>Show Password</label>
                 </label>
                 <br/>
                 <button type="submit">Submit</button>
