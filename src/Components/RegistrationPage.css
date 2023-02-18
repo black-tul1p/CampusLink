@@ -4,13 +4,15 @@
 
 .RegistrationPage-header {
     background-color: #102e44;
-    min-height: 100vh;
-    
+    min-height: 100vmin;
     align-items: center;
     justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: calc(1px + 2vmin);
+    color: white;
 }
 
 .banner {
-    height: 30vmin;
-    width: 60vmin;
+    height: 10vmin;
+    width: 25vmin;
 }
