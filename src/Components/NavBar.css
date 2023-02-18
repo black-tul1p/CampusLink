@@ -1,7 +1,12 @@
 .navbar-container {
     display: grid;
-    grid-template-columns: 12fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 16fr 1fr 1fr 1fr 1fr;
     grid-gap: 10px;
+}
+.seperation-bar {
+    display: grid;
+    height: 3px;
+    background-color:#143253;
 }
 .logo-container {
     justify-content: center;
@@ -33,19 +38,19 @@
 }
 
 .menu-logo-container:hover {
-    background-color: lightblue;
+    background-color:  #143253;
 }
 
 .notification-logo-container:hover {
-    background-color: lightblue;
+    background-color:  #143253;
 }
 
 .settings-logo-container:hover {
-    background-color: lightblue;
+    background-color:  #143253;
 }
 
 .user-logo-container:hover {
-    background-color: lightblue;
+    background-color: #143253;
 }
 
 .logo {
@@ -60,14 +65,14 @@
     height: 40px;
     width: 40px;
     padding-top: 10px;
-    padding-left: 20px
+    padding-left: 11px;
 }
 
 .settings_logo {
     height: 40px;
     width: 40px;
     padding-top: 10px;
-    padding-left: 20px;
+    padding-left: 11px;
 }
 
 
@@ -75,13 +80,13 @@
     height: 40px;
     width: 40px;
     padding-top: 10px;
-    padding-left: 20px;
+    padding-left: 11px;
 }
 
 .user_logo {
     height: 40px;
     width: 40px;
     padding-top: 10px;
-    padding-left: 20px;
+    padding-left: 11px;
 }
 
