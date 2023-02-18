@@ -15,6 +15,7 @@
     justify-content: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: calc(2vmin);
+<<<<<<< HEAD
     color: white;
 }
 
@@ -35,6 +36,8 @@
     justify-content: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: calc(1px + 2vmin);
+=======
+>>>>>>> 72045cb (Added field placeholders and hidden password)
     color: white;
 }
 
