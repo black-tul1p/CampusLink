@@ -1,12 +1,16 @@
-.banner-container {
-    justify-content: center;
+.RegistrationPage {
+    text-align: center;
+}
+
+.RegistrationPage-header {
+    background-color: #102e44;
+    min-height: 100vh;
+    
     align-items: center;
-    cursor: pointer;
+    justify-content: center;
 }
 
 .banner {
-    height: 300px;
-    width: 800;
-    padding-bottom: 20px;
-    text-align: center;
+    height: 30vmin;
+    width: 60vmin;
 }
