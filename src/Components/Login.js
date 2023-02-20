@@ -1,15 +1,11 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  Input,
-  InputLabel,
-  TextField,
-} from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, FormControl, TextField } from "@mui/material";
 import Banner from "../Assets/banner_logo.jpg";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+
   return (
     <div>
       <Box className="Default-card">
@@ -21,7 +17,10 @@ export default function Login() {
               label="Email Address"
               variant="outlined"
               placeholder="test"
-              sx={{ input: { color: "white" } }}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
             />
             <div className="password-section">
               <TextField
@@ -29,6 +28,10 @@ export default function Login() {
                 label="Password"
                 type="password"
                 variant="outlined"
+                value={pass}
+                onChange={(e) => {
+                  setPass(e.target.value);
+                }}
               />
               <Button className="Mini-button">Forgot Password?</Button>
             </div>
@@ -36,7 +39,7 @@ export default function Login() {
           <Button
             variant="contained"
             onClick={() => {
-              alert("Clicked!");
+              alert(email + ": " + pass);
             }}
           >
             Submit
