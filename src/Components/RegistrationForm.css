@@ -1,0 +1,17 @@
+.form {
+    background-color: #fafaface;
+    border-radius: 1vmin;
+    width: fit-content;
+    text-align: left;
+    margin:20px auto;
+    padding: 20px;
+}
+
+.formLabel {
+    color: black;
+    font-size: calc(10px + 1vmin);
+}
+
+.submit {
+    text-align: center;
+}
