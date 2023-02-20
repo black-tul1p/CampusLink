@@ -1,38 +1,77 @@
+:root {
+  --dark-blue: rgb(16,46,68);
+  --light-blue: rgb(185,230,233);
+  --blue: rgb(0,100,255);
+  --white: rgba(255,255,255);
+
+  --font-fancy: 'Times New Roman';
+
+  background-color: var(--dark-blue);
+  font-family: 'Times New Roman', Times, serif;
+}
+
+
+/********************************** App.js **********************************/
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/********************************** Login Page **********************************/
+
+.Banner-logo {
+  width: 50vw;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.Default-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  height: 80vh;
+  gap: 3em;
 }
 
-.App-link {
-  color: #61dafb;
+.Default-card .Login-form {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  gap: 1em;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.Login-form > Button {
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.password-section {
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+}
+
+.Mini-button {
+  align-self: flex-end;
+  color: var(--blue);
+  font-size: 1em;
+}
+
+.MuiOutlinedInput-notchedOutline{
+  border-radius: 1em !important;
+  border-color: white !important;
+}
+
+.MuiInputLabel-root{
+  color: rgba(255,255,255, 0.5) !important;
+}
+
+
+.MuiInputLabel-input{
+  color: var(--white) !important;
 }
