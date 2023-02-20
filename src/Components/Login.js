@@ -1,6 +1,13 @@
-import React, { useState } from "react";
-import { Box, Button, FormControl, TextField } from "@mui/material";
 import Banner from "../Assets/banner_logo.jpg";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
+import { Email, VpnKey } from "@mui/icons-material";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,7 +23,15 @@ export default function Login() {
               id="email-input"
               label="Email Address"
               variant="outlined"
-              placeholder="test"
+              placeholder="email@organization.edu"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Email />
+                    <div class="Vertical-line" />
+                  </InputAdornment>
+                ),
+              }}
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -28,6 +43,15 @@ export default function Login() {
                 label="Password"
                 type="password"
                 variant="outlined"
+                placeholder="***********"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <VpnKey />
+                      <div class="Vertical-line" />
+                    </InputAdornment>
+                  ),
+                }}
                 value={pass}
                 onChange={(e) => {
                   setPass(e.target.value);
@@ -37,6 +61,7 @@ export default function Login() {
             </div>
           </div>
           <Button
+            disableElevation
             variant="contained"
             onClick={() => {
               alert(email + ": " + pass);
