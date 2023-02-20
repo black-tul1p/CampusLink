@@ -1,0 +1,77 @@
+:root {
+  --dark-blue: rgb(16,46,68);
+  --light-blue: rgb(185,230,233);
+  --blue: rgb(0,100,255);
+  --white: rgba(255,255,255);
+
+  --font-fancy: 'Times New Roman';
+
+  background-color: var(--dark-blue);
+  font-family: 'Times New Roman', Times, serif;
+}
+
+
+/********************************** App.js **********************************/
+
+.App {
+  text-align: center;
+}
+
+/********************************** Login Page **********************************/
+
+.Banner-logo {
+  width: 50vw;
+}
+
+.Default-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  gap: 3em;
+}
+
+.Default-card .Login-form {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  gap: 1em;
+}
+
+.Input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.Login-form > Button {
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.password-section {
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+}
+
+.Mini-button {
+  align-self: flex-end;
+  color: var(--blue);
+  font-size: 1em;
+}
+
+.MuiOutlinedInput-notchedOutline{
+  border-radius: 1em !important;
+  border-color: white !important;
+}
+
+.MuiInputLabel-root{
+  color: rgba(255,255,255, 0.5) !important;
+}
+
+
+.MuiInputLabel-input{
+  color: var(--white) !important;
+}
