@@ -3,8 +3,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 169361c (Added Basic Login Page)
+=======
+>>>>>>> 24e8482 (Added MUI Icon library, missing icons to form)
 import Banner from "../Assets/banner_logo.jpg";
 import React, { useState } from "react";
 =======
@@ -21,11 +24,19 @@ import React, { useState } from "react";
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
 =======
 >>>>>>> aedb680 (Added Basic Login Page)
+<<<<<<< HEAD
 >>>>>>> 169361c (Added Basic Login Page)
+=======
+=======
+import Banner from "../Assets/banner_logo.jpg";
+import React, { useState } from "react";
+>>>>>>> b295e2c (Added MUI Icon library, missing icons to form)
+>>>>>>> 24e8482 (Added MUI Icon library, missing icons to form)
 import {
   Box,
   Button,
   FormControl,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -54,17 +65,27 @@ import { loginUser } from "../Backend/student";
 =======
 =======
 >>>>>>> 169361c (Added Basic Login Page)
+=======
+=======
+>>>>>>> b295e2c (Added MUI Icon library, missing icons to form)
+>>>>>>> 24e8482 (Added MUI Icon library, missing icons to form)
   InputAdornment,
   TextField,
 } from "@mui/material";
 import { Email, VpnKey } from "@mui/icons-material";
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../Backend/user";
 <<<<<<< HEAD
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
 =======
 import ErrorBox from "./Error";
+<<<<<<< HEAD
 >>>>>>> 85cb705 (Added an Error functional component)
+=======
+=======
+>>>>>>> b295e2c (Added MUI Icon library, missing icons to form)
+>>>>>>> 24e8482 (Added MUI Icon library, missing icons to form)
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -161,8 +182,24 @@ export default function Login() {
               id="email-input"
               label="Email Address"
               variant="outlined"
+<<<<<<< HEAD
               placeholder="test"
               sx={{ input: { color: "white" } }}
+=======
+              placeholder="email@organization.edu"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Email />
+                    <div class="Vertical-line" />
+                  </InputAdornment>
+                ),
+              }}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+>>>>>>> b295e2c (Added MUI Icon library, missing icons to form)
             />
             <div className="password-section">
               <TextField
@@ -176,18 +213,27 @@ export default function Login() {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
 =======
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
 =======
 >>>>>>> 169361c (Added Basic Login Page)
+=======
+=======
+>>>>>>> b295e2c (Added MUI Icon library, missing icons to form)
+>>>>>>> 24e8482 (Added MUI Icon library, missing icons to form)
                 placeholder="***********"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <VpnKey />
+<<<<<<< HEAD
                       <div className="Vertical-line" />
+=======
+                      <div class="Vertical-line" />
+>>>>>>> b295e2c (Added MUI Icon library, missing icons to form)
                     </InputAdornment>
                   ),
                 }}
@@ -234,6 +280,7 @@ export default function Login() {
           <Button disableElevation variant="contained" onClick={handleLogin}>
 =======
           <Button
+            disableElevation
             variant="contained"
             onClick={() => {
               alert("Clicked!");
