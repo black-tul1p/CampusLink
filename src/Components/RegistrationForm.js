@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 import React, { Component } from "react";
 import "./RegistrationForm.css"
+<<<<<<< HEAD
 
 class RegistrationForm extends Component{
     constructor(props) {
@@ -137,6 +138,8 @@ import React, {useState} from "react";
 =======
 import React, { Component } from "react";
 >>>>>>> df22882 (Second iteration of Registration Form using props)
+=======
+>>>>>>> ac38e18 (Cleaned up UI and formatted code for css styling)
 
 class RegistrationForm extends Component{
     constructor(props) {
@@ -168,7 +171,7 @@ class RegistrationForm extends Component{
     }
 
     showPassword(event) {
-        var x = document.getElementById("pswd");
+        var x = document.getElementById("password");
         if (x.type === "password") {
             x.type = "text";
         } else {
@@ -178,6 +181,7 @@ class RegistrationForm extends Component{
     
     render() {
     return(
+<<<<<<< HEAD
 <<<<<<< HEAD
         <form>
             <label>
@@ -193,55 +197,76 @@ class RegistrationForm extends Component{
 }
 >>>>>>> 650e964 (Created first iteration of registration form)
 =======
+=======
+        <div className="form">
+>>>>>>> ac38e18 (Cleaned up UI and formatted code for css styling)
             <form onSubmit={this.handleSubmit}>
-                <label>
-                    First Name:
+                <div className="firstName">
+                    <label className="formLabel" for="firstName">
+                        First Name:
+                    </label>
                     <input
+                        className="formInput"
                         name="firstName"
+                        id="firstName"
                         type="text"
                         value={this.state.firstName}
                         onChange={this.handleInputChange}
                         placeholder="First Name"
                     />
-                </label>
+                </div>
                 <br/>
-                <label>
-                    Last Name:
+                <div className="lastName">
+                    <label className="formLabel" for="lastName">
+                        Last Name:
+                    </label>
                     <input
+                        className="formInput"
                         name="lastName"
+                        id="lastName"
                         type="text"
                         value={this.state.lastName}
                         onChange={this.handleInputChange}
                         placeholder="Last Name"
                     />
-                </label>
+                </div>
                 <br/>
-                <label>
-                    Email:
+                <div className="email">
+                    <label className="formLabel" for="email">
+                        Email:
+                    </label>
                     <input
+                        className="formInput"
                         name="email"
+                        id="email"
                         type="text"
                         value={this.state.email}
                         onChange={this.handleInputChange}
                         placeholder="Email"
                     />
-                </label>
+                </div>
                 <br/>
-                <label>
-                    Username:
+                <div className="username">
+                    <label className="formLabel" for="username">
+                        Username:
+                    </label>
                     <input
+                        className="formInput"
                         name="username"
+                        id="username"
                         type="text"
                         value={this.state.username}
                         onChange={this.handleInputChange}
                         placeholder="Username"
                     />
-                </label>
+                </div>
                 <br/>
-                <label>
-                    Password:
+                <div className="password">
+                    <label className="formLabel" for="password">
+                        Password:
+                    </label>
                     <input
-                        id="pswd"
+                        id="password"
                         name="password"
                         type="password"
                         value={this.state.password}
@@ -252,11 +277,12 @@ class RegistrationForm extends Component{
                         type='checkbox'
                         onClick={this.showPassword}
                     />
-                    <label>Show Password</label>
-                </label>
+                    <label className="formLabel" for="submit">Show Password</label>
+                </div>
                 <br/>
-                <button type="submit">Submit</button>
+                <button className="submit" type="submit">Submit</button>
             </form>
+        </div>
         );
     }
 }
