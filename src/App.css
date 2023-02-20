@@ -11,6 +11,7 @@
 }
 <<<<<<< HEAD
 
+<<<<<<< HEAD
 html, body {
   scroll-behavior: smooth;
 =======
@@ -18,6 +19,8 @@ html, body {
   width: 0; /* Hide scrollbars */
 >>>>>>> 25f945c (Hide all scrollbars)
 }
+=======
+>>>>>>> aedb680 (Added Basic Login Page)
 
 /********************************** App.js **********************************/
 
@@ -28,7 +31,11 @@ html, body {
 /********************************** Login Page **********************************/
 
 .Banner-logo {
+<<<<<<< HEAD
   max-width: 50vw;
+=======
+  width: 50vw;
+>>>>>>> aedb680 (Added Basic Login Page)
 }
 
 .Default-card {
@@ -38,7 +45,10 @@ html, body {
   align-items: center;
   height: 80vh;
   gap: 3em;
+<<<<<<< HEAD
   color: white;
+=======
+>>>>>>> aedb680 (Added Basic Login Page)
 }
 
 .Default-card .Login-form {
@@ -59,7 +69,11 @@ html, body {
   border-radius: 1em;
 }
 
+<<<<<<< HEAD
 .Password-section {
+=======
+.password-section {
+>>>>>>> aedb680 (Added Basic Login Page)
   display: flex;
   flex-direction: column;
   color: var(--white);
@@ -264,5 +278,13 @@ p {
 h3 {
   font-family: 'Times New Roman', Times, serif;
   color: aliceblue;
+<<<<<<< HEAD
 >>>>>>> 8bb6cac (Improved Navbar and Homepage functionality)
+=======
+=======
+
+.MuiInputLabel-input{
+  color: var(--white) !important;
+>>>>>>> aedb680 (Added Basic Login Page)
+>>>>>>> 169361c (Added Basic Login Page)
 }

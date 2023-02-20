@@ -2,7 +2,10 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 //import NavBar from './Components/NavBar';
+=======
+>>>>>>> 169361c (Added Basic Login Page)
 import "./App.css";
 import handleSubmitTest from "./Backend/handleSubmit-test";
 import { useRef } from "react";
@@ -234,6 +237,7 @@ function App() {
 >>>>>>> 40128b2 (Added skeletal FAQ page)
       </Routes>
     </Router>
+<<<<<<< HEAD
 >>>>>>> 4575726 (Update login page, added register page for testing)
 =======
 import NavBar from './Components/NavBar';
@@ -241,10 +245,16 @@ import HomepageStudent from './Pages/HomepageStudent';
 import HomepageInstructor from './Pages/HomepageInstructor';
 import Settings from './Pages/Settings';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+=======
+=======
+<<<<<<< HEAD
+import NavBar from './Components/NavBar';
+>>>>>>> 169361c (Added Basic Login Page)
 
 function App() {
   return (
     <div ClassName='App'>
+<<<<<<< HEAD
       <Router>
       <NavBar />
       <Routes>
@@ -266,6 +276,41 @@ function App() {
     </Router>
   );
 >>>>>>> 04f071b (Research React Router, fixed redirection)
+=======
+      <NavBar></NavBar>
+    <div ClassName='App'>
+      <NavBar></NavBar>
+    </div>
+>>>>>>> aedb680 (Added Basic Login Page)
+  );
+=======
+import logo from "./logo.svg";
+import "./App.css";
+import Login from "./Components/Login";
+
+function App() {
+  // return (
+  //   <div className="App">
+  //     <header className="App-header">
+  //       <img src={logo} className="App-logo" alt="logo" />
+  //       <p>
+  //         Edit <code>src/App.js</code> and save to reload.
+  //       </p>
+  //       <a
+  //         className="App-link"
+  //         href="https://reactjs.org"
+  //         target="_blank"
+  //         rel="noopener noreferrer"
+  //       >
+  //         Learn React
+  //       </a>
+  //     </header>
+  //   </div>
+  // );
+
+  return <Login />;
+>>>>>>> 270941a (Added Basic Login Page)
+>>>>>>> 169361c (Added Basic Login Page)
 }
 
 export default App;

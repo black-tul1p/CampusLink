@@ -2,10 +2,14 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 169361c (Added Basic Login Page)
 import Banner from "../Assets/banner_logo.jpg";
 import React, { useState } from "react";
 =======
 import React from "react";
+<<<<<<< HEAD
 >>>>>>> 270941a (Added Basic Login Page)
 =======
 import Banner from "../Assets/banner_logo.jpg";
@@ -15,10 +19,14 @@ import React, { useState } from "react";
 import Banner from "../Assets/banner_logo.jpg";
 import React, { useState } from "react";
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
+=======
+>>>>>>> aedb680 (Added Basic Login Page)
+>>>>>>> 169361c (Added Basic Login Page)
 import {
   Box,
   Button,
   FormControl,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -44,6 +52,8 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { loginUser } from "../Backend/student";
 >>>>>>> 4575726 (Update login page, added register page for testing)
 =======
+=======
+>>>>>>> 169361c (Added Basic Login Page)
   InputAdornment,
   TextField,
 } from "@mui/material";
@@ -81,7 +91,11 @@ export default function Login() {
 import Banner from "../Assets/banner_logo.jpg";
 
 export default function Login() {
+<<<<<<< HEAD
 >>>>>>> 270941a (Added Basic Login Page)
+=======
+>>>>>>> aedb680 (Added Basic Login Page)
+>>>>>>> 169361c (Added Basic Login Page)
   return (
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -103,6 +117,7 @@ export default function Login() {
       <Box className="Default-card">
         <img className="Banner-logo" src={Banner} alt="CampusLink Logo" />
         <FormControl className="Login-form">
+<<<<<<< HEAD
           {error && <ErrorBox text={error} />}
           <div className="Input-fields">
             <TextField
@@ -137,7 +152,22 @@ export default function Login() {
             <div className="Password-section">
               <TextField
                 required
+<<<<<<< HEAD
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
+=======
+=======
+          <div className="Input-fields">
+            <TextField
+              id="email-input"
+              label="Email Address"
+              variant="outlined"
+              placeholder="test"
+              sx={{ input: { color: "white" } }}
+            />
+            <div className="password-section">
+              <TextField
+>>>>>>> aedb680 (Added Basic Login Page)
+>>>>>>> 169361c (Added Basic Login Page)
                 id="pass-input"
                 label="Password"
                 type="password"
@@ -145,10 +175,13 @@ export default function Login() {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
 =======
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
+=======
+>>>>>>> 169361c (Added Basic Login Page)
                 placeholder="***********"
                 InputProps={{
                   startAdornment: (
@@ -163,14 +196,20 @@ export default function Login() {
                   setPass(e.target.value);
                 }}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 270941a (Added Basic Login Page)
 =======
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
+=======
+=======
+>>>>>>> aedb680 (Added Basic Login Page)
+>>>>>>> 169361c (Added Basic Login Page)
               />
               <Button className="Mini-button">Forgot Password?</Button>
             </div>
           </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
           <Button
 <<<<<<< HEAD
@@ -191,10 +230,22 @@ export default function Login() {
 =======
           <Button disableElevation variant="contained" onClick={handleLogin}>
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
+=======
+          <Button disableElevation variant="contained" onClick={handleLogin}>
+=======
+          <Button
+            variant="contained"
+            onClick={() => {
+              alert("Clicked!");
+            }}
+          >
+>>>>>>> aedb680 (Added Basic Login Page)
+>>>>>>> 169361c (Added Basic Login Page)
             Submit
           </Button>
           <div style={{ color: "white", alignSelf: "center" }}>
             Don't have an account?
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             <Link to="/">
@@ -252,6 +303,8 @@ export default function Login() {
 =======
             <Button className="Mini-button">Sign up</Button>
 =======
+=======
+>>>>>>> 169361c (Added Basic Login Page)
             <Button
               className="Mini-button"
               onClick={() => {
@@ -260,7 +313,13 @@ export default function Login() {
             >
               Sign up
             </Button>
+<<<<<<< HEAD
 >>>>>>> 1f262be (Improved UI, fixed bugs)
+=======
+=======
+            <Button className="Mini-button">Sign up</Button>
+>>>>>>> aedb680 (Added Basic Login Page)
+>>>>>>> 169361c (Added Basic Login Page)
           </div>
         </FormControl>
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
