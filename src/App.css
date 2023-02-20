@@ -74,3 +74,13 @@
 .MuiInputBase-input{
   color: var(--white) !important;
 }
+
+.MuiSvgIcon-root {
+  color: var(--white);
+}
+
+.Vertical-line {
+  border: 1px solid white;
+  margin: 0.75em;
+  height: 1em;
+}

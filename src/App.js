@@ -1,41 +1,32 @@
-<<<<<<< HEAD
-import NavBar from './Components/NavBar';
-
-function App() {
-  return (
-    <div ClassName='App'>
-      <NavBar></NavBar>
-    <div ClassName='App'>
-      <NavBar></NavBar>
-    </div>
-  );
-=======
-import logo from "./logo.svg";
 import "./App.css";
 import Login from "./Components/Login";
+import handleSubmitTest from "./Backend/handleSubmit-test";
+import { useRef } from "react";
+import CourseContent from "./Components/CourseContent"
 
 function App() {
-  // return (
-  //   <div className="App">
-  //     <header className="App-header">
-  //       <img src={logo} className="App-logo" alt="logo" />
-  //       <p>
-  //         Edit <code>src/App.js</code> and save to reload.
-  //       </p>
-  //       <a
-  //         className="App-link"
-  //         href="https://reactjs.org"
-  //         target="_blank"
-  //         rel="noopener noreferrer"
-  //       >
-  //         Learn React
-  //       </a>
-  //     </header>
-  //   </div>
-  // );
+  /* Backend testing code
+  const testBackend = false;
+  const dataRef = useRef();
+  const submithandler = (e) => {
+    e.preventDefault();
+    handleSubmitTest(dataRef.current.value);
+    dataRef.current.value = "";
+  }; */
 
-  return <Login />;
->>>>>>> 270941a (Added Basic Login Page)
+  // For Backend testing only, will remove later
+  /* if (!testBackend) return <Login />;
+  return (
+    <div className="App">
+      <form onSubmit={submithandler}>
+        <input type="text" ref={dataRef} />
+        <button type="submit">Save</button>
+      </form>
+    </div>
+  ); */
+
+  return <CourseContent />;
+
 }
 
 export default App;
