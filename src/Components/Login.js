@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import Banner from "../Assets/banner_logo.jpg";
 import React, { useState } from "react";
+=======
+import React from "react";
+>>>>>>> 270941a (Added Basic Login Page)
 import {
   Box,
   Button,
   FormControl,
+<<<<<<< HEAD
   InputAdornment,
   TextField,
 } from "@mui/material";
@@ -14,6 +19,15 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
+=======
+  Input,
+  InputLabel,
+  TextField,
+} from "@mui/material";
+import Banner from "../Assets/banner_logo.jpg";
+
+export default function Login() {
+>>>>>>> 270941a (Added Basic Login Page)
   return (
     <div>
       <Box className="Default-card">
@@ -24,6 +38,7 @@ export default function Login() {
               id="email-input"
               label="Email Address"
               variant="outlined"
+<<<<<<< HEAD
               placeholder="email@organization.edu"
               InputProps={{
                 startAdornment: (
@@ -37,6 +52,10 @@ export default function Login() {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
+=======
+              placeholder="test"
+              sx={{ input: { color: "white" } }}
+>>>>>>> 270941a (Added Basic Login Page)
             />
             <div className="password-section">
               <TextField
@@ -44,6 +63,7 @@ export default function Login() {
                 label="Password"
                 type="password"
                 variant="outlined"
+<<<<<<< HEAD
                 placeholder="***********"
                 InputProps={{
                   startAdornment: (
@@ -57,15 +77,23 @@ export default function Login() {
                 onChange={(e) => {
                   setPass(e.target.value);
                 }}
+=======
+>>>>>>> 270941a (Added Basic Login Page)
               />
               <Button className="Mini-button">Forgot Password?</Button>
             </div>
           </div>
           <Button
+<<<<<<< HEAD
             disableElevation
             variant="contained"
             onClick={() => {
               alert(email + ": " + pass);
+=======
+            variant="contained"
+            onClick={() => {
+              alert("Clicked!");
+>>>>>>> 270941a (Added Basic Login Page)
             }}
           >
             Submit

@@ -71,6 +71,7 @@
   color: rgba(255,255,255, 0.5) !important;
 }
 
+<<<<<<< HEAD
 .MuiInputBase-input{
   color: var(--white) !important;
 }
@@ -83,4 +84,9 @@
   border: 1px solid white;
   margin: 0.75em;
   height: 1em;
+=======
+
+.MuiInputLabel-input{
+  color: var(--white) !important;
+>>>>>>> 270941a (Added Basic Login Page)
 }
