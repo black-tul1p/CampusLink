@@ -84,9 +84,12 @@
   border: 1px solid white;
   margin: 0.75em;
   height: 1em;
+<<<<<<< HEAD
 =======
 
 .MuiInputLabel-input{
   color: var(--white) !important;
 >>>>>>> 270941a (Added Basic Login Page)
+=======
+>>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
 }

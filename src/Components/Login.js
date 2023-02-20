@@ -1,19 +1,30 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Banner from "../Assets/banner_logo.jpg";
 import React, { useState } from "react";
 =======
 import React from "react";
 >>>>>>> 270941a (Added Basic Login Page)
+=======
+import Banner from "../Assets/banner_logo.jpg";
+import React, { useState } from "react";
+>>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
 import {
   Box,
   Button,
   FormControl,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
   InputAdornment,
   TextField,
 } from "@mui/material";
 import { Email, VpnKey } from "@mui/icons-material";
+<<<<<<< HEAD
 import CourseContent from "./CourseContent";
+=======
+>>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -39,6 +50,9 @@ export default function Login() {
               label="Email Address"
               variant="outlined"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
               placeholder="email@organization.edu"
               InputProps={{
                 startAdornment: (
@@ -64,6 +78,9 @@ export default function Login() {
                 type="password"
                 variant="outlined"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
                 placeholder="***********"
                 InputProps={{
                   startAdornment: (
@@ -85,6 +102,9 @@ export default function Login() {
           </div>
           <Button
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
             disableElevation
             variant="contained"
             onClick={() => {
