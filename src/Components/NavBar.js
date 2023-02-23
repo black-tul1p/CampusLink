@@ -8,9 +8,12 @@ import user_logo from '../Images/user_logo.jpg';
 import "./NavBar.css";
 
 function NavBar() {
-    function sayHello() {
-        alert('Courses!');
-    }  
+    
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => {
+        setOpen(!open);
+    }
+
     return (
         <>
         <nav className="navbar">
@@ -19,11 +22,23 @@ function NavBar() {
                     <img src={logo} className = "logo" alt="logo"/>
                 </div>
                 <div className = "menu-logo-container">
-                    <Link to="/Courses_Student">
+                    <Link to="/Homepage_Student">
                         <img src={menu_logo} className = "menu_logo" alt="menu"/>
                     </Link>
                 </div>
-                <div className = "notification-logo-container">
+                <div onClick={handleOpen} className = "notification-logo-container">
+                    {/* <div className = "notification-dropdown">
+                        {open ? (
+                            <ul className = "notifications-list">
+                                <li className="notification">
+                                    <button>Notification 1</button>
+                                </li>
+                                <li>
+                                    <button>Notification 2</button>
+                                </li>
+                            </ul>
+                        ): null}
+                    </div> */}
                     <img src={notification_logo} className = "notification_logo" alt="notifications"/>
                 </div>
                 <div className = "settings-logo-container">
@@ -33,10 +48,7 @@ function NavBar() {
                 </div>
                 <div className = "user-logo-container">
                     <img src={user_logo} className = "user_logo" alt="user profile"/> 
-                </div>
-                    
-            </div>
-            <div className="seperation-bar">
+                </div>  
             </div>
         </nav>
         </>
