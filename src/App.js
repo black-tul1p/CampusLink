@@ -200,13 +200,20 @@ import FAQ from "./Components/FAQ";
 =======
 =======
 //import NavBar from './Components/NavBar';
-//import "./App.css";
+import "./App.css";
 //import Login from "./Components/Login";
 import handleSubmitTest from "./Backend/handleSubmit-test";
 import { useRef } from "react";
 import CourseContent from "./Components/CourseContent"
+<<<<<<< HEAD
 >>>>>>> 13af7b9 (created non-functionality navigation bar - 3 hours)
+<<<<<<< HEAD
 >>>>>>> d1088b8 (created non-functionality navigation bar - 3 hours)
+=======
+=======
+import NavBar from "./Components/NavBar"
+>>>>>>> d589644 (slight more set up to start work on front end of CourseContent page)
+>>>>>>> ee6622c (slight more set up to start work on front end of CourseContent page)
 
 function App() {
   return (
