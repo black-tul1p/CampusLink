@@ -1,9 +1,10 @@
 //import NavBar from './Components/NavBar';
-//import "./App.css";
+import "./App.css";
 //import Login from "./Components/Login";
 import handleSubmitTest from "./Backend/handleSubmit-test";
 import { useRef } from "react";
 import CourseContent from "./Components/CourseContent"
+import NavBar from "./Components/NavBar"
 
 function App() {
   /* Backend testing code
