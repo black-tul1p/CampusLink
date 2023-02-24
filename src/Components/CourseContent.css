@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .CCHeader {
     text-align: center;
     color: white;
@@ -63,3 +64,11 @@
 
 
 
+=======
+.CCtest {
+    border: black;
+    padding: 10px 10px;
+    cursor: pointer;
+
+}
+>>>>>>> 8100a24 (created css file, added test button, committing to save before more changes)

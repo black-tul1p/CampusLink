@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import CourseContentCSS from "./CourseContent.css"
 import NavBar from './NavBar';
 import Banner from "../Assets/banner_logo.jpg";
@@ -17,10 +18,15 @@ import { Document,Page } from 'react-pdf';
 
 
 
+=======
+import React from 'react';
+import CourseContentCSS from "./CourseContent.css"
+>>>>>>> 8100a24 (created css file, added test button, committing to save before more changes)
 
 
 export default function CourseContent() {
 
+<<<<<<< HEAD
     const CCNavButtonS = (props) => {
         return(
             <div className='CCNavButton'>
@@ -88,4 +94,11 @@ export default function CourseContent() {
             
     </div>
     )
+=======
+
+    return <div className = "CCtest">
+            <button className="CCtest">ClickMe 
+            </button>
+    </div>
+>>>>>>> 8100a24 (created css file, added test button, committing to save before more changes)
 }
