@@ -38,17 +38,43 @@ import logo from "./logo.svg";
 >>>>>>> 0c9d360 (Add backend testing code)
 import "./App.css";
 import Login from "./Components/Login";
-import handleSubmitTest from "./Backend/handleSubmit-test";
-import { useRef } from "react";
+import {
+  createStudent,
+  removeStudent,
+  getStudentIdByEmail,
+} from "./Backend/student";
+import { useRef, useState } from "react";
 
 function App() {
   // Backend testing code
-  const testBackend = false;
-  const dataRef = useRef();
-  const submithandler = (e) => {
+  const testBackend = true;
+
+  const [first, setFirst] = useState("");
+  const [last, setLast] = useState("");
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+
+  // Helper functions
+  const addStudentHandler = (e) => {
     e.preventDefault();
-    handleSubmitTest(dataRef.current.value);
-    dataRef.current.value = "";
+    createStudent(first, last, email, pass);
+    setFirst("");
+    setLast("");
+    setEmail("");
+    setPass("");
+  };
+
+  const getStudentHandler = (e) => {
+    e.preventDefault();
+    getStudentIdByEmail(email);
+    setEmail("");
+  };
+
+  const delStudentHandler = async (e) => {
+    e.preventDefault();
+    const id = await getStudentIdByEmail(email);
+    removeStudent(id);
+    setEmail("");
   };
 
 <<<<<<< HEAD
@@ -59,9 +85,56 @@ function App() {
   if (!testBackend) return <Login />;
   return (
     <div className="App">
-      <form onSubmit={submithandler}>
-        <input type="text" ref={dataRef} />
+      <form onSubmit={addStudentHandler}>
+        <input
+          type="text"
+          value={first}
+          onChange={(e) => {
+            setFirst(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          value={last}
+          onChange={(e) => {
+            setLast(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+        />
+        <input
+          type="text"
+          value={pass}
+          onChange={(e) => {
+            setPass(e.target.value);
+          }}
+        />
         <button type="submit">Save</button>
+      </form>
+      <form onSubmit={getStudentHandler}>
+        <input
+          type="text"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+        />
+        <button type="submit">Find</button>
+      </form>
+      <form onSubmit={delStudentHandler}>
+        <input
+          type="text"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
+        />
+        <button type="submit">Remove</button>
       </form>
     </div>
   );
