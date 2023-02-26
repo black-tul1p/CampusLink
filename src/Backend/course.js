@@ -7,6 +7,7 @@ import {
     query,
     where,
   } from "@firebase/firestore";
+<<<<<<< HEAD
 import { firestore } from "./firebase";
 
 
@@ -35,6 +36,11 @@ import { firestore } from "./firebase";
   };
   
   export async function createCourse(title, id, credit, department, capacity, registeredStudents, description) {
+=======
+  import { firestore } from "./firebase";
+  
+  export async function createCourse(title, id, credit, department, capacity, registeredStudents) {
+>>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
     let data = {
         courseTitle: title,
         courseId: id,
@@ -42,7 +48,10 @@ import { firestore } from "./firebase";
         department: department,
         capacity: capacity,
         registeredStudents: registeredStudents,
+<<<<<<< HEAD
         description: description,
+=======
+>>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
     };
   
     try {
@@ -62,6 +71,7 @@ import { firestore } from "./firebase";
     }
   }
   
+<<<<<<< HEAD
   // export async function getCourseIdByDetails(courseTitle, courseId) {
   //   const coursesRef = collection(firestore, "courses");
   //   const q = query(coursesRef, where("courseTitle", "==", courseTitle), where("courseId", "==", courseId));
@@ -76,3 +86,19 @@ import { firestore } from "./firebase";
   //   console.log("Found a course with ID: ", courseId);
   //   return courseId;
   // }
+=======
+  export async function getCourseIdByDetails(courseTitle, courseId) {
+    const coursesRef = collection(firestore, "courses");
+    const q = query(coursesRef, where("courseTitle", "==", courseTitle), where("courseId", "==", courseId));
+    const querySnapshot = await getDocs(q);
+  
+    if (querySnapshot.docs.length === 0) {
+      console.log("No course found with course details: ", email);
+      return null;
+    }
+  
+    const courseId = querySnapshot.docs[0].id;
+    console.log("Found a course with ID: ", courseId);
+    return courseId;
+  }
+>>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
