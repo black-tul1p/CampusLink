@@ -58,7 +58,7 @@ export default function Login() {
                 startAdornment: (
                   <InputAdornment position="start">
                     <Email />
-                    <div class="Vertical-line" />
+                    <div className="Vertical-line" />
                   </InputAdornment>
                 ),
               }}
@@ -86,7 +86,7 @@ export default function Login() {
                   startAdornment: (
                     <InputAdornment position="start">
                       <VpnKey />
-                      <div class="Vertical-line" />
+                      <div className="Vertical-line" />
                     </InputAdornment>
                   ),
                 }}

@@ -49,10 +49,11 @@ import {
   getStudentIdByEmail,
 } from "./Backend/student";
 import { useRef, useState } from "react";
+import RegistrationForm from "./Components/RegistrationForm";
 
 function App() {
   // Backend testing code
-  const testBackend = true;
+  const testBackend = false;
 
   const [first, setFirst] = useState("");
   const [last, setLast] = useState("");
@@ -87,7 +88,7 @@ function App() {
 >>>>>>> 270941a (Added Basic Login Page)
 =======
   // For Backend testing only, will remove later
-  if (!testBackend) return <Login />;
+  if (!testBackend) return <RegistrationForm />;
   return (
     <div className="App">
       <form onSubmit={addStudentHandler}>
