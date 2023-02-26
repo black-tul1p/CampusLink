@@ -39,8 +39,12 @@ import { firestore } from "./firebase";
 =======
   import { firestore } from "./firebase";
   
+<<<<<<< HEAD
   export async function createCourse(title, id, credit, department, capacity, registeredStudents) {
 >>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
+=======
+  export async function createCourse(title, id, credit, department, capacity, registeredStudents, description) {
+>>>>>>> b38c553 (added basic course page layout)
     let data = {
         courseTitle: title,
         courseId: id,
@@ -49,9 +53,13 @@ import { firestore } from "./firebase";
         capacity: capacity,
         registeredStudents: registeredStudents,
 <<<<<<< HEAD
+<<<<<<< HEAD
         description: description,
 =======
 >>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
+=======
+        description: description,
+>>>>>>> b38c553 (added basic course page layout)
     };
   
     try {
@@ -93,7 +101,7 @@ import { firestore } from "./firebase";
     const querySnapshot = await getDocs(q);
   
     if (querySnapshot.docs.length === 0) {
-      console.log("No course found with course details: ", email);
+      console.log("No course found with course details: ", courseId);
       return null;
     }
   
