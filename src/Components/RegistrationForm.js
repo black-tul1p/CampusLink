@@ -11,6 +11,7 @@ import {
   IconButton
 } from "@mui/material";
 import { Email, VpnKey, AccountCircleOutlined, VisibilityOff, Visibility } from "@mui/icons-material";
+import { createStudent } from "../Backend/student";
 
 export default function RegistrationForm() {
 
@@ -19,6 +20,15 @@ export default function RegistrationForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [pushed, setPushed] = useState(true);
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        createStudent(firstName, lastName, email, password);
+        alert("First Name: " + firstName + "\n" +
+            "Last Name: " + lastName + "\n" +
+            "Email: " + email + "\n" +
+            "Password: " + password + "\n")
+    }
 
     const showPwHandler = () => {
         setPushed(!pushed)
@@ -34,6 +44,7 @@ export default function RegistrationForm() {
         <div>
             <Box className="Default-card">
                 <img className="Banner-logo" src={Banner} alt="CampusLink Logo"/>
+                <h1> Sign Up</h1>
                 <FormControl className="registrationForm">
                         <div className="Input-fields">
                             <div className="firstName">
@@ -151,12 +162,7 @@ export default function RegistrationForm() {
                         <Button
                             disableElevation
                             variant="contained"
-                            onClick={() => {
-                                alert("First Name: " + firstName + "\n" +
-                                "Last Name: " + lastName + "\n" +
-                                "Email: " + email + "\n" +
-                                "Password: " + password + "\n")
-                            }}
+                            onClick={submitHandler}
                         >
                             Submit
                         </Button>
