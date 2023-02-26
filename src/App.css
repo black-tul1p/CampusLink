@@ -20,7 +20,7 @@
 /********************************** Login Page **********************************/
 
 .Banner-logo {
-  width: 50vw;
+  max-width: 50vw;
 }
 
 .Default-card {

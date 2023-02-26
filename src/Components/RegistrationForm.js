@@ -1,5 +1,14 @@
-import React, { Component } from "react";
+import React, { Component , useState, IconButton} from "react";
 import "./RegistrationForm.css"
+import Banner from "../Assets/banner_logo.jpg";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
+import { Email, VpnKey, AccountCircleOutlined, VisibilityOff, Visibility } from "@mui/icons-material";
 
 class RegistrationForm extends Component{
     constructor(props) {
@@ -9,11 +18,13 @@ class RegistrationForm extends Component{
             lastName: '',
             email: '',
             username: '',
-            password: ''
+            password: '',
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    
 
     handleInputChange(event) {
         const target = event.target;
@@ -26,7 +37,9 @@ class RegistrationForm extends Component{
     }
 
     handleSubmit(event) {
-        alert('First Name: ' + this.state.firstName + 'Last Name: ' + this.state.lastName + 'Email: ' + this.state.email + 'Username: ' + this.state.username + 'Password: ' + this.state.password)
+        alert('First Name: ' + this.state.firstName + 'Last Name: ' 
+            + this.state.lastName + 'Email: ' + this.state.email + 'Username: ' +
+             this.state.username + 'Password: ' + this.state.password)
         event.preventDefault();
     }
 
@@ -41,89 +54,103 @@ class RegistrationForm extends Component{
     
     render() {
     return(
-        <div className="form">
-            <form onSubmit={this.handleSubmit}>
-                <div className="firstName">
-                    <label className="formLabel" for="firstName">
-                        First Name:
-                    </label>
-                    <input
-                        className="formInput"
-                        name="firstName"
-                        id="firstName"
-                        type="text"
-                        value={this.state.firstName}
-                        onChange={this.handleInputChange}
-                        placeholder="First Name"
-                    />
-                </div>
-                <br/>
-                <div className="lastName">
-                    <label className="formLabel" for="lastName">
-                        Last Name:
-                    </label>
-                    <input
-                        className="formInput"
-                        name="lastName"
-                        id="lastName"
-                        type="text"
-                        value={this.state.lastName}
-                        onChange={this.handleInputChange}
-                        placeholder="Last Name"
-                    />
-                </div>
-                <br/>
-                <div className="email">
-                    <label className="formLabel" for="email">
-                        Email:
-                    </label>
-                    <input
-                        className="formInput"
-                        name="email"
-                        id="email"
-                        type="text"
-                        value={this.state.email}
-                        onChange={this.handleInputChange}
-                        placeholder="Email"
-                    />
-                </div>
-                <br/>
-                <div className="username">
-                    <label className="formLabel" for="username">
-                        Username:
-                    </label>
-                    <input
-                        className="formInput"
-                        name="username"
-                        id="username"
-                        type="text"
-                        value={this.state.username}
-                        onChange={this.handleInputChange}
-                        placeholder="Username"
-                    />
-                </div>
-                <br/>
-                <div className="password">
-                    <label className="formLabel" for="password">
-                        Password:
-                    </label>
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value={this.state.password}
-                        onChange={this.handleInputChange}
-                        placeholder="Password"
-                    />
-                    <input
-                        type='checkbox'
-                        onClick={this.showPassword}
-                    />
-                    <label className="formLabel" for="submit">Show Password</label>
-                </div>
-                <br/>
-                <button className="submit" type="submit">Submit</button>
-            </form>
+        <div>
+            <Box className="Default-card">
+                <img className="Banner-logo" src={Banner} alt="CampusLink Logo"/>
+                <FormControl className="registrationForm">
+                        <div className="Input-fields">
+                            <div className="firstName">
+                                <TextField
+                                id="firstName"
+                                label="First Name"
+                                type="text"
+                                variant="outlined"
+                                placeholder="John"
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <AccountCircleOutlined/>
+                                            <div className="Vertical-line"/>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                defaultValue={this.state.firstName}
+                                onChange={this.handleInputChange}
+                                />
+                            </div>
+                            <div className="lastName">
+                                <TextField
+                                id="lastName"
+                                label="Last Name"
+                                type="text"
+                                variant="outlined"
+                                placeholder="Smith"
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <AccountCircleOutlined/>
+                                            <div className="Vertical-line"/>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                value={this.state.lastName}
+                                onChange={this.handleInputChange}
+                                />
+                            </div>
+                            <div className="email">
+                                <TextField
+                                id="email"
+                                label="Email"
+                                type="text"
+                                variant="outlined"
+                                placeholder="email@organization.edu"
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <Email/>
+                                            <div className="Vertical-line"/>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                                value={this.state.email}
+                                onChange={this.handleInputChange}
+                                />
+                            </div>
+                            <div className="password">
+                                <TextField
+                                id="password"
+                                label="Password"
+                                type="text"
+                                variant="outlined"
+                                placeholder="***********"
+                                required
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <VpnKey/>
+                                            <div className="Vertical-line"/>
+                                        </InputAdornment>
+                                    ),
+                                    
+                                }}
+                                value={this.state.password}
+                                onChange={this.handleInputChange}
+                                />
+                            </div>
+                        </div>
+                        <br/>
+                        <Button
+                            disableElevation
+                            variant="contained"
+                            onClick={this.handleSubmit}
+                        >
+                            Submit
+                        </Button>
+                </FormControl>                
+            </Box>
         </div>
         );
     }
