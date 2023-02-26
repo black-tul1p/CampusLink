@@ -1,57 +1,39 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { Component } from "react";
 import "./RegistrationForm.css"
 <<<<<<< HEAD
 =======
 import React, { Component , useState, IconButton} from "react";
+=======
+import React, { useState} from "react";
+>>>>>>> 25bc7f3 (Rewrote file from JS class to Js function)
 import "./RegistrationForm.css"
 import Banner from "../Assets/banner_logo.jpg";
 import {
   Box,
   Button,
   FormControl,
+  Icon,
   InputAdornment,
   TextField,
+  IconButton
 } from "@mui/material";
 import { Email, VpnKey, AccountCircleOutlined, VisibilityOff, Visibility } from "@mui/icons-material";
 >>>>>>> 6dc67e7 (Reformatting page to MUI, still have to fix errors)
 
-class RegistrationForm extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            firstName: '',
-            lastName: '',
-            email: '',
-            username: '',
-            password: '',
-        };
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+export default function RegistrationForm() {
 
-    
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [pushed, setPushed] = useState(true);
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
-    }
-
-    handleSubmit(event) {
-        alert('First Name: ' + this.state.firstName + 'Last Name: ' 
-            + this.state.lastName + 'Email: ' + this.state.email + 'Username: ' +
-             this.state.username + 'Password: ' + this.state.password)
-        event.preventDefault();
-    }
-
-    showPassword(event) {
+    const showPwHandler = () => {
+        setPushed(!pushed)
         var x = document.getElementById("password");
         if (x.type === "password") {
             x.type = "text";
@@ -59,8 +41,7 @@ class RegistrationForm extends Component{
             x.type = "password";
         }
     }
-    
-    render() {
+
     return(
         <div>
             <Box className="Default-card">
@@ -82,9 +63,16 @@ class RegistrationForm extends Component{
                                             <div className="Vertical-line"/>
                                         </InputAdornment>
                                     ),
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+
+                                        </InputAdornment>
+                                    )
                                 }}
-                                defaultValue={this.state.firstName}
-                                onChange={this.handleInputChange}
+                                value={firstName}
+                                onChange={(e) => {
+                                    setFirstName(e.target.value)
+                                }}
                                 />
                             </div>
                             <div className="lastName">
@@ -102,9 +90,16 @@ class RegistrationForm extends Component{
                                             <div className="Vertical-line"/>
                                         </InputAdornment>
                                     ),
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            
+                                        </InputAdornment>
+                                    )
                                 }}
-                                value={this.state.lastName}
-                                onChange={this.handleInputChange}
+                                value={lastName}
+                                onChange={(e) => {
+                                    setLastName(e.target.value)
+                                }}
                                 />
                             </div>
                             <div className="email">
@@ -122,16 +117,23 @@ class RegistrationForm extends Component{
                                             <div className="Vertical-line"/>
                                         </InputAdornment>
                                     ),
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            
+                                        </InputAdornment>
+                                    )
                                 }}
-                                value={this.state.email}
-                                onChange={this.handleInputChange}
+                                value={email}
+                                onChange={(e) => {
+                                    setEmail(e.target.value)
+                                }}
                                 />
                             </div>
                             <div className="password">
                                 <TextField
                                 id="password"
                                 label="Password"
-                                type="text"
+                                type="password"
                                 variant="outlined"
                                 placeholder="***********"
                                 required
@@ -142,10 +144,18 @@ class RegistrationForm extends Component{
                                             <div className="Vertical-line"/>
                                         </InputAdornment>
                                     ),
-                                    
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton onClick={showPwHandler}>
+                                                {pushed ? <VisibilityOff/> : <Visibility/>}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
                                 }}
-                                value={this.state.password}
-                                onChange={this.handleInputChange}
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                }}
                                 />
                             </div>
                         </div>
@@ -153,13 +163,19 @@ class RegistrationForm extends Component{
                         <Button
                             disableElevation
                             variant="contained"
-                            onClick={this.handleSubmit}
+                            onClick={() => {
+                                alert("First Name: " + firstName + "\n" +
+                                "Last Name: " + lastName + "\n" +
+                                "Email: " + email + "\n" +
+                                "Password: " + password + "\n")
+                            }}
                         >
                             Submit
                         </Button>
                 </FormControl>                
             </Box>
         </div>
+<<<<<<< HEAD
         );
     }
 }
@@ -321,3 +337,7 @@ class RegistrationForm extends Component{
 
 export default RegistrationForm
 >>>>>>> df22882 (Second iteration of Registration Form using props)
+=======
+    );
+}
+>>>>>>> 25bc7f3 (Rewrote file from JS class to Js function)
