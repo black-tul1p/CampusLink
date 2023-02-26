@@ -37,7 +37,38 @@
     border: 1px solid #102e44;
     cursor: pointer;
 }
+.log-out-container {
+    position: absolute;
+    float: left;
+    margin-left: 1088px;
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.log-out-triangle {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid lightgray;
+    margin-left: 110px;
+    
 
+}
+.log-out-bubble {
+    /* position: absolute; */
+    background-color: lightgray;
+    border-radius: 10px;
+    margin-top: 0px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.log-out-button {
+    margin-bottom: 10px;
+}
 .menu-logo-container:hover {
     background-color: white;
 }
@@ -90,4 +121,5 @@
     padding-top: 15px;
     padding-left: 20px;
 }
+
 
