@@ -201,7 +201,6 @@ import FAQ from "./Components/FAQ";
 =======
 //import NavBar from './Components/NavBar';
 import "./App.css";
-//import Login from "./Components/Login";
 import handleSubmitTest from "./Backend/handleSubmit-test";
 import { useRef } from "react";
 import CourseContent from "./Components/CourseContent"
@@ -212,8 +211,15 @@ import CourseContent from "./Components/CourseContent"
 =======
 =======
 import NavBar from "./Components/NavBar"
+<<<<<<< HEAD
 >>>>>>> d589644 (slight more set up to start work on front end of CourseContent page)
+<<<<<<< HEAD
 >>>>>>> ee6622c (slight more set up to start work on front end of CourseContent page)
+=======
+=======
+import Login from "./Components/Login";
+>>>>>>> 51aae89 (Finally moved logo to be stuck in the center)
+>>>>>>> daab152 (Finally moved logo to be stuck in the center)
 
 function App() {
   return (

@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> daab152 (Finally moved logo to be stuck in the center)
 .CCHeader {
     text-align: center;
     color: white;
@@ -15,6 +18,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+<<<<<<< HEAD
 
 }
 
@@ -69,6 +73,8 @@
     border: black;
     padding: 10px 10px;
     cursor: pointer;
+=======
+>>>>>>> daab152 (Finally moved logo to be stuck in the center)
 
 }
 >>>>>>> 8100a24 (created css file, added test button, committing to save before more changes)

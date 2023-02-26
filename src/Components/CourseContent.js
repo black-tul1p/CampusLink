@@ -21,7 +21,12 @@ import { Document,Page } from 'react-pdf';
 =======
 import React from 'react';
 import CourseContentCSS from "./CourseContent.css"
+<<<<<<< HEAD
 >>>>>>> 8100a24 (created css file, added test button, committing to save before more changes)
+=======
+import NavBar from './NavBar';
+import Banner from "../Assets/banner_logo.jpg";
+>>>>>>> daab152 (Finally moved logo to be stuck in the center)
 
 
 export default function CourseContent() {
@@ -96,9 +101,16 @@ export default function CourseContent() {
     )
 =======
 
-    return <div className = "CCtest">
-            <button className="CCtest">ClickMe 
-            </button>
+    return ( <div>
+            <div className='CCBannerContainer'>
+                <img className="CCBanner" src={Banner} alt="CampusLink Logo" />
+            </div>
+            <h1 className="CCHeader">Course Test</h1>
+            <p className='Navbar'>huh</p>
     </div>
+<<<<<<< HEAD
 >>>>>>> 8100a24 (created css file, added test button, committing to save before more changes)
+=======
+    );
+>>>>>>> daab152 (Finally moved logo to be stuck in the center)
 }
