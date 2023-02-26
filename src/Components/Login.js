@@ -74,6 +74,7 @@ import { loginUser } from "../Backend/student";
 } from "@mui/material";
 import { Email, VpnKey } from "@mui/icons-material";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../Backend/user";
 <<<<<<< HEAD
@@ -85,7 +86,13 @@ import ErrorBox from "./Error";
 =======
 =======
 >>>>>>> b295e2c (Added MUI Icon library, missing icons to form)
+<<<<<<< HEAD
 >>>>>>> 24e8482 (Added MUI Icon library, missing icons to form)
+=======
+=======
+import CourseContent from "./CourseContent";
+>>>>>>> 9d596fb (needs some fixes but added bar for course content pages (quizzes, grades, etc))
+>>>>>>> 45ea6e6 (needs some fixes but added bar for course content pages (quizzes, grades, etc))
 
 export default function Login() {
   const [email, setEmail] = useState("");
