@@ -18,16 +18,20 @@
 }
 
 .CCNavBar {
-    display: flex;
+
     background-color: rgba(13, 37, 54, 1);
+    text-align: center;
+    align-items: center;
+    justify-content: center;
     display: grid;
-    grid-template-columns: 7fr 7fr 7fr 7fr 7fr 7fr 7fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-gap: 0px;
+    padding: 0px 0px;
 }
 
 .CCNavButton {
     color: white;
-    pad: 10px 10px;
+    pad: 0px 0px;
     justify-content: center;
     align-items: center;
     cursor: pointer;
