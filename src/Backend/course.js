@@ -9,7 +9,7 @@ import {
   } from "@firebase/firestore";
   import { firestore } from "./firebase";
   
-  export async function createCourse(title, id, credit, department, capacity, registeredStudents) {
+  export async function createCourse(title, id, credit, department, capacity, registeredStudents, description) {
     let data = {
         courseTitle: title,
         courseId: id,
@@ -17,6 +17,7 @@ import {
         department: department,
         capacity: capacity,
         registeredStudents: registeredStudents,
+        description: description,
     };
   
     try {
@@ -42,7 +43,7 @@ import {
     const querySnapshot = await getDocs(q);
   
     if (querySnapshot.docs.length === 0) {
-      console.log("No course found with course details: ", email);
+      console.log("No course found with course details: ", courseId);
       return null;
     }
   
