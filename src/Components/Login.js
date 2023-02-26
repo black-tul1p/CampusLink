@@ -8,6 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Email, VpnKey } from "@mui/icons-material";
+import CourseContent from "./CourseContent";
 
 export default function Login() {
   const [email, setEmail] = useState("");

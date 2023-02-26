@@ -16,3 +16,24 @@
     justify-content: center;
 
 }
+
+.CCNavBar {
+    display: flex;
+    background-color: rgba(13, 37, 54, 1);
+    display: grid;
+    grid-template-columns: 7fr 7fr 7fr 7fr 7fr 7fr 7fr;
+    grid-gap: 0px;
+}
+
+.CCNavButton {
+    color: white;
+    pad: 10px 10px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    ;
+}
+
+
+
+
