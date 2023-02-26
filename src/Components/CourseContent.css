@@ -1,6 +1,18 @@
-.CCtest {
-    border: black;
-    padding: 10px 20px;
-    cursor: pointer;
+.CCHeader {
+    text-align: center;
+    color: white;
+
+}
+
+.CCBanner {
+    width: 225px;
+    height: 75px;
+}
+
+.CCBannerContainer {
+    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
 }
