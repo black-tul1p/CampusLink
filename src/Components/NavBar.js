@@ -43,6 +43,7 @@ import menu_logo from '../Images/menu_logo.jpg';
 import settings_logo from '../Images/settings_logo.jpg';
 import notification_logo from '../Images/notification_logo.jpg';
 import user_logo from '../Images/user_logo.jpg';
+import LogoutContainer from './LogoutContainer';
 import "./NavBar.css";
 
 function NavBar() {
@@ -50,6 +51,10 @@ function NavBar() {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
         setOpen(!open);
+    }
+    const [click, setClick] = React.useState(false);
+    const handleClick = () => {
+        setClick(!click);
     }
 
     return (
@@ -84,10 +89,11 @@ function NavBar() {
                         <img src={settings_logo} className = "settings_logo" alt="settings"/> 
                     </Link>
                 </div>
-                <div className = "user-logo-container">
-                    <img src={user_logo} className = "user_logo" alt="user profile"/> 
+                <div onClick= {handleClick} className = "user-logo-container">
+                    {click ? <img src={user_logo} className = "user_logo" alt="user profile"/>: <img src={user_logo} className = "user_logo" alt="user profile"/>}
                 </div>  
             </div>
+            {click && <LogoutContainer/>} 
         </nav>
         </>
   )
