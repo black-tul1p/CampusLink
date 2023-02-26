@@ -38,7 +38,7 @@ function NavBar() {
 =======
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../Images/campuslink_logo.jpg';
+import logo from '../Images/logo.jpg';
 import menu_logo from '../Images/menu_logo.jpg';
 import settings_logo from '../Images/settings_logo.jpg';
 import notification_logo from '../Images/notification_logo.jpg';
