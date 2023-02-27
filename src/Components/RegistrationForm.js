@@ -8,10 +8,13 @@ import {
   Icon,
   InputAdornment,
   TextField,
-  IconButton
+  IconButton,
+  ToggleButtonGroup,
+  ToggleButton
 } from "@mui/material";
 import { Email, VpnKey, AccountCircleOutlined, VisibilityOff, Visibility } from "@mui/icons-material";
 import { createStudent } from "../Backend/student";
+import { createInstructor } from "../Backend/instructor";
 
 export default function RegistrationForm() {
 
@@ -20,14 +23,25 @@ export default function RegistrationForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [pushed, setPushed] = useState(true);
+    const [accountType, setAccountType] = useState("student");
 
     const submitHandler = (e) => {
         e.preventDefault();
-        createStudent(firstName, lastName, email, password);
+        if (accountType === "student") {
+            createStudent(firstName, lastName, email, password);
         alert("First Name: " + firstName + "\n" +
             "Last Name: " + lastName + "\n" +
             "Email: " + email + "\n" +
-            "Password: " + password + "\n")
+            "Password: " + password + "\n" + 
+            "Account Type: " + accountType + "\n")
+        } else {
+            createInstructor(firstName, lastName, email, password);
+            alert("First Name: " + firstName + "\n" +
+            "Last Name: " + lastName + "\n" +
+            "Email: " + email + "\n" +
+            "Password: " + password + "\n" + 
+            "Account Type: " + accountType + "\n")
+        }
     }
 
     const showPwHandler = () => {
@@ -37,6 +51,12 @@ export default function RegistrationForm() {
             x.type = "text";
         } else {
             x.type = "password";
+        }
+    }
+
+    const changeAccountType = (e, newAccountType) => {
+        if (newAccountType !== null) {
+            setAccountType(newAccountType)
         }
     }
 
@@ -159,12 +179,28 @@ export default function RegistrationForm() {
                             </div>
                         </div>
                         <br/>
+                        <div className="toggleButton">
+                        <ToggleButtonGroup
+                            size="medium"
+                            value={accountType}
+                            exclusive
+                            onChange={changeAccountType}
+                        >
+                            <ToggleButton value="student">
+                                Student
+                            </ToggleButton>
+                            <ToggleButton value="instructor">
+                                Instructor
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                        </div>
+                        <br/>
                         <Button
                             disableElevation
                             variant="contained"
                             onClick={submitHandler}
                         >
-                            Submit
+                            Sign Up
                         </Button>
                 </FormControl>                
             </Box>
