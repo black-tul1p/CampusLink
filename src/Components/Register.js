@@ -45,10 +45,6 @@ export default function Registration() {
     },
   });
 
-  useEffect(() => {
-    console.log(role);
-  }, [role]);
-
   const handleRegistration = async (e) => {
     e.preventDefault();
 
@@ -199,7 +195,6 @@ export default function Registration() {
               aria-label="student-role"
               onClick={() => {
                 setRole("student");
-                console.log(role);
               }}
               disableRipple
             >
@@ -211,7 +206,6 @@ export default function Registration() {
               aria-label="instructor-role"
               onClick={() => {
                 setRole("instructor");
-                console.log(role);
               }}
               disableRipple
             >
