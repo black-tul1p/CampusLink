@@ -1,5 +1,5 @@
 import { firestore } from "./firebase";
-import { collection, addDoc } from "@firebase/firestore";
+import { collection, addDoc, getDocs } from "@firebase/firestore";
 
 /**
  * Updates the FAQ collection in Firestore with a new question-answer pair.
@@ -29,7 +29,7 @@ export const updateFAQ = async (question, answer) => {
 export const fetchFAQ = async () => {
   try {
     const faqRef = collection(firestore, "FAQ");
-    const snapshot = await faqRef.get();
+    const snapshot = await getDocs(faqRef);
     const faq = [];
     snapshot.forEach((doc) => {
       faq.push({
@@ -41,6 +41,6 @@ export const fetchFAQ = async () => {
     console.log("FAQ fetched successfully:", faq);
     return faq;
   } catch (error) {
-    console.error("Error fetching FAQ:", error);
+    throw new Error("Error fetching FAQ:", error);
   }
 };
