@@ -84,6 +84,7 @@ export const sendSuggestion = async (question) => {
     answer: "",
 =======
   let qna = {
+    id: Date.now(),
     question: question,
     answer: answer,
 >>>>>>> b08fc33 (Implemented basic backend for FAQ)
