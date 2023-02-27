@@ -27,14 +27,18 @@ function Classlist() {
   useEffect(() => {
     // Get course description
     const courseID = searchParams.get('course_id')
-    const course = doc(firestore, 'courses', courseID)
-    getDoc(course).then((courseDoc) => {
-      if (courseDoc.exists()) {
-        setCourseData(courseDoc.data());
-      } else {
-        console.log("Course not found!");
-      }
-    });
+    if (courseID === null) {
+      console.log("Course not specified!");
+    } else {
+      const course = doc(firestore, 'courses', courseID)
+      getDoc(course).then((courseDoc) => {
+        if (courseDoc.exists()) {
+          setCourseData(courseDoc.data());
+        } else {
+          console.log("Course not found!");
+        }
+      });
+    }
 
     //Get students and add to list
     getDocs(collection(firestore, 'students')) 
