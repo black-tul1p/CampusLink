@@ -9,9 +9,14 @@
   background-color: var(--dark-blue);
   font-family: 'Times New Roman', Times, serif;
 }
+<<<<<<< HEAD
 
 html, body {
   scroll-behavior: smooth;
+=======
+::-webkit-scrollbar {
+  width: 0; /* Hide scrollbars */
+>>>>>>> 25f945c (Hide all scrollbars)
 }
 
 /********************************** App.js **********************************/
