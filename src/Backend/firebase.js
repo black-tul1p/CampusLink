@@ -14,4 +14,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const firestore = getFirestore(app);
+<<<<<<< HEAD
 export const auth = getAuth(app);
+=======
+export const auth = getAuth(app);
+>>>>>>> b737697 (Implement backend for handling users)
