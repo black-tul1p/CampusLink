@@ -50,6 +50,8 @@ import {
 } from "./Backend/student";
 import { useRef, useState } from "react";
 import RegistrationForm from "./Components/RegistrationForm";
+import RegistrationPage from "./Components/RegistrationPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   // Backend testing code
@@ -88,8 +90,19 @@ function App() {
 >>>>>>> 270941a (Added Basic Login Page)
 =======
   // For Backend testing only, will remove later
-  if (!testBackend) return <RegistrationForm />;
+  if (!testBackend) {
   return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login/>}>
+          <Route index element={<Login/>}/>
+          <Route path="registration" element={<RegistrationPage/>}/>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+    );
+  } else {
+    return (
     <div className="App">
       <form onSubmit={addStudentHandler}>
         <input
@@ -148,7 +161,11 @@ function App() {
 >>>>>>> 816cbd1 (Added banner to registration page)
     </div>
   );
+<<<<<<< HEAD
 >>>>>>> 0c9d360 (Add backend testing code)
+=======
+        }
+>>>>>>> bf73a88 (Attempted to redirect using react router)
 }
 
 export default App;

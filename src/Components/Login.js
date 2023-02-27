@@ -22,9 +22,14 @@ import {
 } from "@mui/material";
 import { Email, VpnKey } from "@mui/icons-material";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import CourseContent from "./CourseContent";
 =======
 >>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
+=======
+import { Link } from 'react-router-dom';
+import RegistrationPage from "./RegistrationPage";
+>>>>>>> bf73a88 (Attempted to redirect using react router)
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -120,7 +125,11 @@ export default function Login() {
           </Button>
           <div style={{ color: "white", alignSelf: "center" }}>
             Don't have an account?
-            <Button className="Mini-button">Sign up</Button>
+            <Button className="Mini-button"
+            containerElement={<Link to="/registration"/>}
+            >
+              Sign up
+              </Button>
           </div>
         </FormControl>
       </Box>

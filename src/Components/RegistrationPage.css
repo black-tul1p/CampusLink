@@ -20,6 +20,7 @@
 }
 
 .banner {
+<<<<<<< HEAD
     height: 10vmin;
     width: 25vmin;
 =======
@@ -57,4 +58,8 @@
     height: 10vmin;
     width: 25vmin;
 >>>>>>> 650e964 (Created first iteration of registration form)
+=======
+    height: 20vmin;
+    width: 55vmin;
+>>>>>>> bf73a88 (Attempted to redirect using react router)
 }

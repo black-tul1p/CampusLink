@@ -16,7 +16,6 @@ import {
   Box,
   Button,
   FormControl,
-  Icon,
   InputAdornment,
   TextField,
   IconButton,
@@ -81,7 +80,6 @@ export default function RegistrationForm() {
     return(
         <div>
             <Box className="Default-card">
-                <img className="Banner-logo" src={Banner} alt="CampusLink Logo"/>
                 <h1> Sign Up</h1>
                 <FormControl className="registrationForm">
                         <div className="Input-fields">
@@ -220,6 +218,7 @@ export default function RegistrationForm() {
                         >
                             Sign Up
                         </Button>
+                        
                 </FormControl>                
             </Box>
         </div>
