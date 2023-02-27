@@ -61,7 +61,7 @@ export async function createUser(email, password, firstName, lastName, role) {
  * @returns {boolean} - True if the user is authenticated successfully.
  * @throws {Error} - If there was an error during authentication, or if the authenticated user has an invalid role.
  */
-export async function loginUser(email, password, role) {
+export async function loginUser(email, password) {
   try {
     // sign in user with the provided credentials
     const userCredential = await signInWithEmailAndPassword(
@@ -70,15 +70,26 @@ export async function loginUser(email, password, role) {
       password
     );
     const user = userCredential.user;
+    // JWT
     const token = await user.getIdToken();
     localStorage.setItem("token", token);
-
-    // validate role
-    const userClaims = await auth.currentUser.getIdTokenResult();
-    if (userClaims.claims.role !== role) {
-      throw new Error("Invalid user role for student login");
-    }
     return true;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+/**
+ * Retrieves the role of the current authenticated user from Firebase Authentication.
+ *
+ * @returns {Promise<string>} The role of the user.
+ * @throws {Error} If there is an error retrieving the role.
+ */
+export async function getUserRole() {
+  try {
+    // retrieve and return role
+    const userClaims = await auth.currentUser.getIdTokenResult();
+    return userClaims.claims.role;
   } catch (error) {
     throw new Error(error.message);
   }
