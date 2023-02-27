@@ -7,6 +7,8 @@ import {
 } from "./Backend/student";
 import { useRef, useState } from "react";
 import RegistrationForm from "./Components/RegistrationForm";
+import RegistrationPage from "./Components/RegistrationPage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   // Backend testing code
@@ -41,8 +43,19 @@ function App() {
   };
 
   // For Backend testing only, will remove later
-  if (!testBackend) return <RegistrationForm />;
+  if (!testBackend) {
   return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login/>}>
+          <Route index element={<Login/>}/>
+          <Route path="registration" element={<RegistrationPage/>}/>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+    );
+  } else {
+    return (
     <div className="App">
       <form onSubmit={addStudentHandler}>
         <input
@@ -97,6 +110,7 @@ function App() {
       </form>
     </div>
   );
+        }
 }
 
 export default App;
