@@ -100,12 +100,7 @@ export default function Login() {
     <div>
       <Box className="Default-card">
         <img className="Banner-logo" src={Banner} alt="CampusLink Logo" />
-        <FormControl
-          className="Login-form"
-          onSubmit={() => {
-            alert("BRUH");
-          }}
-        >
+        <FormControl className="Login-form">
           {error && (
             <Typography
               variant="body1"
@@ -145,7 +140,7 @@ export default function Login() {
               <TextField
 =======
             />
-            <div className="password-section">
+            <div className="Password-section">
               <TextField
                 required
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
@@ -207,6 +202,7 @@ export default function Login() {
           <div style={{ color: "white", alignSelf: "center" }}>
             Don't have an account?
 <<<<<<< HEAD
+<<<<<<< HEAD
             <Link to="/">
             <Button className="Mini-button"
             containerElement={<Link to="/"/>}
@@ -261,6 +257,16 @@ export default function Login() {
 >>>>>>> 4575726 (Update login page, added register page for testing)
 =======
             <Button className="Mini-button">Sign up</Button>
+=======
+            <Button
+              className="Mini-button"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              Sign up
+            </Button>
+>>>>>>> 1f262be (Improved UI, fixed bugs)
           </div>
         </FormControl>
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
