@@ -15,12 +15,16 @@
     "react-dom": "^18.2.0",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "react-pdf": "^6.2.2",
 =======
 >>>>>>> e74232a (created non-functionality navigation bar - 3 hours)
     "react-router-dom": "^6.8.1",
 =======
 >>>>>>> bf73a88 (Attempted to redirect using react router)
+=======
+    "react-router-dom": "^6.8.1",
+>>>>>>> 43a6187 (Fix CSS and update Libraries)
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
