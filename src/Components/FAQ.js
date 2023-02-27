@@ -6,13 +6,18 @@ import {
   AccordionSummary,
   AccordionDetails,
   Box,
+  TextField,
+  Button,
+  Snackbar,
   CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { fetchFAQ } from "../Backend/faq";
+import { fetchFAQ, sendSuggestion } from "../Backend/faq";
 import styled from "@emotion/styled";
 
 export default function FAQ() {
+  // Can make these styles dynamic for light theme later on
+  // using props
   const StyledContainer = styled(Container)`
     padding-top: 40px;
     padding-bottom: 40px;
@@ -59,6 +64,40 @@ export default function FAQ() {
     color: #fff;
   `;
 
+  const StyledSuggestionTitle = styled(Typography)`
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 1em;
+  `;
+
+  const StyledSuggestionBox = styled(Box)`
+    padding: 2em;
+    background-color: #132b3d;
+    color: #fff;
+    border-radius: 1em;
+  `;
+
+  const StyledDescription = styled(Typography)`
+    color: #1eefef;
+    text-align: center;
+    font-size: 1em;
+    margin-bottom: 1.5em;
+  `;
+
+  const StyledForm = styled.div`
+    display: flex;
+    flex-direction: column;
+  `;
+
+  const StyledTextField = styled(TextField)`
+    margin-bottom: 1em;
+  `;
+
+  const StyledButton = styled(Button)`
+    align-self: flex-end;
+  `;
+
   const defFAQ = [
     {
       id: 1,
@@ -88,6 +127,9 @@ export default function FAQ() {
 
   const [faq, setFAQ] = useState(defFAQ);
   const [loading, setLoading] = useState(true);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [suggestion, setSuggestion] = useState("");
 
   useEffect(() => {
     fetchFAQ()
@@ -101,29 +143,88 @@ export default function FAQ() {
       });
   }, []);
 
+  const handleSubmit = () => {
+    if (!suggestion) {
+      console.log("Invalid form data");
+      return;
+    }
+    sendSuggestion(suggestion)
+      .then(() => {
+        setSnackbarMessage("Thank you for your suggestion!");
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setSnackbarMessage("Error sending suggestion. Please try again.");
+      })
+      .finally(() => {
+        setOpenSnackbar(true);
+      });
+    setSuggestion("");
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
-    <StyledContainer maxWidth="md">
-      <StyledTitle variant="h4" gutterBottom>
-        Frequently Asked Questions
-      </StyledTitle>
-      {loading ? (
-        <StyledBox>
-          <CircularProgress />
-        </StyledBox>
-      ) : faq.length > 0 ? (
-        faq.map((q) => (
-          <AccordionStyled key={q.id}>
-            <StyledSummary expandIcon={<ExpandMoreIconStyled />}>
-              <Typography variant="h6">{q.question}</Typography>
-            </StyledSummary>
-            <StyledDetails>
-              <Typography>{q.answer}</Typography>
-            </StyledDetails>
-          </AccordionStyled>
-        ))
-      ) : (
-        <Typography>No FAQ found.</Typography>
-      )}
-    </StyledContainer>
+    <div>
+      <StyledContainer maxWidth="md">
+        <StyledTitle variant="h4" gutterBottom>
+          Frequently Asked Questions
+        </StyledTitle>
+        {loading ? (
+          <StyledBox>
+            <CircularProgress />
+          </StyledBox>
+        ) : faq.length > 0 ? (
+          faq.map((q) => (
+            <AccordionStyled key={q.id}>
+              <StyledSummary expandIcon={<ExpandMoreIconStyled />}>
+                <Typography variant="h6">{q.question}</Typography>
+              </StyledSummary>
+              <StyledDetails>
+                <Typography>{q.answer}</Typography>
+              </StyledDetails>
+            </AccordionStyled>
+          ))
+        ) : (
+          <Typography>No FAQ found.</Typography>
+        )}
+      </StyledContainer>
+      <StyledSuggestionBox>
+        <StyledSuggestionTitle>
+          Have a suggestion for a new FAQ question?
+        </StyledSuggestionTitle>
+        <StyledDescription>
+          Fill out the form below and we'll review your suggestion.
+        </StyledDescription>
+        <StyledForm>
+          <StyledTextField
+            label="Enter your question here"
+            multiline
+            rows={4}
+            variant="outlined"
+            value={suggestion}
+            onChange={(e) => {
+              setSuggestion(e.target.value);
+            }}
+            required
+          />
+          <StyledButton
+            variant="contained"
+            type="submit"
+            onClick={handleSubmit}
+          >
+            Submit
+          </StyledButton>
+        </StyledForm>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={5000}
+          onClose={handleCloseSnackbar}
+          message={snackbarMessage}
+        />
+      </StyledSuggestionBox>
+    </div>
   );
 }
