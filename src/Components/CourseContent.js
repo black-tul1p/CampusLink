@@ -2,6 +2,8 @@ import CourseContentCSS from "./CourseContent.css"
 import NavBar from './NavBar';
 import Banner from "../Assets/banner_logo.jpg";
 import React, { useState } from "react";
+import { useEffect } from "react";
+import ReactDom from "react";
 import {
   Box,
   Button,
@@ -9,31 +11,60 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
+import CS307Syllabus from "../Assets/CS307-Syllabus.pdf";
+import { Document,Page } from 'react-pdf';
 
 
-const CCNavButtonS = (props) => {
-    return(
-        <div className='CCNavButton'>
-            <Button varaint="contained" color="inherit" >
-                <h3>{props.title}</h3>
-            </Button>
-        </div>
-    
 
-    )
-}
+
 
 
 export default function CourseContent() {
 
+    const CCNavButtonS = (props) => {
+        return(
+            <div className='CCNavButton'>
+                <Button varaint="contained" color="inherit" 
+                    onClick={() => alert(props.title)}>
+                  <h3>{props.title}</h3>
+                    
+                </Button>
+            </div>
+        
+    
+        )
+    }
+
+    const CCTest = (props) => {
+
+        return(
+            <div>
+               <h1>Super test</h1>
+            </div>
+            
+        )
+    }
+    
+    const CCAssignmentS = (props) => {
+        return(
+                <h4>
+                    {props.title}
+                    {props.duedate}
+                </h4>
+        )
+    }
+    
+    const [content_page, setCounter] = useState("Syllabus");
+
+
 
     return ( <div>
             <div className='CCBannerContainer'>
-                <img className="CCBanner" src={Banner} alt="CampusLink Logo" />
+                <img className="CCBanner" src={Banner} alt="CampusLink Logo"/>
             </div>
 
             <div className='CCNavBar'>
-                <CCNavButtonS title="Syllabus"/>
+                <CCNavButtonS title="Syllabus" />
                 <CCNavButtonS title="Assignments"/>
                 <CCNavButtonS title="Quizzes"/>
                 <CCNavButtonS title="Grades"/>
@@ -41,11 +72,21 @@ export default function CourseContent() {
                 <CCNavButtonS title="Classlist"/>
                 <CCNavButtonS title="Bookmarks"/>
             </div>
-            
+        
+            <div className="CCSyllabusContainer">
+                <div className="CCAssignmentS">
+                    <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
+                    <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
+                    <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
+                    <CCAssignmentS title="Test Name" duedate=" 2/22/2"/>
+                </div>
+               
+            </div>
+
 
             
 
-            <h1 className="CCHeader">Course Test</h1>
+            
     </div>
     )
 }

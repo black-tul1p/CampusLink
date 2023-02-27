@@ -38,6 +38,28 @@
     ;
 }
 
+.CCSyllabusContainer {
+    color: white;
+    background-color: white;
+    display: contents;
+}
+
+.CCAssignment {
+    background-color: white;
+    color: black; 
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: grid;
+    display: flex;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 0px;
+    padding: 10px 0px;
+    width: 200px;
+    height: 100px;
+    cursor: pointer;
+}
+
 
 
 

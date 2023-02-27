@@ -5,6 +5,7 @@ import { useRef } from "react";
 import CourseContent from "./Components/CourseContent"
 import NavBar from "./Components/NavBar"
 import Login from "./Components/Login";
+import ClassListCC from "./Components/ClasslistCC";
 
 function App() {
   /* Backend testing code
@@ -22,12 +23,12 @@ function App() {
     <div className="App">
       <form onSubmit={submithandler}>
         <input type="text" ref={dataRef} />
-        <button type="submit">Save</button>
+        <button type="submit">Save</button>s
       </form>
     </div>
   ); */
 
-  return <CourseContent />;
+  return <ClassListCC />;
 
 }
 
