@@ -8,6 +8,7 @@ import {
     where,
   } from "@firebase/firestore";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { firestore } from "./firebase";
 
 
@@ -34,6 +35,38 @@ import { firestore } from "./firebase";
       throw new Error("Error fetching courses:", error);
     }
   };
+=======
+import { useEffect } from "react";
+  import { firestore } from "./firebase";
+
+
+
+  export async function getAllCourses() {
+    const [loading, setLoading] = userState(true);
+    const[courses, setCourses] = userState([]);
+
+    useEffect(() => {
+      const getCoursesFromFirebase = [];
+      const getData = db
+      .collection("courses")
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          getCoursesFromFirebase.push({
+            ...doc.data(),
+            key: doc.id,
+          });
+        });
+        setCourses(getCoursesFromFirebase);
+        setLoading(false);
+      });
+
+      return () => getData();
+    }, []);
+
+    return courses;
+
+  }
+>>>>>>> 1151790 (wrote function to get all courses from database)
   
   export async function createCourse(title, id, credit, department, capacity, registeredStudents, description) {
 =======
@@ -80,10 +113,14 @@ import { firestore } from "./firebase";
   }
   
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1151790 (wrote function to get all courses from database)
   // export async function getCourseIdByDetails(courseTitle, courseId) {
   //   const coursesRef = collection(firestore, "courses");
   //   const q = query(coursesRef, where("courseTitle", "==", courseTitle), where("courseId", "==", courseId));
   //   const querySnapshot = await getDocs(q);
+<<<<<<< HEAD
   
   //   if (querySnapshot.docs.length === 0) {
   //     console.log("No course found with course details: ", courseId);
@@ -99,14 +136,23 @@ import { firestore } from "./firebase";
     const coursesRef = collection(firestore, "courses");
     const q = query(coursesRef, where("courseTitle", "==", courseTitle), where("courseId", "==", courseId));
     const querySnapshot = await getDocs(q);
+=======
+>>>>>>> 1151790 (wrote function to get all courses from database)
   
-    if (querySnapshot.docs.length === 0) {
-      console.log("No course found with course details: ", courseId);
-      return null;
-    }
+  //   if (querySnapshot.docs.length === 0) {
+  //     console.log("No course found with course details: ", courseId);
+  //     return null;
+  //   }
   
+<<<<<<< HEAD
     const courseId = querySnapshot.docs[0].id;
     console.log("Found a course with ID: ", courseId);
     return courseId;
   }
 >>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
+=======
+  //   const courseId = querySnapshot.docs[0].id;
+  //   console.log("Found a course with ID: ", courseId);
+  //   return courseId;
+  // }
+>>>>>>> 1151790 (wrote function to get all courses from database)

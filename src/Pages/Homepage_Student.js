@@ -1,9 +1,11 @@
 import React from 'react'
 import './Homepage_Student.css'
+import {getAllCourses} from '../Backend/course';
 
 function Homepage_Student() {
   return (
     <div className='Homepage_Student'>
+      
       <div className='Homepage-student-container'>
         <div className='course-container'>
           <div className='course-container-top'>
