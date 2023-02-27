@@ -1,5 +1,6 @@
 import { firestore } from "./firebase";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {
   collection,
   doc,
@@ -16,6 +17,9 @@ import {
  * @param {string} question - The question to be added or updated in the FAQ.
 =======
 import { collection, addDoc } from "@firebase/firestore";
+=======
+import { collection, addDoc, getDocs } from "@firebase/firestore";
+>>>>>>> 0705bc4 (Fixed wrong imports)
 
 /**
  * Updates the FAQ collection in Firestore with a new question-answer pair.
@@ -111,8 +115,12 @@ export const fetchFAQ = async () => {
     const snapshot = await getDocs(faqRef);
 =======
     const faqRef = collection(firestore, "FAQ");
+<<<<<<< HEAD
     const snapshot = await faqRef.get();
 >>>>>>> b08fc33 (Implemented basic backend for FAQ)
+=======
+    const snapshot = await getDocs(faqRef);
+>>>>>>> 0705bc4 (Fixed wrong imports)
     const faq = [];
     snapshot.forEach((doc) => {
       faq.push({
@@ -125,11 +133,15 @@ export const fetchFAQ = async () => {
     return faq;
   } catch (error) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     throw new Error("Error fetching FAQ:", error);
   }
 };
 =======
     console.error("Error fetching FAQ:", error);
+=======
+    throw new Error("Error fetching FAQ:", error);
+>>>>>>> 0705bc4 (Fixed wrong imports)
   }
 };
 >>>>>>> b08fc33 (Implemented basic backend for FAQ)
