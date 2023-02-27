@@ -12,7 +12,6 @@ export default function ClasslistCC() {
     return (
         <div>
             <CourseContent/>
-            <h1>Classlist test</h1>
         </div>
 
     ) 

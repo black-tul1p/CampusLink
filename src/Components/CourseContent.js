@@ -73,18 +73,17 @@ export default function CourseContent() {
                 <CCNavButtonS title="Bookmarks"/>
             </div>
         
-            <div className="CCSyllabusContainer">
+           {/* <div className="CCSyllabusContainer">
                 <div className="CCAssignmentS">
                     <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
                     <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
                     <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
                     <CCAssignmentS title="Test Name" duedate=" 2/22/2"/>
                 </div>
-               
-            </div>
+              </div> */}
 
 
-            
+
 
             
     </div>
