@@ -86,6 +86,7 @@
   margin: 0.75em;
   height: 1em;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 .MuiInputLabel-input{
@@ -93,4 +94,14 @@
 >>>>>>> 270941a (Added Basic Login Page)
 =======
 >>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
+=======
+}
+
+.toggleButton {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  background-color: whitesmoke;
+>>>>>>> 7eb55e5 (Implemented account type option, createInstructor)
 }
