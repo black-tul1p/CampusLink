@@ -23,9 +23,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "react-pdf": "^6.2.2",
 =======
 >>>>>>> e74232a (created non-functionality navigation bar - 3 hours)
+=======
+    "react-pdf": "^6.2.2",
+>>>>>>> d7f8e40 (fixed and finalized navbar of course content overall page, created outline for backend to be added, started classlist portion)
     "react-router-dom": "^6.8.1",
 =======
 >>>>>>> bf73a88 (Attempted to redirect using react router)

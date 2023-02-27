@@ -12,6 +12,10 @@ export default function ClasslistCC() {
     return (
         <div>
             <CourseContent/>
+<<<<<<< HEAD
+=======
+            <h1>Classlist test</h1>
+>>>>>>> d7f8e40 (fixed and finalized navbar of course content overall page, created outline for backend to be added, started classlist portion)
         </div>
 
     ) 

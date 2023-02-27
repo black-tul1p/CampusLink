@@ -314,8 +314,10 @@ function App() {
 import logo from "./logo.svg";
 import "./App.css";
 import Login from "./Components/Login";
+import ClassListCC from "./Components/ClasslistCC";
 
 function App() {
+<<<<<<< HEAD
   // return (
   //   <div className="App">
   //     <header className="App-header">
@@ -334,6 +336,29 @@ function App() {
   //     </header>
   //   </div>
   // );
+=======
+  /* Backend testing code
+  const testBackend = false;
+  const dataRef = useRef();
+  const submithandler = (e) => {
+    e.preventDefault();
+    handleSubmitTest(dataRef.current.value);
+    dataRef.current.value = "";
+  }; */
+
+  // For Backend testing only, will remove later
+  /* if (!testBackend) return <Login />;
+  return (
+    <div className="App">
+      <form onSubmit={submithandler}>
+        <input type="text" ref={dataRef} />
+        <button type="submit">Save</button>s
+      </form>
+    </div>
+  ); */
+
+  return <ClassListCC />;
+>>>>>>> ba1a3f8 (fixed and finalized navbar of course content overall page, created outline for backend to be added, started classlist portion)
 
   return <Login />;
 >>>>>>> 270941a (Added Basic Login Page)
