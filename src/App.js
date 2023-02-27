@@ -43,6 +43,7 @@ import logo from "./logo.svg";
 >>>>>>> 0c9d360 (Add backend testing code)
 import "./App.css";
 import Login from "./Components/Login";
+<<<<<<< HEAD
 import {
   createStudent,
   removeStudent,
@@ -163,6 +164,19 @@ function App() {
       <RegistrationPage></RegistrationPage>
 >>>>>>> 816cbd1 (Added banner to registration page)
     </div>
+=======
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Register from "./Components/Register";
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Register />} />
+      </Routes>
+    </Router>
+>>>>>>> 4575726 (Update login page, added register page for testing)
   );
 <<<<<<< HEAD
 >>>>>>> 0c9d360 (Add backend testing code)
