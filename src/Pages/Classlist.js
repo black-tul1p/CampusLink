@@ -5,6 +5,7 @@ import {
   doc,
   addDoc,
   deleteDoc,
+  getDoc,
   getDocs,
   query,
   data,
@@ -14,19 +15,29 @@ import { firestore } from "../Backend/firebase";
 import logo from '../images/campuslink_banner.png'
 import ProfilePic from '../images/default_profile_picture.png'
 import LogoBanner from '../Components/LogoBanner.js'
-import { useState } from "react";
-import { useEffect } from "react";
-
-async function getStudents() {
-  const students = await getDocs(collection(firestore, 'students'))
-  return students
-}
+import { useState, useEffect } from "react";
+import { useSearchParams } from 'react-router-dom'
 
 function Classlist() {
   const [students, setStudents] = useState([]);
+  const [courseData, setCourseData] = useState([]);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    getStudents() 
+    // Get course description
+    const courseID = searchParams.get('course_id')
+    const course = doc(firestore, 'courses', courseID)
+    getDoc(course).then((courseDoc) => {
+      if (courseDoc.exists()) {
+        setCourseData(courseDoc.data());
+      } else {
+        console.log("Course not found!");
+      }
+    });
+
+    //Get students and add to list
+    getDocs(collection(firestore, 'students')) 
     .then((studentSet) => {
       let studentList = []
       studentSet.forEach((doc) => {
@@ -41,7 +52,8 @@ function Classlist() {
   return (
     <div className="Registration-page">
       <LogoBanner></LogoBanner>
-      <h1 className="course-name" >[Course Name Here]</h1>
+      <h1 className="course-name" >{courseData.courseTitle}</h1>
+      <h2 className="course-name" >{courseData.description}</h2>
       <div className="classlist-wrapper">
         <h1 className="title" >Course Classlist</h1>
 
