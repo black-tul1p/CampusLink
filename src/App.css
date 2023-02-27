@@ -9,7 +9,9 @@
   background-color: var(--dark-blue);
   font-family: 'Times New Roman', Times, serif;
 }
-
+::-webkit-scrollbar {
+  width: 0; /* Hide scrollbars */
+}
 
 /********************************** App.js **********************************/
 
