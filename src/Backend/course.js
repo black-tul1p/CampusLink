@@ -9,6 +9,7 @@ import {
   } from "@firebase/firestore";
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { firestore } from "./firebase";
 
 
@@ -38,27 +39,29 @@ import { firestore } from "./firebase";
 =======
 import { useEffect } from "react";
   import { firestore } from "./firebase";
+=======
+import { firestore } from "./firebase";
+>>>>>>> b7ae110 (minor changes to courses page and course.js)
 
 
 
-  export async function getAllCourses() {
-    const [loading, setLoading] = userState(true);
-    const[courses, setCourses] = userState([]);
-
-    useEffect(() => {
-      const getCoursesFromFirebase = [];
-      const getData = db
-      .collection("courses")
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          getCoursesFromFirebase.push({
-            ...doc.data(),
-            key: doc.id,
-          });
+  export const getAllCourses = async() => {
+    try {
+      const getData = collection(firestore, "courses");
+      const snapshot = await getDocs(getData);
+      const course = [];
+      snapshot.forEach((doc) => {
+        course.push({
+          courseTitle: doc.data().courseTitle,
+          courseId: doc.data().courseId,
+          credit: doc.data().credit,
+          department: doc.data().department,
+          capacity: doc.data().capacity,
+          registeredStudents: doc.data().registeredStudents,
+          description: doc.data().description,
         });
-        setCourses(getCoursesFromFirebase);
-        setLoading(false);
       });
+<<<<<<< HEAD
 
       return () => getData();
     }, []);
@@ -67,6 +70,14 @@ import { useEffect } from "react";
 
   }
 >>>>>>> 1151790 (wrote function to get all courses from database)
+=======
+      console.log("All courses fetched:", course);
+      return course;
+    } catch (error) {
+      throw new Error("Error fetching courses:", error);
+    }
+  };
+>>>>>>> b7ae110 (minor changes to courses page and course.js)
   
   export async function createCourse(title, id, credit, department, capacity, registeredStudents, description) {
 =======

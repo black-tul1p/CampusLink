@@ -1,6 +1,6 @@
 .navbar-container {
     display: grid;
-    background-color: #102e44;
+    background-color: #0a2232;
     grid-template-columns: 23fr 2fr 2fr 2fr 2fr;
     grid-gap: 10px;
 }
@@ -13,28 +13,28 @@
 .menu-logo-container {
     justify-content: center;
     align-items: center;
-    border: 1px solid #102e44;
+    border: 1px solid #0a2232;
     cursor: pointer;
 }
 
 .notification-logo-container {
     justify-content: center;
     align-items: center;
-    border: 1px solid #102e44;
+    border: 1px solid #0a2232;
     cursor: pointer;
 }
 
 .settings-logo-container {
     justify-content: center;
     align-items: center;
-    border: 1px solid #102e44;
+    border: 1px solid #0a2232;
     cursor: pointer;
 }
 
 .user-logo-container {
     justify-content: center;
     align-items: center;
-    border: 1px solid #102e44;
+    border: 1px solid #0a2232;
     cursor: pointer;
 }
 .log-out-container {
