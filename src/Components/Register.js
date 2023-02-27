@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createUser } from "../Backend/student";
+import { createUser } from "../Backend/user";
 import { TextField, Button, Box, Typography } from "@mui/material";
 
 export default function Register() {
