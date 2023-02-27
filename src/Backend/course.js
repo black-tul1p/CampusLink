@@ -7,36 +7,32 @@ import {
     query,
     where,
   } from "@firebase/firestore";
-import { useEffect } from "react";
-  import { firestore } from "./firebase";
+import { firestore } from "./firebase";
 
 
 
-  export async function getAllCourses() {
-    const [loading, setLoading] = userState(true);
-    const[courses, setCourses] = userState([]);
-
-    useEffect(() => {
-      const getCoursesFromFirebase = [];
-      const getData = db
-      .collection("courses")
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          getCoursesFromFirebase.push({
-            ...doc.data(),
-            key: doc.id,
-          });
+  export const getAllCourses = async() => {
+    try {
+      const getData = collection(firestore, "courses");
+      const snapshot = await getDocs(getData);
+      const course = [];
+      snapshot.forEach((doc) => {
+        course.push({
+          courseTitle: doc.data().courseTitle,
+          courseId: doc.data().courseId,
+          credit: doc.data().credit,
+          department: doc.data().department,
+          capacity: doc.data().capacity,
+          registeredStudents: doc.data().registeredStudents,
+          description: doc.data().description,
         });
-        setCourses(getCoursesFromFirebase);
-        setLoading(false);
       });
-
-      return () => getData();
-    }, []);
-
-    return courses;
-
-  }
+      console.log("All courses fetched:", course);
+      return course;
+    } catch (error) {
+      throw new Error("Error fetching courses:", error);
+    }
+  };
   
   export async function createCourse(title, id, credit, department, capacity, registeredStudents, description) {
     let data = {
