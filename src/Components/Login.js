@@ -34,12 +34,7 @@ export default function Login() {
     <div>
       <Box className="Default-card">
         <img className="Banner-logo" src={Banner} alt="CampusLink Logo" />
-        <FormControl
-          className="Login-form"
-          onSubmit={() => {
-            alert("BRUH");
-          }}
-        >
+        <FormControl className="Login-form">
           {error && (
             <Typography
               variant="body1"
@@ -69,7 +64,7 @@ export default function Login() {
                 setEmail(e.target.value);
               }}
             />
-            <div className="password-section">
+            <div className="Password-section">
               <TextField
                 required
                 id="pass-input"
@@ -98,7 +93,14 @@ export default function Login() {
           </Button>
           <div style={{ color: "white", alignSelf: "center" }}>
             Don't have an account?
-            <Button className="Mini-button">Sign up</Button>
+            <Button
+              className="Mini-button"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              Sign up
+            </Button>
           </div>
         </FormControl>
       </Box>

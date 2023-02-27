@@ -50,7 +50,7 @@
   border-radius: 1em;
 }
 
-.password-section {
+.Password-section {
   display: flex;
   flex-direction: column;
   color: var(--white);
@@ -83,4 +83,32 @@
   border: 1px solid white;
   margin: 0.75em;
   height: 1em;
+}
+
+
+/********************************** Registration Page **********************************/
+
+
+.Default-card .Registration-form {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  gap: 1em;
+}
+
+.Registration-form > Button {
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.Toggle-button {
+  color:  white;
+  display: grid;
+  gap: 1em;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
 }
