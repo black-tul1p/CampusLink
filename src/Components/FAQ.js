@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Container,
   Typography,
@@ -86,16 +86,18 @@ export default function FAQ() {
   `;
 
   const StyledForm = styled.div`
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 7fr 1fr;
+    gap: 0.5em;
+    align-items: center;
   `;
 
-  const StyledTextField = styled(TextField)`
-    margin-bottom: 1em;
-  `;
+  const StyledTextField = styled(TextField)``;
 
   const StyledButton = styled(Button)`
-    align-self: flex-end;
+    height: 100%;
+    margin: 0.5em;
+    border-radius: 1em;
   `;
 
   const defFAQ = [
@@ -129,7 +131,7 @@ export default function FAQ() {
   const [loading, setLoading] = useState(true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [suggestion, setSuggestion] = useState("");
+  const suggestionRef = useRef("");
 
   useEffect(() => {
     fetchFAQ()
@@ -144,11 +146,11 @@ export default function FAQ() {
   }, []);
 
   const handleSubmit = () => {
-    if (!suggestion) {
+    if (!suggestionRef) {
       console.log("Invalid form data");
       return;
     }
-    sendSuggestion(suggestion)
+    sendSuggestion(suggestionRef.current.value)
       .then(() => {
         setSnackbarMessage("Thank you for your suggestion!");
       })
@@ -159,7 +161,7 @@ export default function FAQ() {
       .finally(() => {
         setOpenSnackbar(true);
       });
-    setSuggestion("");
+    suggestionRef.current.value = "";
   };
 
   const handleCloseSnackbar = () => {
@@ -204,10 +206,7 @@ export default function FAQ() {
             multiline
             rows={4}
             variant="outlined"
-            value={suggestion}
-            onChange={(e) => {
-              setSuggestion(e.target.value);
-            }}
+            inputRef={suggestionRef}
             required
           />
           <StyledButton
