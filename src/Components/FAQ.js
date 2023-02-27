@@ -12,7 +12,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { fetchFAQ, sendSuggestion } from "../Backend/faq";
+import { fetchFAQ, sendSuggestion, updateFAQ } from "../Backend/faq";
 import styled from "@emotion/styled";
 
 export default function FAQ() {
@@ -73,6 +73,7 @@ export default function FAQ() {
 
   const StyledSuggestionBox = styled(Box)`
     padding: 2em;
+    margin-bottom: 2em;
     background-color: #132b3d;
     color: #fff;
     border-radius: 1em;
@@ -93,49 +94,33 @@ export default function FAQ() {
     max-width: 800px;
   `;
 
+  const StyledFormTwo = styled(Box)`
+    display: grid;
+    grid-template-columns: 3.5fr 3.5fr 1fr;
+    gap: 0.5em;
+    align-items: center;
+    max-width: 800px;
+  `;
+
   const StyledButton = styled(Button)`
     height: 100%;
     margin: 0.5em;
     border-radius: 1em;
   `;
 
-  const defFAQ = [
-    {
-      id: 1,
-      question: "How do I sign up for CampusLink?",
-      answer:
-        "To sign up for CampusLink, simply visit our website and click on the 'Sign Up' button. You will be asked to provide some basic information such as your name, email address, and a password. Once you have filled out the form, click 'Submit' and you will be redirected to your CampusLink dashboard.",
-    },
-    {
-      id: 2,
-      question: "How do I add a course to my CampusLink dashboard?",
-      answer:
-        "To add a course to your CampusLink dashboard, first make sure you are logged in to your account. Then, click on the 'Courses' tab in the top navigation menu. From there, you can search for a course by name or course code, and click the 'Add Course' button to add it to your dashboard.",
-    },
-    {
-      id: 3,
-      question: "How do I upload an assignment on CampusLink?",
-      answer:
-        "To upload an assignment on CampusLink, navigate to the 'Assignments' tab in your dashboard and select the appropriate assignment. Then, click the 'Upload' button and follow the instructions to upload your file. You can also add any additional comments or notes for your instructor if needed.",
-    },
-    {
-      id: 4,
-      question: "How do I contact my instructor on CampusLink?",
-      answer:
-        "To contact your instructor on CampusLink, navigate to the 'Inbox' tab in your dashboard and select the appropriate conversation. You can send a new message or reply to an existing message in the conversation. You can also see your conversation history and any attachments or files that have been shared.",
-    },
-  ];
-
-  const [faq, setFAQ] = useState(defFAQ);
+  const [faq, setFAQ] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const suggestionRef = useRef("");
+  const qRef = useRef("");
+  const aRef = useRef("");
+  const isTesting = false;
 
   useEffect(() => {
     fetchFAQ()
       .then((res) => {
-        setFAQ([...faq, ...res]);
+        setFAQ(res);
         setLoading(false);
       })
       .catch((error) => {
@@ -157,13 +142,36 @@ export default function FAQ() {
       })
       .catch((error) => {
         console.log(error.message);
-        setSnackbarMessage("Error sending suggestion. Please try again.");
+        setSnackbarMessage(error.message);
       })
       .finally(() => {
         setOpenSnackbar(true);
       });
     // Reset suggestionRef value
-    suggestionRef.current.value = "";
+    suggestionRef.current = "";
+  };
+
+  const handleQnASubmit = () => {
+    // Verify that the refs contain defined data
+    if (!qRef || !aRef) {
+      console.log("Invalid form data");
+      return;
+    }
+    // Send submission to the database
+    updateFAQ(qRef.current.value, aRef.current.value)
+      .then(() => {
+        setSnackbarMessage("Thank you for your submission!");
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setSnackbarMessage(error.message);
+      })
+      .finally(() => {
+        setOpenSnackbar(true);
+      });
+    // Reset ref values
+    qRef.current = "";
+    aRef.current = "";
   };
 
   const handleCloseSnackbar = () => {
@@ -188,16 +196,18 @@ export default function FAQ() {
             <CircularProgress />
           </StyledBox>
         ) : faq.length > 0 ? (
-          faq.map((q) => (
-            <AccordionStyled key={q.id}>
-              <StyledSummary expandIcon={<ExpandMoreIconStyled />}>
-                <Typography variant="h6">{q.question}</Typography>
-              </StyledSummary>
-              <StyledDetails>
-                <Typography>{q.answer}</Typography>
-              </StyledDetails>
-            </AccordionStyled>
-          ))
+          faq
+            .filter((q) => q.question && q.answer)
+            .map((q) => (
+              <AccordionStyled key={q.id}>
+                <StyledSummary expandIcon={<ExpandMoreIconStyled />}>
+                  <Typography variant="h6">{q.question}</Typography>
+                </StyledSummary>
+                <StyledDetails>
+                  <Typography>{q.answer}</Typography>
+                </StyledDetails>
+              </AccordionStyled>
+            ))
         ) : (
           <Typography>No FAQ found.</Typography>
         )}
@@ -233,6 +243,44 @@ export default function FAQ() {
           message={snackbarMessage}
         />
       </StyledSuggestionBox>
+      {isTesting && (
+        <StyledSuggestionBox>
+          <StyledSuggestionTitle>
+            Enter a new FAQ question + answer
+          </StyledSuggestionTitle>
+          <StyledFormTwo>
+            <TextField
+              label="Enter your question here"
+              multiline
+              rows={4}
+              variant="outlined"
+              inputRef={qRef}
+              required
+            />
+            <TextField
+              label="Enter your answer here"
+              multiline
+              rows={4}
+              variant="outlined"
+              inputRef={aRef}
+              required
+            />
+            <StyledButton
+              variant="contained"
+              type="submit"
+              onClick={handleQnASubmit}
+            >
+              Submit
+            </StyledButton>
+          </StyledFormTwo>
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={5000}
+            onClose={handleCloseSnackbar}
+            message={snackbarMessage}
+          />
+        </StyledSuggestionBox>
+      )}
     </div>
   );
 }
