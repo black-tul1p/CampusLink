@@ -9,6 +9,7 @@ import { collection, addDoc, getDocs } from "@firebase/firestore";
  */
 export const updateFAQ = async (question, answer) => {
   let qna = {
+    id: Date.now(),
     question: question,
     answer: answer,
   };
