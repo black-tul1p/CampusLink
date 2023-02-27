@@ -1,4 +1,5 @@
 import { firestore } from "./firebase";
+<<<<<<< HEAD
 import {
   collection,
   doc,
@@ -13,10 +14,18 @@ import {
  * Updates the FAQ collection in Firestore with a new question-answer pair.
  * If the question already exists, the answer is updated with the new answer.
  * @param {string} question - The question to be added or updated in the FAQ.
+=======
+import { collection, addDoc } from "@firebase/firestore";
+
+/**
+ * Updates the FAQ collection in Firestore with a new question-answer pair.
+ * @param {string} question - The question to be added to the FAQ.
+>>>>>>> b08fc33 (Implemented basic backend for FAQ)
  * @param {string} answer - The answer to the corresponding question.
  * @throws Will throw an error if there is an issue updating the FAQ.
  */
 export const updateFAQ = async (question, answer) => {
+<<<<<<< HEAD
   if (!question || !answer) {
     console.error("Error updating FAQ: missing data");
   }
@@ -69,13 +78,24 @@ export const sendSuggestion = async (question) => {
     id: Date.now(),
     question: question,
     answer: "",
+=======
+  let qna = {
+    question: question,
+    answer: answer,
+>>>>>>> b08fc33 (Implemented basic backend for FAQ)
   };
 
   try {
     await addDoc(collection(firestore, "faq"), qna);
+<<<<<<< HEAD
     console.log("Question added to FAQ successfully.");
   } catch (error) {
     console.error("Error adding question to FAQ:", error);
+=======
+    console.log("FAQ updated successfully.");
+  } catch (error) {
+    console.error("Error updating FAQ:", error);
+>>>>>>> b08fc33 (Implemented basic backend for FAQ)
   }
 };
 
@@ -86,8 +106,13 @@ export const sendSuggestion = async (question) => {
  */
 export const fetchFAQ = async () => {
   try {
+<<<<<<< HEAD
     const faqRef = collection(firestore, "faq");
     const snapshot = await getDocs(faqRef);
+=======
+    const faqRef = collection(firestore, "FAQ");
+    const snapshot = await faqRef.get();
+>>>>>>> b08fc33 (Implemented basic backend for FAQ)
     const faq = [];
     snapshot.forEach((doc) => {
       faq.push({
@@ -99,6 +124,12 @@ export const fetchFAQ = async () => {
     console.log("FAQ fetched successfully:", faq);
     return faq;
   } catch (error) {
+<<<<<<< HEAD
     throw new Error("Error fetching FAQ:", error);
   }
 };
+=======
+    console.error("Error fetching FAQ:", error);
+  }
+};
+>>>>>>> b08fc33 (Implemented basic backend for FAQ)
