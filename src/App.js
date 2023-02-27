@@ -179,11 +179,13 @@ function App() {
 =======
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Register from "./Components/Register";
+import FAQ from "./Components/FAQ";
 
 function App() {
   return (
     <Router>
       <Routes>
+<<<<<<< HEAD
         <Route path="/" element={<Login />} />
         <Route path="/join" element={<Register />} />
         <Route path="/nav" element={<NavBar />} />
@@ -206,6 +208,11 @@ function App() {
           }
         />
         <Route path="/admin" element={<Admin />} />
+=======
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Register />} />
+        <Route path="/faq" element={<FAQ />} />
+>>>>>>> 40128b2 (Added skeletal FAQ page)
       </Routes>
     </Router>
 >>>>>>> 4575726 (Update login page, added register page for testing)
