@@ -85,14 +85,13 @@ export default function FAQ() {
     margin-bottom: 1.5em;
   `;
 
-  const StyledForm = styled.div`
+  const StyledForm = styled(Box)`
     display: grid;
     grid-template-columns: 7fr 1fr;
     gap: 0.5em;
     align-items: center;
+    max-width: 800px;
   `;
-
-  const StyledTextField = styled(TextField)``;
 
   const StyledButton = styled(Button)`
     height: 100%;
@@ -146,10 +145,12 @@ export default function FAQ() {
   }, []);
 
   const handleSubmit = () => {
+    // Verify that suggestionRef contains defined data
     if (!suggestionRef) {
       console.log("Invalid form data");
       return;
     }
+    // Send suggestion to the database
     sendSuggestion(suggestionRef.current.value)
       .then(() => {
         setSnackbarMessage("Thank you for your suggestion!");
@@ -161,6 +162,7 @@ export default function FAQ() {
       .finally(() => {
         setOpenSnackbar(true);
       });
+    // Reset suggestionRef value
     suggestionRef.current.value = "";
   };
 
@@ -169,7 +171,14 @@ export default function FAQ() {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <StyledContainer maxWidth="md">
         <StyledTitle variant="h4" gutterBottom>
           Frequently Asked Questions
@@ -201,7 +210,7 @@ export default function FAQ() {
           Fill out the form below and we'll review your suggestion.
         </StyledDescription>
         <StyledForm>
-          <StyledTextField
+          <TextField
             label="Enter your question here"
             multiline
             rows={4}
