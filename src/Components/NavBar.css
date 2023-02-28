@@ -51,14 +51,14 @@
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-bottom: 5px solid lightgrey;
+    border-bottom: 5px solid rgb(239, 231, 231);
     margin-left: 110px;
     
 
 }
 .log-out-bubble {
     /* position: absolute; */
-    background-color: lightgrey;
+    background-color: rgb(239, 231, 231);
     border-radius: 10px;
     margin-top: 0px;
     width: 80%;

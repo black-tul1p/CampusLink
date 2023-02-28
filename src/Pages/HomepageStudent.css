@@ -1,8 +1,10 @@
 html, body {
-    background-color: #102e44;;
+    background-color: #102e44;
+    scroll-behavior: smooth;
     height: 100%;
+    margin-bottom: 50px;
   }
-.Homepage-student-container {
+.homepage-student-container {
     display: grid;
     grid-template-columns: auto auto auto;
     column-gap: 50px;
@@ -10,23 +12,32 @@ html, body {
     margin-top : 100px;
     margin-left: 50px;
     margin-right: 50px;
+    margin-bottom: 10px;
 }
 .course-container {
     display: flex;
     flex-direction: column;
-    height: 150px;
+    flex-wrap: wrap;
+    width: 350px;
+    
 }
 .course-container-top {
     background-color: #0a2232;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
-    height: 70%;
+    min-height: 150px;
+    max-height: fit-content;
 }
 .course-container-bottom {
-    background-color: rgb(237, 235, 235);
+    background-color: rgb(239, 231, 231);
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-    height: 30%;
-    text-align: center;
-    justify-content: center;
+    min-height: 50px;
+    max-height: fit-content;
+}
+
+p {
+    left: 20px;
+    font-size: x-large;
+    position: relative;
 }
