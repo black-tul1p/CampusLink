@@ -51,9 +51,10 @@ import {
 import { useRef, useState } from "react";
 import RegistrationForm from "./Components/RegistrationForm";
 import RegistrationPage from "./Components/RegistrationPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
+<<<<<<< HEAD
   // Backend testing code
   const testBackend = false;
 
@@ -91,14 +92,15 @@ function App() {
 =======
   // For Backend testing only, will remove later
   if (!testBackend) {
+=======
+>>>>>>> 04f071b (Research React Router, fixed redirection)
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route path="/" element={<Login/>}>
-          <Route index element={<Login/>}/>
-          <Route path="registration" element={<RegistrationPage/>}/>
-        </Route>
+        <Route path="/" element={<RegistrationPage/>}/>
+        <Route path="/login" element={<Login/>}/>
       </Routes>
+<<<<<<< HEAD
     </BrowserRouter>
     );
   } else {
@@ -166,6 +168,10 @@ function App() {
 =======
         }
 >>>>>>> bf73a88 (Attempted to redirect using react router)
+=======
+    </Router>
+  );
+>>>>>>> 04f071b (Research React Router, fixed redirection)
 }
 
 export default App;
