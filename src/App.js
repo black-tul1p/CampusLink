@@ -6,7 +6,7 @@ import {
   getStudentIdByEmail,
 } from "./Backend/student";
 import { useRef, useState } from "react";
-import RegistrationForm from "./Components/RegistrationForm";
+import Admin from "./Components/Admin";
 import RegistrationPage from "./Components/RegistrationPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -16,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<RegistrationPage/>}/>
         <Route path="/login" element={<Login/>}/>
+        <Route path="/admin" element={<Admin/>}/>
       </Routes>
     </Router>
   );
