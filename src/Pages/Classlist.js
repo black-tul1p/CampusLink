@@ -24,8 +24,9 @@ function Classlist() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
+  //Initialize data which comes from the database
   useEffect(() => {
-    // Get course description
+    // Get course title and description
     const courseID = searchParams.get('course_id')
     if (courseID === null) {
       console.log("Course not specified!");
@@ -41,6 +42,8 @@ function Classlist() {
     }
 
     //Get students and add to list
+    /*Which student is in which course isn't kept track of yet
+      so for now we just add every student in the database*/
     getDocs(collection(firestore, 'students')) 
     .then((studentSet) => {
       let studentList = []
@@ -62,6 +65,7 @@ function Classlist() {
         <h1 className="title" >Course Classlist</h1>
 
         <button className="add-button" onClick={() => {
+          //Append placeholder student
           setStudents([
             ...students, {
              firstName: "Firstname",
