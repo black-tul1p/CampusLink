@@ -65,7 +65,7 @@ function NavBar() {
                     <img src={logo} className = "logo" alt="logo"/>
                 </div>
                 <div className = "menu-logo-container">
-                    <Link to="/Homepage_Student">
+                    <Link to="/">
                         <img src={menu_logo} className = "menu_logo" alt="menu"/>
                     </Link>
                 </div>

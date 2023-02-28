@@ -186,8 +186,7 @@ function App() {
 >>>>>>> 4575726 (Update login page, added register page for testing)
 =======
 import NavBar from './Components/NavBar';
-import LogoutContainer from './Components/LogoutContainer';
-import Homepage_Student from './Pages/Homepage_Student';
+import HomepageStudent from './Pages/HomepageStudent';
 import Settings from './Pages/Settings';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -196,10 +195,9 @@ function App() {
     <div ClassName='App'>
       <Router>
       <NavBar />
-      {/* <LogoutContainer />    */}
       <Routes>
-        <Route exact path="/Homepage_Student" element={<Homepage_Student/>}/>
-        <Route exact path="/Settings" element={<Settings/>}/>
+      <Route exact path="/" element={<HomepageStudent/>}/>
+      <Route exact path="/Settings" element={<Settings/>}/>
       </Routes>
       </Router> 
        
