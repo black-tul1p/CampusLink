@@ -73,11 +73,13 @@ export default function Login() {
           </Button>
           <div style={{ color: "white", alignSelf: "center" }}>
             Don't have an account?
+            <Link to="/">
             <Button className="Mini-button"
-            containerElement={<Link to="/registration"/>}
+            containerElement={<Link to="/"/>}
             >
               Sign up
-              </Button>
+            </Button>
+            </Link>
           </div>
         </FormControl>
       </Box>

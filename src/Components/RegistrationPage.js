@@ -13,12 +13,14 @@ function RegistrationPage() {
                 <RegistrationForm></RegistrationForm>
                 <div style={{color: "white", alignSelf: "center"}}>
                             Already have an account?
+                            <Link to="login">
                             <Button 
                             className="Mini-button"
-                            containerElement={<Link to="/"/>}
+                            containerElement={<Link to="/login"/>}
                             >
                                 Log in
                             </Button>
+                            </Link>
                         </div>
             </header>
         </div>
