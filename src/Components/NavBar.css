@@ -1,7 +1,7 @@
 .navbar-container {
     display: grid;
     background-color: #0a2232;
-    grid-template-columns: 23fr 2fr 2fr 2fr 2fr;
+    grid-template-columns: 22fr 2fr 2fr 2fr 2fr;
     grid-gap: 10px;
 }
 

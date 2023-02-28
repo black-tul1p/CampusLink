@@ -21,19 +21,23 @@ function HomepageStudent() {
 
   return (
     <div className='homepage-student'>
+      <div className='header-container'>
+        <p>My Courses</p>
+        <div className='divider'></div>
+      </div>
       <div className='homepage-student-container'>
-        {loading ? null : courses.length > 0 ? (
-          courses.filter((course) => course.description && course.courseId && course.courseTitle)
-          .map((course) => (
-            <div className='course-container'>
-              <div className='course-container-top'>
-                <p style={{ color: "rgb(239, 231, 231)" }}>{course.courseTitle} {course.courseId} :</p>
-                <p style={{ color: "rgb(239, 231, 231)" }}>{course.description}</p>
+          {loading ? null : courses.length > 0 ? (
+            courses.filter((course) => course.description && course.courseId && course.courseTitle)
+            .map((course) => (
+              <div className='course-container'>
+                <div className='course-container-top'>
+                  <h3>{course.courseTitle} {course.courseId} :</h3>
+                  <h3>{course.description}</h3>
+                </div>
+                <div className='course-container-bottom'></div>
               </div>
-              <div className='course-container-bottom'></div>
-            </div>
-          ))
-        ) : (<h1>Username is not registered for any courses!</h1>
+            ))
+          ) : (<h1>Username is not registered for any courses!</h1>
         )}
       </div>
     </div>

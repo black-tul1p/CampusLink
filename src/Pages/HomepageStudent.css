@@ -2,17 +2,19 @@ html, body {
     background-color: #102e44;
     scroll-behavior: smooth;
     height: 100%;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
   }
+
 .homepage-student-container {
     display: grid;
     grid-template-columns: auto auto auto;
     column-gap: 50px;
     row-gap: 50px;
-    margin-top : 100px;
     margin-left: 50px;
     margin-right: 50px;
     margin-bottom: 10px;
+    padding-top: 40px;
+    
 }
 .course-container {
     display: flex;
@@ -25,19 +27,35 @@ html, body {
     background-color: #0a2232;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
-    min-height: 150px;
-    max-height: fit-content;
+    min-height: 100px;
+    max-height: 100px;
+    border: 20px solid #0a2232;
 }
 .course-container-bottom {
-    background-color: rgb(239, 231, 231);
+    background-color: aliceblue;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-    min-height: 50px;
+    min-height: 40px;
     max-height: fit-content;
 }
 
+.header-container {
+    padding-left: 50px;
+
+}
+.divider {
+    width: 1155px;
+    height:5px;
+    background-color: aliceblue;
+    position: absolute;
+}
 p {
-    left: 20px;
-    font-size: x-large;
-    position: relative;
+    font-family: 'Times New Roman', Times, serif;
+    color: aliceblue;
+    font-size: 40px;
+    line-height: 0px;
+}
+h3 {
+    font-family: 'Times New Roman', Times, serif;
+    color: aliceblue;
 }
