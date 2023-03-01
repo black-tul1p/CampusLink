@@ -134,7 +134,7 @@ export default function NavBar() {
             navigate("/home");
           }}
         >
-          <img src={logo_mini} style={{ width: "2.5em" }} />
+          <img src={logo_mini} style={{ width: "2.5em" }} alt="" />
         </SidebarItem>
       </Tooltip>
       <SidebarDivider />
