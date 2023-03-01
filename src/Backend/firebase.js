@@ -25,7 +25,11 @@ export const firestore = getFirestore(app);
 export const auth = getAuth(app);
 =======
 export const auth = getAuth(app);
+<<<<<<< HEAD
 >>>>>>> b737697 (Implement backend for handling users)
 =======
 export const firestore = getFirestore(app);
 >>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
+=======
+>>>>>>> 9af0ff6 (added some files from main)
+>>>>>>> 698a5b3 (added some files from main)

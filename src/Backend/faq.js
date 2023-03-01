@@ -205,8 +205,10 @@ export const fetchFAQ = async () => {
 <<<<<<< HEAD
     throw new Error("Error fetching FAQ:", error);
   }
+<<<<<<< HEAD
 };
 =======
+<<<<<<< HEAD
     console.error("Error fetching FAQ:", error);
 =======
     throw new Error("Error fetching FAQ:", error);
@@ -214,3 +216,7 @@ export const fetchFAQ = async () => {
   }
 };
 >>>>>>> b08fc33 (Implemented basic backend for FAQ)
+=======
+};
+>>>>>>> 9af0ff6 (added some files from main)
+>>>>>>> 698a5b3 (added some files from main)

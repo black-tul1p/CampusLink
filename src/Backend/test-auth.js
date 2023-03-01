@@ -18,4 +18,8 @@ function SignInScreen() {
 }
 =======
 }
+<<<<<<< HEAD
 >>>>>>> 3eb1c0f (Consolidate assets)
+=======
+>>>>>>> 9af0ff6 (added some files from main)
+>>>>>>> 698a5b3 (added some files from main)
