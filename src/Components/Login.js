@@ -87,7 +87,7 @@ export default function Login() {
             <Button
               className="Mini-button"
               onClick={() => {
-                navigate("/register");
+                navigate("/join");
               }}
             >
               Sign up
