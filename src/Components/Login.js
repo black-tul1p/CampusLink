@@ -6,22 +6,39 @@ import {
   FormControl,
   InputAdornment,
   TextField,
+  Typography,
 } from "@mui/material";
 import { Email, VpnKey } from "@mui/icons-material";
-import { Link } from 'react-router-dom';
-import RegistrationPage from "./RegistrationPage";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../Backend/user";
+import ErrorBox from "./Error";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    // Returns true if signed in
+    const signedIn = await loginUser(email.trim(), pass).catch((error) => {
+      setError(error.message);
+    });
+
+    if (signedIn) navigate("/");
+  };
 
   return (
     <div>
       <Box className="Default-card">
         <img className="Banner-logo" src={Banner} alt="CampusLink Logo" />
         <FormControl className="Login-form">
+          {error && <ErrorBox text={error} />}
           <div className="Input-fields">
             <TextField
+              required
               id="email-input"
               label="Email Address"
               variant="outlined"
@@ -39,8 +56,9 @@ export default function Login() {
                 setEmail(e.target.value);
               }}
             />
-            <div className="password-section">
+            <div className="Password-section">
               <TextField
+                required
                 id="pass-input"
                 label="Password"
                 type="password"
@@ -62,24 +80,19 @@ export default function Login() {
               <Button className="Mini-button">Forgot Password?</Button>
             </div>
           </div>
-          <Button
-            disableElevation
-            variant="contained"
-            onClick={() => {
-              alert(email + ": " + pass);
-            }}
-          >
+          <Button disableElevation variant="contained" onClick={handleLogin}>
             Submit
           </Button>
           <div style={{ color: "white", alignSelf: "center" }}>
             Don't have an account?
-            <Link to="/">
-            <Button className="Mini-button"
-            containerElement={<Link to="/"/>}
+            <Button
+              className="Mini-button"
+              onClick={() => {
+                navigate("/register");
+              }}
             >
               Sign up
             </Button>
-            </Link>
           </div>
         </FormControl>
       </Box>
