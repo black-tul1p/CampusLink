@@ -36,8 +36,16 @@ export async function createUser(email, password, firstName, lastName, role) {
     email,
     password
   ).catch((error) => {
-    console.error(error);
-    throw new Error("Error creating user");
+    switch (error.code) {
+      case "auth/email-already-in-use":
+        throw new Error("Email already in use");
+      case "auth/invalid-email":
+        throw new Error("Invalid email format");
+      case "auth/weak-password":
+        throw new Error("Password too weak");
+    }
+
+    throw new Error("Error creating user: ", error.code);
   });
   const user = userCredential.user;
 
@@ -69,7 +77,19 @@ export async function loginUser(email, password) {
       auth,
       email,
       password
-    );
+    ).catch((error) => {
+      switch (error.code) {
+        case "auth/user-not-found": // Handle both together for security
+        case "auth/wrong-password":
+          throw new Error("Incorrect email or password");
+        case "auth/too-many-requests":
+          throw new Error(
+            "Too many attempts. Please reset password or try again later."
+          );
+      }
+
+      throw new Error("Error logging in: ", error.code);
+    });
     const user = userCredential.user;
     // JWT
     const token = await user.getIdToken();
@@ -172,4 +192,26 @@ export async function delCurrentUser() {
     console.log("Error deleting user:", error);
     throw error;
   }
+}
+
+/**
+ * Verifies if an email is of the format [username]@[university].edu
+ *
+ * @param {string} email - The email to verify
+ * @returns {boolean} - Returns true if the email is of the correct format, false otherwise.
+ */
+
+export function verifyEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const universityRegex = /@[a-zA-Z0-9.-]+\.(edu)$/;
+
+  if (!emailRegex.test(email)) {
+    return false; // Email does not match standard email format
+  }
+
+  if (!universityRegex.test(email)) {
+    return false; // Email domain is not a valid university domain
+  }
+
+  return true;
 }
