@@ -43,9 +43,9 @@ export async function createUser(email, password, firstName, lastName, role) {
         throw new Error("Invalid email format");
       case "auth/weak-password":
         throw new Error("Password too weak");
+      default:
+        throw new Error("Error creating user: ", error.code);
     }
-
-    throw new Error("Error creating user: ", error.code);
   });
   const user = userCredential.user;
 
@@ -86,9 +86,9 @@ export async function loginUser(email, password) {
           throw new Error(
             "Too many attempts. Please reset password or try again later."
           );
+        default:
+          throw new Error("Error logging in: ", error.code);
       }
-
-      throw new Error("Error logging in: ", error.code);
     });
     const user = userCredential.user;
     // JWT
