@@ -197,8 +197,8 @@ function App() {
       <Routes>
 <<<<<<< HEAD
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Register />} />
-        <Route path="/nav" element={<NavBar />} />
         <Route
           path="/home"
           element={
@@ -216,7 +216,7 @@ function App() {
               <SettingsPage />
             </Container>
           }
-        />{" "}
+        />
         <Route
           path="/faq"
           element={
