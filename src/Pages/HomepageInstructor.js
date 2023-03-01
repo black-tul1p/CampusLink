@@ -1,11 +1,16 @@
 import React from 'react'
-import './HomepageStudent.css'
+import './HomepageStudent'
 import { getAllCourses } from '../Backend/course'
 import { useState, useEffect } from 'react'
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function HomepageInstructor() {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const showAlert = () => {
+        alert("Add new Course!");
+      }
   
     useEffect (() => {
       getAllCourses()
@@ -37,8 +42,11 @@ function HomepageInstructor() {
                   <div className='course-container-bottom'></div>
                 </div>
               ))
-            ) : (<h1>Username is not registered for any courses!</h1>
+            ) : (<h1>Username is not teaching any courses!</h1>
           )}
+          <div onClick={showAlert} className='add-course-container'>
+            <AddCircleIcon fontSize="large"/>
+          </div>
         </div>
       </div>
     )
