@@ -14,12 +14,4 @@ function SignInScreen() {
       <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
-<<<<<<< HEAD
->>>>>>> 3eb1c0f (Consolidate assets)
-=======
->>>>>>> 9af0ff6 (added some files from main)
->>>>>>> 698a5b3 (added some files from main)

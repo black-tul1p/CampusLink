@@ -3,39 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.9",
     "@mui/material": "^5.11.9",
-=======
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.11.11",
-    "@mui/material": "^5.11.7",
->>>>>>> 7c34313 (minor changes to instructor view)
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "firebase": "^9.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "react-pdf": "^6.2.2",
-=======
->>>>>>> e74232a (created non-functionality navigation bar - 3 hours)
-=======
-    "react-pdf": "^6.2.2",
->>>>>>> d7f8e40 (fixed and finalized navbar of course content overall page, created outline for backend to be added, started classlist portion)
     "react-router-dom": "^6.8.1",
-=======
->>>>>>> bf73a88 (Attempted to redirect using react router)
-=======
-    "react-router-dom": "^6.8.1",
->>>>>>> 43a6187 (Fix CSS and update Libraries)
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },

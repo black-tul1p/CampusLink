@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> daab152 (Finally moved logo to be stuck in the center)
 .CCHeader {
     text-align: center;
     color: white;
@@ -18,12 +14,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-<<<<<<< HEAD
 
 }
 
 .CCNavBar {
-<<<<<<< HEAD
 
     background-color: rgba(13, 37, 54, 1);
     text-align: center;
@@ -33,32 +27,17 @@
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-gap: 0px;
     padding: 0px 0px;
-=======
-    display: flex;
-    background-color: rgba(13, 37, 54, 1);
-    display: grid;
-    grid-template-columns: 7fr 7fr 7fr 7fr 7fr 7fr 7fr;
-    grid-gap: 0px;
->>>>>>> 45ea6e6 (needs some fixes but added bar for course content pages (quizzes, grades, etc))
 }
 
 .CCNavButton {
     color: white;
-<<<<<<< HEAD
     pad: 0px 0px;
-=======
-    pad: 10px 10px;
->>>>>>> 45ea6e6 (needs some fixes but added bar for course content pages (quizzes, grades, etc))
     justify-content: center;
     align-items: center;
     cursor: pointer;
     ;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d7f8e40 (fixed and finalized navbar of course content overall page, created outline for backend to be added, started classlist portion)
 .CCSyllabusContainer {
     color: white;
     background-color: white;
@@ -80,26 +59,6 @@
     height: 100px;
     cursor: pointer;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> d7f8e40 (fixed and finalized navbar of course content overall page, created outline for backend to be added, started classlist portion)
 
 
 
-
-=======
-.CCtest {
-    border: black;
-    padding: 10px 10px;
-    cursor: pointer;
-=======
->>>>>>> daab152 (Finally moved logo to be stuck in the center)
-
-}
->>>>>>> 8100a24 (created css file, added test button, committing to save before more changes)
-=======
-
-
-
->>>>>>> 45ea6e6 (needs some fixes but added bar for course content pages (quizzes, grades, etc))

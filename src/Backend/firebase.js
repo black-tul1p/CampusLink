@@ -1,15 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "@firebase/firestore";
-<<<<<<< HEAD
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_Firebase_apiKey,
-=======
-
-const firebaseConfig = {
-  apiKey: process.env.REACT_APP_apiKey,
->>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
   authDomain: process.env.REACT_APP_authDomain,
   projectId: process.env.REACT_APP_projectId,
   storageBucket: process.env.REACT_APP_storageBucket,
@@ -19,17 +13,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-<<<<<<< HEAD
 export const firestore = getFirestore(app);
-<<<<<<< HEAD
 export const auth = getAuth(app);
-=======
-export const auth = getAuth(app);
-<<<<<<< HEAD
->>>>>>> b737697 (Implement backend for handling users)
-=======
-export const firestore = getFirestore(app);
->>>>>>> b78e432 (implemented 'courses' backend - add, remove and get 'course' from firesbase db)
-=======
->>>>>>> 9af0ff6 (added some files from main)
->>>>>>> 698a5b3 (added some files from main)

@@ -9,18 +9,10 @@
   background-color: var(--dark-blue);
   font-family: 'Times New Roman', Times, serif;
 }
-<<<<<<< HEAD
 
-<<<<<<< HEAD
 html, body {
   scroll-behavior: smooth;
-=======
-::-webkit-scrollbar {
-  width: 0; /* Hide scrollbars */
->>>>>>> 25f945c (Hide all scrollbars)
 }
-=======
->>>>>>> aedb680 (Added Basic Login Page)
 
 /********************************** App.js **********************************/
 
@@ -31,11 +23,7 @@ html, body {
 /********************************** Login Page **********************************/
 
 .Banner-logo {
-<<<<<<< HEAD
   max-width: 50vw;
-=======
-  width: 50vw;
->>>>>>> aedb680 (Added Basic Login Page)
 }
 
 .Default-card {
@@ -45,10 +33,7 @@ html, body {
   align-items: center;
   height: 80vh;
   gap: 3em;
-<<<<<<< HEAD
   color: white;
-=======
->>>>>>> aedb680 (Added Basic Login Page)
 }
 
 .Default-card .Login-form {
@@ -69,11 +54,7 @@ html, body {
   border-radius: 1em;
 }
 
-<<<<<<< HEAD
 .Password-section {
-=======
-.password-section {
->>>>>>> aedb680 (Added Basic Login Page)
   display: flex;
   flex-direction: column;
   color: var(--white);
@@ -94,7 +75,6 @@ html, body {
   color: rgba(255,255,255, 0.5) !important;
 }
 
-<<<<<<< HEAD
 .MuiInputBase-input{
   color: var(--white) !important;
 }
@@ -107,17 +87,6 @@ html, body {
   border: 1px solid white;
   margin: 0.75em;
   height: 1em;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-.MuiInputLabel-input{
-  color: var(--white) !important;
->>>>>>> 270941a (Added Basic Login Page)
-=======
->>>>>>> 0720e1e (Added MUI Icon library, missing icons to form)
-=======
 }
 
 .toggleButton {
@@ -126,8 +95,6 @@ html, body {
   text-align: center;
   color: white;
   background-color: whitesmoke;
->>>>>>> 7eb55e5 (Implemented account type option, createInstructor)
-=======
 }
 
 
@@ -156,9 +123,6 @@ html, body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1em;
-<<<<<<< HEAD
->>>>>>> 1f262be (Improved UI, fixed bugs)
-=======
 }
 
 
@@ -278,13 +242,4 @@ p {
 h3 {
   font-family: 'Times New Roman', Times, serif;
   color: aliceblue;
-<<<<<<< HEAD
->>>>>>> 8bb6cac (Improved Navbar and Homepage functionality)
-=======
-=======
-
-.MuiInputLabel-input{
-  color: var(--white) !important;
->>>>>>> aedb680 (Added Basic Login Page)
->>>>>>> 169361c (Added Basic Login Page)
 }
