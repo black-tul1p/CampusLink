@@ -1,12 +1,25 @@
 import React, { useState } from "react";
-import logo from "../Assets/campuslink_logo.jpg";
-import menu_logo from "../Assets/menu_logo.jpg";
-import settings_logo from "../Assets/settings_logo.jpg";
-import notification_logo from "../Assets/notification_logo.jpg";
-import user_logo from "../Assets/user_logo.jpg";
+import { useNavigate } from "react-router-dom";
+import logo from "../Images/logo.jpg";
+import MenuIcon from "@mui/icons-material/Menu";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import SettingsIcon from "@mui/icons-material/Settings";
+import Person2Icon from "@mui/icons-material/Person2";
+import LogoutContainer from "./LogoutContainer";
 import "./NavBar.css";
 
 function NavBar() {
+  const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+  const [click, setClick] = useState(false);
+  const handleClick = () => {
+    setClick(!click);
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -14,23 +27,50 @@ function NavBar() {
           <div className="logo-container">
             <img src={logo} className="logo" alt="logo" />
           </div>
-          <div className="menu-logo-container">
-            <img src={menu_logo} className="menu_logo" alt="menu" />
+          <div
+            className="menu-logo-container"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            <MenuIcon fontSize="large" sx={{ color: "#F0F8FF" }} />
           </div>
-          <div className="notification-logo-container">
-            <img
-              src={notification_logo}
-              className="notification_logo"
-              alt="notifications"
-            />
+          <div onClick={handleOpen} className="notification-logo-container">
+            <NotificationsIcon fontSize="large" sx={{ color: "#F0F8FF" }} />
+            {/* <div className = "notification-dropdown">
+                        {open ? (
+                            <ul className = "notifications-list">
+                                <li className="notification">
+                                    <button>Notification 1</button>
+                                </li>
+                                <li>
+                                    <button>Notification 2</button>
+                                </li>
+                            </ul>
+                        ): null}
+                    </div> */}
           </div>
-          <div className="settings-logo-container">
-            <img src={settings_logo} className="settings_logo" alt="settings" />
+          <div
+            className="settings-logo-container"
+            onClick={() => {
+              navigate("/settings");
+            }}
+          >
+            <SettingsIcon fontSize="large" sx={{ color: "#F0F8FF" }} />
           </div>
-          <div className="user-logo-container">
-            <img src={user_logo} className="user_logo" alt="user profile" />
+          <div
+            id="user-icon"
+            onClick={handleClick}
+            className="user-logo-container"
+          >
+            {click ? (
+              <Person2Icon fontSize="large" sx={{ color: "#F0F8FF" }} />
+            ) : (
+              <Person2Icon fontSize="large" sx={{ color: "#F0F8FF" }} />
+            )}
           </div>
         </div>
+        {click && <LogoutContainer />}
       </nav>
     </>
   );

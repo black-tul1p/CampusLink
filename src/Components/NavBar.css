@@ -1,87 +1,111 @@
 .navbar-container {
     display: grid;
-    grid-template-columns: 12fr 1fr 1fr 1fr 1fr;
+    background-color: #0a2232;
+    grid-template-columns: 25fr 2fr 2fr 2fr 2fr;
     grid-gap: 10px;
 }
+
 .logo-container {
     justify-content: center;
     align-items: center;
     cursor: pointer;
 }
 .menu-logo-container {
+    display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
 }
 
 .notification-logo-container {
+    display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
 }
 
 .settings-logo-container {
+    display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid #0a2232;
     cursor: pointer;
 }
 
 .user-logo-container {
+    display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid #0a2232;
     cursor: pointer;
 }
+.log-out-container {
+    position: absolute;
+    float: left;
+    margin-left: 1088px;
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.log-out-triangle {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid aliceblue;
+    margin-left: 110px;
+    
 
+}
+.log-out-bubble {
+    /* position: absolute; */
+    background-color: aliceblue;
+    border-radius: 10px;
+    margin-top: 0px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.log-out-button {
+    margin-bottom: 10px;
+}
 .menu-logo-container:hover {
-    background-color: lightblue;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
 }
 
 .notification-logo-container:hover {
-    background-color: lightblue;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
 }
 
 .settings-logo-container:hover {
-    background-color: lightblue;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
 }
 
 .user-logo-container:hover {
-    background-color: lightblue;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
 }
 
 .logo {
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
     padding-top: 5px;
     padding-left: 5px;
     padding-bottom: 5px;
 }
-
-.menu_logo {
-    height: 40px;
-    width: 40px;
-    padding-top: 10px;
-    padding-left: 20px
+button {
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-size: 15px;
+    padding: 5px 5px;
+    border-radius: 5px;
+    margin: 10px 0px;
+    cursor: pointer;
 }
 
-.settings_logo {
-    height: 40px;
-    width: 40px;
-    padding-top: 10px;
-    padding-left: 20px;
-}
-
-
-.notification_logo {
-    height: 40px;
-    width: 40px;
-    padding-top: 10px;
-    padding-left: 20px;
-}
-
-.user_logo {
-    height: 40px;
-    width: 40px;
-    padding-top: 10px;
-    padding-left: 20px;
-}
 
