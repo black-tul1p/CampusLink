@@ -223,17 +223,16 @@ import {
   getDocs,
   query,
   where,
+  getDoc,
 } from "@firebase/firestore";
 import {
+  getAuth,
   createUserWithEmailAndPassword,
   deleteUser,
-  getAuth,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import { auth, firestore } from "./firebase";
-
-// const admin = require("firebase-admin");
 
 /**
  * Creates a new user with an email address and password, adds a custom claim to indicate their role,
@@ -247,6 +246,8 @@ import { auth, firestore } from "./firebase";
  * @throws {Error} - If there was an error creating the user or creating the appropriate document.
  */
 export async function createUser(email, password, firstName, lastName, role) {
+  const auth = getAuth();
+
   // create user with email and password
   const userCredential = await createUserWithEmailAndPassword(
     auth,
@@ -259,14 +260,10 @@ export async function createUser(email, password, firstName, lastName, role) {
   const user = userCredential.user;
 
   // // set custom claim to indicate role as student
-  // await getAuth()
-  //   .setCustomUserClaims(user.uid, { role: role })
-  //   .catch((error) => {
-  //     throw new Error(error);
-  //   });
+  // await auth.setCustomUserClaims(user.uid, { role: role });
 
   // create document for student in the appropriate collection
-  const userRef = doc(firestore, role.toLowerCase() + "s", user.uid);
+  const userRef = doc(firestore, role + "s", user.uid);
   await setDoc(userRef, {
     firstName: firstName,
     lastName: lastName,
@@ -302,18 +299,31 @@ export async function loginUser(email, password) {
 }
 
 /**
- * Retrieves the role of the current authenticated user from Firebase Authentication.
+ * Checks if the current logged in user has a document in the students or instructors collection.
+ * Returns the role accordingly.
  *
- * @returns {Promise<string>} The role of the user.
- * @throws {Error} If there is an error retrieving the role.
+ * @returns {Promise<string|boolean>} - A Promise that resolves to a string ("student" or "instructor") if the user is found, or false if not found.
+ * @throws {Error} - If there was an error retrieving data from Firestore.
  */
 export async function getUserRole() {
+  const user = auth.currentUser;
+  const studentRef = collection(firestore, "students");
+  const instructorRef = collection(firestore, "instructors");
+
   try {
-    // retrieve and return role
-    const userClaims = await auth.currentUser.getIdTokenResult();
-    return userClaims.claims.role;
+    const studentDoc = await getDoc(doc(studentRef, user.uid));
+    if (studentDoc.exists()) {
+      return "student";
+    }
+
+    const instructorDoc = await getDoc(doc(instructorRef, user.uid));
+    if (instructorDoc.exists()) {
+      return "instructor";
+    }
+
+    return false;
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(`Error checking user role: ${error.message}`);
   }
 }
 
