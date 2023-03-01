@@ -11,6 +11,7 @@ import SettingsPage from "./Components/Settings";
 const Container = styled.div`
   display: flex;
 `;
+import FAQ from "./Components/FAQ";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           }
         />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/faq" element={<FAQ />} />
       </Routes>
     </Router>
   );
