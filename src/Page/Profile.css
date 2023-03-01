@@ -26,6 +26,18 @@ body {
     height: auto;
   }
   
+  .name-inputs .preferred-name {
+    margin-left: -80px;
+  }
+  
+
+  .name-input {
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+    background-color: white;
+  }
+
   .profile p {
     font-size: 18px;
     margin-bottom: 10px;

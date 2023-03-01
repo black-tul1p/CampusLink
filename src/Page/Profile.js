@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { updateUserProfile } from "../Backend/user"
 import './Profile.css';
 import { FiEdit2 } from 'react-icons/fi';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-
+import { auth } from '../Backend/firebase';
 
 function Profile(props) {
   const [photoUrl, setPhotoUrl] = useState(props.photo);
@@ -11,6 +12,7 @@ function Profile(props) {
   const [lastName, setLastName] = useState(props.lastName);
   const [preferredName, setPreferredName] = useState(props.preferredName);
   const [usePreferredName, setUsePreferredName] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
@@ -23,27 +25,32 @@ function Profile(props) {
   };
 
   const handleSaveClick = () => {
-    //updateFirstNameAndLastName(firstName, lastName)
+    const updatedFirstName = usePreferredName ? preferredName : firstName;
+    updateUserProfile(auth.currentUser.uid, {
+      firstName: updatedFirstName,
+      lastName: lastName,
+    })
+      .then(() => {
+        alert('Profile updated successfully!');
+        setEditMode(false);
+      })
+      .catch((error) => {
+        alert(`Error updating profile: ${error.message}`);
+      });
   };
-/*
-  const updateFirstNameAndLastName = (newFirstName, newLastName) => {
-    const db = firebase.firestore();
-    const userRef = db.collection("user").doc(props.userId);
-    userRef.update({
-      firstName: newFirstName,
-      lastName: newLastName
-    }).then(() => {
-      console.log("Document successfully updated!");
-      setFirstName(newFirstName);
-      setLastName(newLastName);
-    }).catch((error) => {
-      console.error("Error updating document: ", error);
-    });
-  }
-*/
+
+  const handleCancelClick = () => {
+    setEditMode(false);
+    setPhotoUrl(props.photo);
+    setFirstName(props.firstName);
+    setLastName(props.lastName);
+    setPreferredName(props.preferredName);
+    setUsePreferredName(false);
+  };
+
   return (
     <div className="profile">
-      <h1>Profile Page</h1>
+      <h1>Account Setting</h1>
       <div className="profile-photo">
         <img src={photoUrl} alt="Profile" />
         <label className="edit-icon" htmlFor="photo-upload">
@@ -53,7 +60,7 @@ function Profile(props) {
             type="file"
             accept=".jpg,.jpeg,.png"
             onChange={handlePhotoChange}
-            style={{ display: 'none' }}
+            style={{ display: editMode ? 'block' : 'none' }}
           />
         </label>
       </div>
@@ -65,6 +72,7 @@ function Profile(props) {
             type="text"
             value={firstName}
             onChange={(event) => setFirstName(event.target.value)}
+            disabled={!editMode}
           />
         </div>
         <div className="name-input">
@@ -74,6 +82,7 @@ function Profile(props) {
             type="text"
             value={lastName}
             onChange={(event) => setLastName(event.target.value)}
+            disabled={!editMode}
           />
         </div>
         <div className="name-input">
@@ -84,6 +93,7 @@ function Profile(props) {
               type="checkbox"
               checked={usePreferredName}
               onChange={handleUsePreferredNameChange}
+              disabled={!editMode}
             />
           </label>
           <input
@@ -91,15 +101,20 @@ function Profile(props) {
             type="text"
             value={preferredName}
             onChange={(event) => setPreferredName(event.target.value)}
-            disabled={!usePreferredName}
+            disabled={!usePreferredName || !editMode}
           />
         </div>
       </div>
       <p>Email: {props.email}</p>
-      <button onClick={handleSaveClick}>Save</button>
+      {editMode ? (
+        <div>
+          <button onClick={handleSaveClick}>Save</button>
+          <button onClick={handleCancelClick}>Cancel</button>
+        </div>
+      ) : 
+      (<button onClick={() => setEditMode(true)}>Edit Profile</button>)}
     </div>
   );
 }
 
 export default Profile;
-
