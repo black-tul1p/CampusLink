@@ -7,13 +7,15 @@ import {
   where,
 } from "@firebase/firestore";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   deleteUser,
+  getAuth,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import { auth, firestore } from "./firebase";
+
+// const admin = require("firebase-admin");
 
 /**
  * Creates a new user with an email address and password, adds a custom claim to indicate their role,
@@ -27,8 +29,6 @@ import { auth, firestore } from "./firebase";
  * @throws {Error} - If there was an error creating the user or creating the appropriate document.
  */
 export async function createUser(email, password, firstName, lastName, role) {
-  const auth = getAuth();
-
   // create user with email and password
   const userCredential = await createUserWithEmailAndPassword(
     auth,
@@ -40,11 +40,15 @@ export async function createUser(email, password, firstName, lastName, role) {
   });
   const user = userCredential.user;
 
-  // set custom claim to indicate role as student
-  await auth.setCustomUserClaims(user.uid, { role: role });
+  // // set custom claim to indicate role as student
+  // await getAuth()
+  //   .setCustomUserClaims(user.uid, { role: role })
+  //   .catch((error) => {
+  //     throw new Error(error);
+  //   });
 
   // create document for student in the appropriate collection
-  const userRef = doc(firestore, role + "s", user.uid);
+  const userRef = doc(firestore, role.toLowerCase() + "s", user.uid);
   await setDoc(userRef, {
     firstName: firstName,
     lastName: lastName,

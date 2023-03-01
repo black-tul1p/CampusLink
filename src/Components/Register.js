@@ -1,5 +1,5 @@
 import Banner from "../Assets/banner_logo.jpg";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -61,10 +61,6 @@ export default function Registration() {
     });
 
     if (registered) navigate("/");
-  };
-
-  const handleRoleChange = (event) => {
-    setRole(event.target.checked ? "instructor" : "student");
   };
 
   return (
@@ -165,7 +161,7 @@ export default function Registration() {
               <TextField
                 required
                 id="conf-pass-input"
-                label="Password"
+                label="Confirm"
                 type="password"
                 variant="outlined"
                 placeholder="***********"
