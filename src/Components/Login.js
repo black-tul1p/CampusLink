@@ -51,7 +51,11 @@ import { loginUser } from "../Backend/student";
 import { Email, VpnKey } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../Backend/user";
+<<<<<<< HEAD
 >>>>>>> f4f9525 (Added backend  functionality to get user role)
+=======
+import ErrorBox from "./Error";
+>>>>>>> 85cb705 (Added an Error functional component)
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -63,8 +67,7 @@ export default function Login() {
     e.preventDefault();
 
     // Returns true if signed in
-    const signedIn = await loginUser(email, pass).catch((error) => {
-      console.log(error.message);
+    const signedIn = await loginUser(email.trim(), pass).catch((error) => {
       setError(error.message);
     });
 
@@ -101,15 +104,7 @@ export default function Login() {
       <Box className="Default-card">
         <img className="Banner-logo" src={Banner} alt="CampusLink Logo" />
         <FormControl className="Login-form">
-          {error && (
-            <Typography
-              variant="body1"
-              color="error"
-              sx={{ alignSelf: "center" }}
-            >
-              {error}
-            </Typography>
-          )}
+          {error && <ErrorBox text={error} />}
           <div className="Input-fields">
             <TextField
               required
