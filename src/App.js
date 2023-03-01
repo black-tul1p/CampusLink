@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./Components/NavBar";
 import HomepageInstructor from "./Components/HomepageInstructor";
 import styled from "@emotion/styled";
+import SettingsPage from "./Components/Settings";
 
 const Container = styled.div`
   display: flex;
@@ -24,6 +25,15 @@ function App() {
             <Container>
               <NavBar />
               <HomepageInstructor />
+            </Container>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <Container>
+              <NavBar />
+              <SettingsPage />
             </Container>
           }
         />

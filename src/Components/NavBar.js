@@ -6,7 +6,6 @@ import {
   Settings,
   AccountCircle,
   ExitToApp,
-  ArrowLeft,
 } from "@mui/icons-material";
 import {
   ClickAwayListener,
@@ -17,6 +16,7 @@ import {
   Popper,
 } from "@mui/material";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 // CSS Styles
 const Sidebar = styled.div`
@@ -95,6 +95,7 @@ const SidebarIcon = styled.div`
 export default function NavBar() {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -121,7 +122,11 @@ export default function NavBar() {
 
   return (
     <Sidebar>
-      <SidebarItem>
+      <SidebarItem
+        onClick={() => {
+          navigate("/home");
+        }}
+      >
         <img src={logo_mini} style={{ width: "2.5em" }} />
       </SidebarItem>
       <SidebarDivider />
@@ -131,7 +136,11 @@ export default function NavBar() {
             <Notifications style={{ color: "#fff" }} />
           </SidebarIcon>
         </SidebarButton>
-        <SidebarButton>
+        <SidebarButton
+          onClick={() => {
+            navigate("/settings");
+          }}
+        >
           <SidebarIcon>
             <Settings style={{ color: "#fff" }} />
           </SidebarIcon>
