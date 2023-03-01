@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 import { firestore } from "../Backend/firebase";
 import { useSearchParams } from "react-router-dom";
 import "./Classlist.css";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 
 export default function Admin() {
@@ -28,32 +28,24 @@ export default function Admin() {
   }, []);
 
   return (
-    <div className="adminPage">
-      <div className="classlist-wrapper">
-        <h1 className="title" >Instructor List</h1>
-
-        <table className="classlist">
-          <tbody>
-            <tr>
-              <th className="accountTypeColumn">Status</th>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-
-            {instructors.map(instructor => (
-              <tr>
-                <td className="userTypeColumn">
-                  Approved
-                </td>
-                <td>{instructor.lastName}, {instructor.firstName}</td>
-                <td>{instructor.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p id="student-count-label">Total Instructors: {instructors.length}</p>
-      </div>
-    </div>
+    <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange} >
+                <Tab label="Students" />
+                <Tab label="Instructors" />
+                <Tab label="Pending Requests" />
+            </Tabs>
+        </Box>
+        <TabPanel value={value} index={0}>
+            Student
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+            Instructor 
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+            Pending Requests
+        </TabPanel>
+    </Box>
   );
 }
 
@@ -71,4 +63,25 @@ InstructorInfoRow.defaultProps = {
   firstName: "Firstname",
   lastName: "Lastname",
   email: "example@gmail.com",
+}
+
+//From Material UI website example
+
+function TabPanel(props) {
+    const {children, value, index, ...other } = props;
+
+    return (
+        <div
+        role="tabpanel"
+        hidden={vaule !== index}
+        id={`simple-tabpanel-${index}`}
+        {...other}
+        >
+            {value === index && (
+                <Box sx={{ p:3 }}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
 }
