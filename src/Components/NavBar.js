@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import logo_mini from "../Assets/campuslink_logo.jpg";
-import { Notifications, Settings, AccountCircle } from "@mui/icons-material";
+import {
+  Notifications,
+  Settings,
+  AccountCircle,
+  ExitToApp,
+  ArrowLeft,
+} from "@mui/icons-material";
+import {
+  ClickAwayListener,
+  Grow,
+  MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+} from "@mui/material";
+import { useRef } from "react";
 
 // CSS Styles
 const Sidebar = styled.div`
@@ -77,12 +92,37 @@ const SidebarIcon = styled.div`
   }
 `;
 
-const NavBar = () => {
+export default function NavBar() {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleLogout = (event) => {
+    handleClose(event);
+    // Add logout function call here
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    }
+  }
+
   return (
     <Sidebar>
       <SidebarItem>
         <img src={logo_mini} style={{ width: "2.5em" }} />
-        {/* <SidebarText>Home</SidebarText> */}
       </SidebarItem>
       <SidebarDivider />
       <SidebarRow>
@@ -90,23 +130,78 @@ const NavBar = () => {
           <SidebarIcon>
             <Notifications style={{ color: "#fff" }} />
           </SidebarIcon>
-          {/* <SidebarText>Notifications</SidebarText> */}
         </SidebarButton>
         <SidebarButton>
           <SidebarIcon>
             <Settings style={{ color: "#fff" }} />
           </SidebarIcon>
-          {/* <SidebarText>Settings</SidebarText> */}
         </SidebarButton>
         <SidebarButton>
-          <SidebarIcon>
-            <AccountCircle style={{ color: "#fff" }} />
+          <SidebarIcon
+            ref={anchorRef}
+            aria-controls={open ? "menu-list-grow" : undefined}
+            aria-haspopup="true"
+            onClick={handleToggle}
+            style={{ color: "#fff" }}
+          >
+            <AccountCircle />
           </SidebarIcon>
-          {/* <SidebarText>User</SidebarText> */}
+          <Popper
+            open={open}
+            anchorEl={anchorRef.current}
+            placement="right"
+            transition
+            disablePortal
+            popperOptions={{
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, 20],
+                  },
+                },
+              ],
+            }}
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{
+                  transformOrigin:
+                    placement === "right" ? "center left" : "center right",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList
+                      autoFocusItem={open}
+                      id="menu-list-grow"
+                      onKeyDown={handleListKeyDown}
+                    >
+                      <MenuItem onClick={handleClose}>
+                        <Settings
+                          fontSize="small"
+                          sx={{ mr: 1 }}
+                          style={{ color: "rgb(16,46,68" }}
+                        />
+                        Account Settings
+                      </MenuItem>
+                      <MenuItem onClick={handleLogout}>
+                        <ExitToApp
+                          fontSize="small"
+                          sx={{ mr: 1 }}
+                          style={{ color: "rgb(16,46,68" }}
+                        />
+                        Logout
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </SidebarButton>
       </SidebarRow>
     </Sidebar>
   );
-};
-
-export default NavBar;
+}

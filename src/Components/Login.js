@@ -26,7 +26,7 @@ export default function Login() {
       setError(error.message);
     });
 
-    if (signedIn) navigate("/");
+    if (signedIn) navigate("/home");
   };
 
   return (
