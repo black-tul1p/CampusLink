@@ -17,9 +17,11 @@ export default function Admin() {
     .then((instructorSet) => {
       let instructorList = []
       instructorSet.forEach((doc) => {
+        if (doc.data().accepted) {
         instructorList.push({firstName: doc.data().firstName,
                           lastName:  doc.data().lastName,
                           email:     doc.data().email});
+        }
       });
       setInstructors(instructorList);
     });
