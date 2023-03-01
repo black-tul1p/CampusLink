@@ -6,6 +6,7 @@ import {
   Settings,
   AccountCircle,
   ExitToApp,
+  QuestionMark,
 } from "@mui/icons-material";
 import {
   ClickAwayListener,
@@ -14,6 +15,8 @@ import {
   MenuList,
   Paper,
   Popper,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -131,85 +134,118 @@ export default function NavBar() {
       </SidebarItem>
       <SidebarDivider />
       <SidebarRow>
-        <SidebarButton>
-          <SidebarIcon>
-            <Notifications style={{ color: "#fff" }} />
-          </SidebarIcon>
-        </SidebarButton>
-        <SidebarButton
-          onClick={() => {
-            navigate("/settings");
-          }}
+        <Tooltip
+          title={<Typography style={{ fontSize: "1.5em" }}>FAQ</Typography>}
+          placement="right"
         >
-          <SidebarIcon>
-            <Settings style={{ color: "#fff" }} />
-          </SidebarIcon>
-        </SidebarButton>
-        <SidebarButton>
-          <SidebarIcon
-            ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
-            aria-haspopup="true"
-            onClick={handleToggle}
-            style={{ color: "#fff" }}
-          >
-            <AccountCircle />
-          </SidebarIcon>
-          <Popper
-            open={open}
-            anchorEl={anchorRef.current}
-            placement="right"
-            transition
-            disablePortal
-            popperOptions={{
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, 20],
-                  },
-                },
-              ],
+          <SidebarButton
+            onClick={() => {
+              navigate("/faq");
             }}
           >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin:
-                    placement === "right" ? "center left" : "center right",
-                }}
-              >
-                <Paper>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList
-                      autoFocusItem={open}
-                      id="menu-list-grow"
-                      onKeyDown={handleListKeyDown}
-                    >
-                      <MenuItem onClick={handleClose}>
-                        <Settings
-                          fontSize="small"
-                          sx={{ mr: 1 }}
-                          style={{ color: "rgb(16,46,68" }}
-                        />
-                        Account Settings
-                      </MenuItem>
-                      <MenuItem onClick={handleLogout}>
-                        <ExitToApp
-                          fontSize="small"
-                          sx={{ mr: 1 }}
-                          style={{ color: "rgb(16,46,68" }}
-                        />
-                        Logout
-                      </MenuItem>
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
-        </SidebarButton>
+            <SidebarIcon>
+              <QuestionMark style={{ color: "#fff" }} />
+            </SidebarIcon>
+          </SidebarButton>
+        </Tooltip>
+        <Tooltip
+          title={
+            <Typography style={{ fontSize: "1.5em" }}>Notifications</Typography>
+          }
+          placement="right"
+        >
+          <SidebarButton>
+            <SidebarIcon>
+              <Notifications style={{ color: "#fff" }} />
+            </SidebarIcon>
+          </SidebarButton>
+        </Tooltip>
+        <Tooltip
+          title={
+            <Typography style={{ fontSize: "1.5em" }}>Settings</Typography>
+          }
+          placement="right"
+        >
+          <SidebarButton
+            onClick={() => {
+              navigate("/settings");
+            }}
+          >
+            <SidebarIcon>
+              <Settings style={{ color: "#fff" }} />
+            </SidebarIcon>
+          </SidebarButton>
+        </Tooltip>
+        <Tooltip
+          title={<Typography style={{ fontSize: "1.5em" }}>Account</Typography>}
+          placement="right"
+        >
+          <SidebarButton>
+            <SidebarIcon
+              ref={anchorRef}
+              aria-controls={open ? "menu-list-grow" : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              style={{ color: "#fff" }}
+            >
+              <AccountCircle />
+            </SidebarIcon>
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              placement="right"
+              transition
+              disablePortal
+              popperOptions={{
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, 20],
+                    },
+                  },
+                ],
+              }}
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === "right" ? "center left" : "center right",
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id="menu-list-grow"
+                        onKeyDown={handleListKeyDown}
+                      >
+                        <MenuItem onClick={handleClose}>
+                          <Settings
+                            fontSize="small"
+                            sx={{ mr: 1 }}
+                            style={{ color: "rgb(16,46,68" }}
+                          />
+                          Account Settings
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>
+                          <ExitToApp
+                            fontSize="small"
+                            sx={{ mr: 1 }}
+                            style={{ color: "rgb(16,46,68" }}
+                          />
+                          Logout
+                        </MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </SidebarButton>
+        </Tooltip>
       </SidebarRow>
     </Sidebar>
   );
