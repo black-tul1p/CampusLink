@@ -1,5 +1,5 @@
 import React from 'react'
-import './HomepageStudent.css'
+import './Homepage.css'
 import { getAllCourses } from '../Backend/course'
 import { useState, useEffect } from 'react'
 
