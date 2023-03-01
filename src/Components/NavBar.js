@@ -40,10 +40,10 @@ const SidebarItem = styled.div`
   height: 4em;
   color: #fff;
   cursor: pointer;
-  transition: transform 0.15s ease-out;
-  &:hover {
-    transform: scale(1.5);
-  }
+  // transition: transform 0.15s ease-out;
+  // &:hover {
+  //   transform: scale(1.5);
+  // }
 `;
 
 const SidebarText = styled.span`
@@ -125,13 +125,18 @@ export default function NavBar() {
 
   return (
     <Sidebar>
-      <SidebarItem
-        onClick={() => {
-          navigate("/home");
-        }}
+      <Tooltip
+        title={<Typography style={{ fontSize: "1.5em" }}>Home</Typography>}
+        placement="right"
       >
-        <img src={logo_mini} style={{ width: "2.5em" }} />
-      </SidebarItem>
+        <SidebarItem
+          onClick={() => {
+            navigate("/home");
+          }}
+        >
+          <img src={logo_mini} style={{ width: "2.5em" }} />
+        </SidebarItem>
+      </Tooltip>
       <SidebarDivider />
       <SidebarRow>
         <Tooltip
