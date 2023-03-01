@@ -43,6 +43,7 @@ import logo from "./logo.svg";
 =======
 >>>>>>> 0c9d360 (Add backend testing code)
 import "./App.css";
+<<<<<<< HEAD
 import Login from "./Components/Login";
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -56,15 +57,22 @@ import { useRef, useState } from "react";
 >>>>>>> 3eb1c0f (Consolidate assets)
 import Admin from "./Components/Admin";
 import Register from "./Components/Register";
+=======
+>>>>>>> d603b06 (Integrated FAQ page)
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import styled from "@emotion/styled";
+import Login from "./Components/Login";
+import Register from "./Components/Register";
+import Admin from "./Components/Admin";
 import NavBar from "./Components/NavBar";
 import HomepageInstructor from "./Components/HomepageInstructor";
-import styled from "@emotion/styled";
 import SettingsPage from "./Components/Settings";
+import FAQ from "./Components/FAQ";
 
 const Container = styled.div`
   display: flex;
 `;
+<<<<<<< HEAD
 
 function App() {
 <<<<<<< HEAD
@@ -180,6 +188,8 @@ function App() {
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Register from "./Components/Register";
 import FAQ from "./Components/FAQ";
+=======
+>>>>>>> d603b06 (Integrated FAQ page)
 
 function App() {
   return (
@@ -204,6 +214,15 @@ function App() {
             <Container>
               <NavBar />
               <SettingsPage />
+            </Container>
+          }
+        />{" "}
+        <Route
+          path="/faq"
+          element={
+            <Container>
+              <NavBar />
+              <FAQ />
             </Container>
           }
         />
