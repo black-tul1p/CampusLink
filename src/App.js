@@ -1,17 +1,17 @@
 import "./App.css";
-import Login from "./Components/Login";
-import Admin from "./Components/Admin";
-import Register from "./Components/Register";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import styled from "@emotion/styled";
+import Login from "./Components/Login";
+import Register from "./Components/Register";
+import Admin from "./Components/Admin";
 import NavBar from "./Components/NavBar";
 import HomepageInstructor from "./Components/HomepageInstructor";
-import styled from "@emotion/styled";
 import SettingsPage from "./Components/Settings";
+import FAQ from "./Components/FAQ";
 
 const Container = styled.div`
   display: flex;
 `;
-import FAQ from "./Components/FAQ";
 
 function App() {
   return (
@@ -35,6 +35,15 @@ function App() {
             <Container>
               <NavBar />
               <SettingsPage />
+            </Container>
+          }
+        />{" "}
+        <Route
+          path="/faq"
+          element={
+            <Container>
+              <NavBar />
+              <FAQ />
             </Container>
           }
         />

@@ -108,6 +108,15 @@ export default function FAQ() {
     border-radius: 1em;
   `;
 
+  const StyledPageContainer = styled.div`
+    flex-grow: 1;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+  `;
+
   const [faq, setFAQ] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -179,14 +188,7 @@ export default function FAQ() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <StyledPageContainer>
       <StyledContainer maxWidth="md">
         <StyledTitle variant="h4" gutterBottom>
           Frequently Asked Questions
@@ -281,6 +283,6 @@ export default function FAQ() {
           />
         </StyledSuggestionBox>
       )}
-    </div>
+    </StyledPageContainer>
   );
 }
