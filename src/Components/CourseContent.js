@@ -11,8 +11,8 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import CS307Syllabus from "../Assets/CS307-Syllabus.pdf";
-import { Document,Page } from 'react-pdf';
+//import CS307Syllabus from "../Assets/CS307-Syllabus.pdf";
+//import { Document,Page } from 'react-pdf';
 
 
 
@@ -35,7 +35,7 @@ export default function CourseContent() {
         )
     }
 
-    const CCTest = (props) => {
+   /* const CCTest = (props) => {
 
         return(
             <div>
@@ -43,18 +43,18 @@ export default function CourseContent() {
             </div>
             
         )
-    }
+    } */
     
-    const CCAssignmentS = (props) => {
+   /* const CCAssignmentS = (props) => {
         return(
                 <h4>
                     {props.title}
                     {props.duedate}
                 </h4>
         )
-    }
+    } */
     
-    const [content_page, setCounter] = useState("Syllabus");
+  //  const [content_page, setCounter] = useState("Syllabus");
 
 
 
@@ -73,14 +73,7 @@ export default function CourseContent() {
                 <CCNavButtonS title="Bookmarks"/>
             </div>
         
-           {/* <div className="CCSyllabusContainer">
-                <div className="CCAssignmentS">
-                    <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
-                    <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
-                    <CCAssignmentS title="Test Name" duedate=" 2/2/2"/>
-                    <CCAssignmentS title="Test Name" duedate=" 2/22/2"/>
-                </div>
-              </div> */}
+            
 
 
 

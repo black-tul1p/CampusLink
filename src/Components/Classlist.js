@@ -16,7 +16,8 @@ import logo from '../images/campuslink_banner.png'
 import ProfilePic from '../images/default_profile_picture.png'
 import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom';
+import React from 'react';
 
 function Classlist() {
   const [students, setStudents] = useState([]);

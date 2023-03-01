@@ -8,17 +8,21 @@ import NavBar from "./Components/NavBar";
 import HomepageInstructor from "./Components/HomepageInstructor";
 import SettingsPage from "./Components/Settings";
 import FAQ from "./Components/FAQ";
-import React from 'react'
+
+//import Classlist from "./Components/Classlist";
+import React from 'react';
+import ClasslistCC from "./Components/ClasslistCC";
+import CourseContent from "./Components/CourseContent";
 
 const Container = styled.div`
   display: flex;
-`;
+`;    
 
 function App() {
-  return (
+   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<ClasslistCC />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Register />} />
         <Route
@@ -52,7 +56,7 @@ function App() {
         <Route path="/faq" element={<FAQ />} />
       </Routes>
     </Router>
-  );
+  ); 
 }
 
 export default App;
