@@ -1,6 +1,7 @@
 import { Box } from "@mui/system";
 import { Error } from "@mui/icons-material";
 import styled from "@emotion/styled";
+import React from 'react';
 
 export default function ErrorBox(props) {
   const StyledBox = styled(Box)`

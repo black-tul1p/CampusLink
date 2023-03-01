@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import "./Classlist.css";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import styled from "@emotion/styled";
+import React from 'react';
 
 export default function Admin() {
   const [instructors, setInstructors] = useState([]);

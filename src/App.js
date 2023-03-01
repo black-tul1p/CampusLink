@@ -8,6 +8,7 @@ import NavBar from "./Components/NavBar";
 import HomepageInstructor from "./Components/HomepageInstructor";
 import SettingsPage from "./Components/Settings";
 import FAQ from "./Components/FAQ";
+import React from 'react'
 
 const Container = styled.div`
   display: flex;

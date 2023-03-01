@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
 import { Switch, FormControlLabel, FormGroup } from "@mui/material";
+import React from 'react';
 
 const Container = styled.div`
   display: flex;
