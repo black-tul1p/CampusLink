@@ -134,7 +134,7 @@ export async function getUserRole() {
  *
  * @throws {Error} - If there was an error signing out the user.
  */
-export async function signOutUser() {
+export async function logoutUser() {
   try {
     await signOut(auth);
     console.log("User signed out successfully");
