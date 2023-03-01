@@ -4,6 +4,7 @@ html, body {
 }
 
 .logo-header {
+  position: -webkit-sticky;
   position: sticky;
   background-color: #0e293d;
   padding-bottom: 10px;
