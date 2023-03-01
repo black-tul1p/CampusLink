@@ -1,7 +1,7 @@
 .navbar-container {
     display: grid;
     background-color: #0a2232;
-    grid-template-columns: 22fr 2fr 2fr 2fr 2fr;
+    grid-template-columns: 25fr 2fr 2fr 2fr 2fr;
     grid-gap: 10px;
 }
 
@@ -11,20 +11,21 @@
     cursor: pointer;
 }
 .menu-logo-container {
+    display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #0a2232;
     cursor: pointer;
 }
 
 .notification-logo-container {
+    display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #0a2232;
     cursor: pointer;
 }
 
 .settings-logo-container {
+    display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid #0a2232;
@@ -32,6 +33,7 @@
 }
 
 .user-logo-container {
+    display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid #0a2232;
@@ -70,19 +72,23 @@
     margin-bottom: 10px;
 }
 .menu-logo-container:hover {
-    background-color: white;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
 }
 
 .notification-logo-container:hover {
-    background-color: white;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
 }
 
 .settings-logo-container:hover {
-    background-color: white;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
 }
 
 .user-logo-container:hover {
-    background-color: white;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
 }
 
 .logo {
@@ -92,36 +98,6 @@
     padding-left: 5px;
     padding-bottom: 5px;
 }
-
-.menu_logo {
-    height: 40px;
-    width: 40px;
-    padding-top: 15px;
-    padding-left: 20px;
-}
-
-.settings_logo {
-    height: 40px;
-    width: 40px;
-    padding-top: 15px;
-    padding-left: 20px;
-}
-
-
-.notification_logo {
-    height: 40px;
-    width: 40px;
-    padding-top: 15px;
-    padding-left: 20px;
-}
-
-.user_logo {
-    height: 40px;
-    width: 40px;
-    padding-top: 15px;
-    padding-left: 20px;
-}
-
 button {
     background-color: rgb(0, 0, 0);
     color: white;

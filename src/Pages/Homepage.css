@@ -47,6 +47,7 @@ html, body {
     border-radius: 10px;
     width: 350px;
     height: 180px;
+    cursor: pointer;
 }
 
 .header-container {
