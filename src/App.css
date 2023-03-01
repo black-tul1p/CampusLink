@@ -10,6 +10,9 @@
   font-family: 'Times New Roman', Times, serif;
 }
 
+html, body {
+  scroll-behavior: smooth;
+}
 
 /********************************** App.js **********************************/
 
@@ -20,7 +23,7 @@
 /********************************** Login Page **********************************/
 
 .Banner-logo {
-  max-max-width: 50vw;
+  max-width: 50vw;
 }
 
 .Default-card {
@@ -120,4 +123,123 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1em;
+}
+
+
+/********************************** Home Page **********************************/
+
+.homepage-student-container {
+  padding: 3em;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Three columns by default */
+  grid-gap: 2em;
+  width: inherit;
+}
+
+.homepage-student {
+  flex-grow: 1;
+  overflow: auto;
+  height: 100vh;
+}
+
+/* style the scrollbar as needed */
+.homepage-student::-webkit-scrollbar {
+  width: 0.75em;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.homepage-student::-webkit-scrollbar-thumb {
+  background-color: rgba(32, 32, 32);
+  border-radius: 10em;
+}
+
+@media (max-width: 1650px) {
+  /* Change to two columns on screens smaller than 768px */
+  .homepage-student-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1225px) {
+  /* Change to two columns on screens smaller than 768px */
+  .homepage-student-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  /* Change to one column on screens smaller than 480px */
+  .homepage-student-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.course-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  transition: transform 0.15s ease-out;
+  cursor: pointer;
+}
+
+.course-container:hover {
+  transform: scale(1.1);
+}
+
+.course-container-top {
+  background-color: #0a2232;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  min-height: 100px;
+  max-height: 100px;
+  border: 20px solid #0a2232;
+}
+
+.course-container-bottom {
+  background-color: aliceblue;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  min-height: 40px;
+  max-height: -moz-fit-content;
+  max-height: fit-content;
+}
+
+.add-course-container {
+  background-color: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  height: 11.25em;
+  transition: transform 0.15s ease-out;
+  cursor: pointer;
+}
+
+.add-course-container:hover {
+  transform: scale(1.1);
+}
+
+.header-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 50px;
+  width: auto;
+}
+
+.divider {
+  margin-right: 3em;
+  height: 0.15em;
+  background-color: aliceblue;
+}
+
+p {
+  font-family: 'Times New Roman', Times, serif;
+  color: aliceblue;
+  font-size: 2.15em;
+  line-height: 0px;
+}
+
+h3 {
+  font-family: 'Times New Roman', Times, serif;
+  color: aliceblue;
 }
