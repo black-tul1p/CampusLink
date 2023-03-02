@@ -33,11 +33,14 @@ function HomepageInstructor() {
   };
 
   const submitCourseDialogue = () => {
-    createCourse(newCourseTitle, newCourseId, 3, newCourseDept, 150, 0, newCourseDesc);
+    createCourse(newCourseTitle, newCourseId, 3, newCourseDept, 150, 0, newCourseDesc)
+      .then(() => {
+        updateCourseList();
+      });
     closeCourseDialogue();
   }
 
-  useEffect(() => {
+  const updateCourseList = () => {
     getAllCourses()
       .then((res) => {
         setCourses(res);
@@ -47,6 +50,10 @@ function HomepageInstructor() {
         console.log(error.message);
         setLoading(false);
       });
+  }
+
+  useEffect(() => {
+    updateCourseList();
   }, []);
 
   return (
