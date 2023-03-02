@@ -8,10 +8,11 @@ import CourseNavBar from "./Components/CourseNavBar";
 import Announcements from "./CoursePages/Announcements";
 import Assignments from "./CoursePages/Assignments";
 import Syllabus from "./CoursePages/Syllabus";
-import Classlist from "./CoursePages/Classlist";
+import Classlist from "./Components/Classlist";
 import Discussions from "./CoursePages/Discussions";
 import Grades from "./CoursePages/Grades";
 import Quizzes from "./CoursePages/Quizzes";
+import FAQ from "./Components/FAQ";
 
 const Container = styled.div`
   display: flex;
@@ -28,6 +29,24 @@ function App() {
             <Container>
               <NavBar />
               <HomepageInstructor />
+            </Container>
+          }
+      />
+      <Route
+          path="/home"
+          element={
+            <Container>
+              <NavBar />
+              <HomepageInstructor />
+            </Container>
+          }
+      />
+      <Route
+          path="/faq"
+          element={
+            <Container>
+              <NavBar />
+              <FAQ />
             </Container>
           }
       />
