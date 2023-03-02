@@ -1,0 +1,72 @@
+html, body {
+    background-color: #102e44;
+    scroll-behavior: smooth;
+    height: 100%;
+    margin-bottom: 20px;
+  }
+
+.homepage-student-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 50px;
+    row-gap: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 10px;
+    padding-top: 40px;
+    
+}
+.course-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 350px;
+    
+}
+.course-container-top {
+    background-color: #0a2232;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    min-height: 100px;
+    max-height: 100px;
+    border: 20px solid #0a2232;
+}
+.course-container-bottom {
+    background-color: aliceblue;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    min-height: 40px;
+    max-height: fit-content;
+}
+
+.add-course-container {
+    background-color: aliceblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    width: 350px;
+    height: 180px;
+    cursor: pointer;
+}
+
+.header-container {
+    padding-left: 50px;
+
+}
+.divider {
+    width: 1155px;
+    height:5px;
+    background-color: aliceblue;
+    position: absolute;
+}
+p {
+    font-family: 'Times New Roman', Times, serif;
+    color: aliceblue;
+    font-size: 40px;
+    line-height: 0px;
+}
+h3 {
+    font-family: 'Times New Roman', Times, serif;
+    color: aliceblue;
+}
