@@ -41,7 +41,7 @@ function Homepage() {
       .finally(() => {
         setOpenSnackbar(true);
       });
-    console.log(role);
+    // console.log(role);
 
     // Get courses
     // if (role === "instructor") {

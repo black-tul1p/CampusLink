@@ -54,18 +54,26 @@ export async function createUser(email, password, firstName, lastName, role) {
   const displayName = firstName + " " + lastName;
   await updateProfile(user, { displayName: displayName });
 
-  // // set custom claim to indicate role as student
-  // await auth.setCustomUserClaims(user.uid, { role: role });
-
-  // create document for student in the appropriate collection
+  // create document for user in the appropriate collection
   const userRef = doc(firestore, role + "s", user.uid);
-  await setDoc(userRef, {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    preferredName: "",
-    courses: [],
-  });
+  if (role === "instructor") {
+    await setDoc(userRef, {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      preferredName: "",
+      courses: [],
+      accepted: false,
+    });
+  } else {
+    await setDoc(userRef, {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      preferredName: "",
+      courses: [],
+    });
+  }
 }
 
 /**
@@ -78,6 +86,15 @@ export async function createUser(email, password, firstName, lastName, role) {
  * @throws {Error} - If there was an error during authentication, or if the authenticated user has an invalid role.
  */
 export async function loginUser(email, password) {
+  await getUserRoleByEmail(email).then(async (role) => {
+    if (role === "instructor") {
+      await isAcceptedInstructor(email).then((accepted) => {
+        if (!accepted) {
+          throw new Error(`Please wait for Instructor account approval`);
+        }
+      });
+    }
+  });
   try {
     // sign in user with the provided credentials
     const userCredential = await signInWithEmailAndPassword(
@@ -128,6 +145,32 @@ export async function getUserRole() {
     }
 
     return false;
+  } catch (error) {
+    throw new Error(`Error checking user role: ${error.message}`);
+  }
+}
+
+/**
+ * Checks if the user with the specified email has a document in the students or instructors collection.
+ * Returns the role accordingly.
+ *
+ * @param {string} email - The email of the user to check.
+ * @returns {Promise<string>} - A Promise that resolves to a string ("student" or "instructor") if the user is found, or false if not found.
+ * @throws {Error} - If there was an error retrieving data from Firestore.
+ */
+export async function getUserRoleByEmail(email) {
+  const instructorsRef = collection(firestore, "instructors");
+  const instQuery = query(instructorsRef, where("email", "==", email));
+
+  const studentsRef = collection(firestore, "students");
+  const studQuery = query(studentsRef, where("email", "==", email));
+
+  try {
+    const instSnapshot = await getDocs(instQuery);
+    if (instSnapshot.docs.length > 0) return "instructor";
+
+    const studSnapshot = await getDocs(studQuery);
+    if (studSnapshot.docs.length > 0) return "student";
   } catch (error) {
     throw new Error(`Error checking user role: ${error.message}`);
   }
@@ -254,4 +297,33 @@ export function verifyEmail(email) {
   }
 
   return true;
+}
+
+/**
+ * Checks if the user with the specified email is an approved instructor
+ *
+ * @param {string} email - The email of the user to check.
+ * @returns {Promise<boolean>|string} - A promise that resolves to true if the user is an accepted instructor,
+ * false otherwise.
+ * @throws {Error} - If there was an error querying the Firestore database.
+ */
+async function isAcceptedInstructor(email) {
+  const instructorsRef = collection(firestore, "instructors");
+  const querySnapshot = await getDocs(
+    query(instructorsRef, where("email", "==", email))
+  );
+  const docs = querySnapshot.docs;
+
+  if (docs.length === 0) {
+    return "none"; // no instructor with this email exists
+  }
+
+  const instructorDoc = docs[0];
+  const data = instructorDoc.data();
+
+  if (data.accepted !== true) {
+    return false; // instructor's accepted field is not true
+  }
+
+  return true; // instructor exists and accepted field is true
 }

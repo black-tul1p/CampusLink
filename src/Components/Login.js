@@ -26,7 +26,7 @@ export default function Login() {
     // Returns true if signed in
     await loginUser(email.trim(), pass)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         handleLogin(res);
         navigate("/home");
       })
