@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 import { firestore } from "../Backend/firebase";
 import { useSearchParams } from "react-router-dom";
 import "./Classlist.css";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Tab, Tabs, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import { PropTypes } from "prop-types";
 
@@ -40,6 +40,14 @@ function allyProps(index) {
 		id: `simple-tab-${index}`, 
 		'aria-controls': `simple-tabpanel-${index}`,
 	};
+}
+
+function handleApprove() {
+	alert("approve");
+}
+
+function handleDeny() {
+	alert("deny");
 }
 
 export default function Admin() {
@@ -168,7 +176,16 @@ export default function Admin() {
             {pendingInstructors.map(pendingInstructor => (
               <tr>
                 <td className="userTypeColumn">
-                  Approve Deny
+                  <Button className="Mini-button"
+				  	onClick={handleApprove}
+					>
+						Approve
+					</Button> 
+					<Button className="Mini-button"
+				  	onClick={handleDeny}
+					>
+						Deny
+					</Button>
                 </td>
                 <td>{pendingInstructor.lastName}, {pendingInstructor.firstName}</td>
                 <td>{pendingInstructor.email}</td>
