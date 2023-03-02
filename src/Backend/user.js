@@ -163,10 +163,10 @@ export function getLoggedInUserId() {
 }
 
 /**
- * Retrieves a user document from the Firestore database by their email
+ * Retrieves user information from the Firestore database by their email
  *
  * @param {string} email - The email of the user to retrieve
- * @returns {Promise<Object>} - A promise that resolves to the user document object, or null if not found
+ * @returns {Promise<Object>} - A promise that resolves to the user fields object, or null if not found
  * @throws {Error} Throws an error if there is an issue finding the user doc in the database
  */
 export async function getUserByEmail(email) {
@@ -178,26 +178,27 @@ export async function getUserByEmail(email) {
 
   try {
     const querySnapshot1 = await getDocs(q1);
-    const instructorsId = querySnapshot1.docs[0];
-    if (instructorsId) return instructorsId;
+    const instructorDoc = querySnapshot1.docs[0];
+    if (instructorDoc) return instructorDoc.data();
 
     const querySnapshot2 = await getDocs(q2);
-    const studentId = querySnapshot2.docs[0];
-    if (studentId) return studentId;
+    const studentDoc = querySnapshot2.docs[0];
+    if (studentDoc) return studentDoc.data();
 
-    return false;
+    return null;
   } catch (error) {
     throw new Error(`Error finding user doc in DB: ${error.message}`);
   }
 }
 
+
 /**
- * Gets the user document from Firestore based on the currently logged in user's UID
+ * Retrieves the currently logged in user's information from Firestore
  *
- * @returns {boolean|DocumentSnapshot} Returns the user's document if found, false otherwise
+ * @returns {boolean|Object} Returns the user's document if found, false otherwise
  * @throws {Error} Throws an error if there is an issue finding the user doc in the database
  */
-export async function getUserDoc() {
+export async function getCurrentUser() {
   const user = auth.currentUser;
   const studentRef = collection(firestore, "students");
   const instructorRef = collection(firestore, "instructors");
@@ -205,12 +206,12 @@ export async function getUserDoc() {
   try {
     const studentDoc = await getDoc(doc(studentRef, user.uid));
     if (studentDoc.exists()) {
-      return studentDoc;
+      return studentDoc.data();
     }
 
     const instructorDoc = await getDoc(doc(instructorRef, user.uid));
     if (instructorDoc.exists()) {
-      return instructorDoc;
+      return instructorDoc.data*;
     }
 
     return false;
