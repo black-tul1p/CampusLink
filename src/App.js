@@ -1,54 +1,46 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import styled from "@emotion/styled";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Admin from "./Components/Admin";
-import NavBar from "./Components/NavBar";
-import Homepage from "./Components/Home";
-import SettingsPage from "./Components/Settings";
-import FAQ from "./Components/FAQ";
+import Landing, { PageList } from "./Components/Landing";
+import { useContext, useState } from "react";
+import { AuthContext } from "./Contexts/AuthContext";
 
-const Container = styled.div`
-  display: flex;
-`;
+function AuthorizedRoute(props) {
+  const { user } = useContext(AuthContext);
+  if (user) {
+    return props.children;
+  }
+  return <Navigate to="/login" />;
+}
 
 function App() {
+  const [isDark, setisDark] = useState(true);
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Register />} />
-        <Route
-          path="/home"
-          element={
-            <Container>
-              <NavBar />
-              <Homepage />
-            </Container>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <Container>
-              <NavBar />
-              <SettingsPage />
-            </Container>
-          }
-        />
-        <Route
-          path="/faq"
-          element={
-            <Container>
-              <NavBar />
-              <FAQ />
-            </Container>
-          }
-        />
         <Route path="/admin" element={<Admin />} />
-        <Route path="/faq" element={<FAQ />} />
+        {Object.values(PageList).map((path) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <AuthorizedRoute>
+                <Landing page={path} theme={isDark} />
+              </AuthorizedRoute>
+            }
+          />
+        ))}
       </Routes>
     </Router>
   );

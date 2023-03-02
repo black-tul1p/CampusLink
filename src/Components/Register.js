@@ -70,19 +70,15 @@ export default function Registration() {
         return;
       }
 
-      // Returns true if registered successfully
-      const registered = await createUser(
-        email,
-        password,
-        firstName,
-        lastName,
-        role
-      ).catch((error) => {
-        console.log(error.message);
-        setError(error.message);
-      });
-
-      if (registered) navigate("/");
+      // Redirect to Login page if registered successfully
+      await createUser(email, password, firstName, lastName, role)
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error.message);
+          setError(error.message);
+        });
     }
   };
 

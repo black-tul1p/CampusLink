@@ -98,10 +98,7 @@ export async function loginUser(email, password) {
       }
     });
     const user = userCredential.user;
-    // JWT
-    const token = await user.getIdToken();
-    localStorage.setItem("token", token);
-    return true;
+    return user;
   } catch (error) {
     throw new Error(error.message);
   }
