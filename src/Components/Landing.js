@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import FAQ from "./FAQ";

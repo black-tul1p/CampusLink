@@ -22,7 +22,6 @@ import { useNavigate } from "react-router-dom";
 import { createUser, verifyEmail } from "../Backend/user";
 import styled from "@emotion/styled";
 import ErrorBox from "./Error";
-import { AuthContext } from "../Contexts/AuthContext";
 
 export default function Registration() {
   const [firstName, setFirstName] = useState("");

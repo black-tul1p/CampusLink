@@ -70,7 +70,7 @@ function Homepage() {
 
     // REMOVE WHEN DONE
     setLoading(false);
-  }, [courses]);
+  }, [courses, user.displayName]);
 
   return (
     <div className="homepage-student">

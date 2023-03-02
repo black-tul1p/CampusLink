@@ -96,7 +96,7 @@ export const fetchFAQ = async () => {
         answer: doc.data().answer,
       });
     });
-    console.log("FAQ fetched successfully:", faq);
+    // console.log("FAQ fetched successfully:", faq);
     return faq;
   } catch (error) {
     throw new Error("Error fetching FAQ:", error);
