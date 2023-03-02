@@ -7,7 +7,7 @@ import { CircularProgress, Snackbar, SnackbarContent } from "@mui/material";
 import { auth } from "../Backend/firebase";
 import { CheckCircle } from "@mui/icons-material";
 
-function HomepageInstructor(props) {
+function HomepageInstructor() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openSnackbar, setOpenSnackbar] = useState(false);
