@@ -1,12 +1,20 @@
 import {
-    collection, 
-    doc, 
-    addDoc, 
-    getDocs, 
-    query, 
+    collection,
+    doc,
+    setDoc,
+    getDocs,
+    query,
     where,
-} from "@firebase/firestore";
-import {firestore} from "./firebase"
+    getDoc,
+  } from "@firebase/firestore";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    deleteUser,
+    signInWithEmailAndPassword,
+    signOut,
+  } from "firebase/auth";
+  import { auth, firestore } from "./firebase";
 
 export async function createInstructor(first, last, email, password) {
     let data = {
@@ -14,7 +22,8 @@ export async function createInstructor(first, last, email, password) {
         lastName: last, 
         email: email, 
         pass: password, 
-        accepted: false
+        accepted: false,
+        courses: null
     };
 
     try {
@@ -24,3 +33,29 @@ export async function createInstructor(first, last, email, password) {
         console.error("Error adding instructor: ", data);
     }
 }
+
+export const getInstructorCourses = async() => {
+    try {
+      const getData = collection(firestore, "instructor");
+      const snapshot = query(getData, where("email", "==", auth.currentUser.email));
+      const course = [];
+      const querySnapshot = await getDocs(snapshot);
+      querySnapshot.forEach((doc) => {
+        course.push({
+          courseTitle: doc.data().courses.courseTitle,
+          courseId: doc.data().courses.courseId,
+          credit: doc.data().courses.credit,
+          department: doc.data().courses.department,
+          capacity: doc.data().courses.capacity,
+          registeredStudents: doc.data().courses.registeredStudents,
+          description: doc.data().courses.description,
+        });
+      });
+      console.log("All courses fetched:", course);
+      return course;
+    } catch (error) {
+      throw new Error("Error fetching courses:", error);
+    }
+  };
+
+

@@ -1,8 +1,7 @@
 import React from 'react'
-import './HomepageStudent'
-import { getAllCourses } from '../Backend/course'
 import { useState, useEffect } from 'react'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { getInstructorCourses } from '../Backend/instructor';
 
 function HomepageInstructor() {
     const [courses, setCourses] = useState([]);
@@ -13,10 +12,11 @@ function HomepageInstructor() {
       }
   
     useEffect (() => {
-      getAllCourses()
+      getInstructorCourses()
       .then((res) => {
-        setCourses(res);
-        setLoading(false);
+        console.log(res);
+        //setCourses(res);
+        setLoading(true);
       })
       .catch((error) => {
         console.log(error.message);
@@ -26,6 +26,8 @@ function HomepageInstructor() {
   
     return (
       <div className='homepage-student'>
+
+
         <div className='header-container'>
           <p>My Courses</p>
           <div className='divider'></div>

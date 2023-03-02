@@ -59,6 +59,7 @@ export default function CourseContent() {
 
 
     return ( <div>
+
             <div className='CCBannerContainer'>
                 <img className="CCBanner" src={Banner} alt="CampusLink Logo"/>
             </div>
