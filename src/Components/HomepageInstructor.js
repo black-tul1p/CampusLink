@@ -1,8 +1,9 @@
 import React from "react";
 import "./HomepageStudent";
-import { getAllCourses, createCourse } from "../Backend/course";
+import { getAllCourses, createCourse, removeCourse } from "../Backend/course";
 import { useState, useEffect } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import DeleteIcon from '@mui/icons-material/Delete';
 import { CircularProgress } from "@mui/material";
 
 import Button from '@mui/material/Button';
@@ -34,9 +35,7 @@ function HomepageInstructor() {
 
   const submitCourseDialogue = () => {
     createCourse(newCourseTitle, newCourseId, 3, newCourseDept, 150, 0, newCourseDesc)
-      .then(() => {
-        updateCourseList();
-      });
+      .then(() => {updateCourseList();});
     closeCourseDialogue();
   }
 
@@ -140,10 +139,16 @@ function HomepageInstructor() {
             courses
               .filter(
                 (course) =>
-                  course.description && course.courseId && course.courseTitle
+                  course.description && course.courseId && course.courseTitle && course.databaseId
               )
               .map((course) => (
-                <div className="course-container">
+                <div className="course-container" forCourse={course.databaseId}>
+                  <div className="delete-course-container" onClick={(event) => {
+                    const id = event.currentTarget.parentElement.getAttribute('forCourse');
+                    removeCourse(id).then(() => {updateCourseList();});
+                  }}>
+                    <DeleteIcon fontSize="large" />
+                  </div>
                   <div className="course-container-top">
                     <h3>
                       {course.courseTitle} {course.courseId} :

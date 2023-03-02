@@ -22,7 +22,8 @@ import { firestore } from "./firebase";
           department: doc.data().department,
           capacity: doc.data().capacity,
           registeredStudents: doc.data().registeredStudents,
-          description: doc.data().description,
+          description: doc.data().description, 
+          databaseId : doc.id
         });
       });
       console.log("All courses fetched:", course);
