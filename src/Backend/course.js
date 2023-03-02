@@ -62,6 +62,7 @@ export async function removeCourse(courseId) {
   }
 }
 
+
 // export async function getCourseIdByDetails(courseTitle, courseId) {
 //   const coursesRef = collection(firestore, "courses");
 //   const q = query(coursesRef, where("courseTitle", "==", courseTitle), where("courseId", "==", courseId));

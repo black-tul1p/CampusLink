@@ -6,6 +6,7 @@ import {
     query,
     where,
     getDoc,
+    addDoc,
   } from "@firebase/firestore";
   import {
     getAuth,
@@ -23,7 +24,7 @@ export async function createInstructor(first, last, email, password) {
         email: email, 
         pass: password, 
         accepted: false,
-        courses: null
+        courses: []
     };
 
     try {
@@ -41,6 +42,9 @@ export const getInstructorCourses = async() => {
       const course = [];
       const querySnapshot = await getDocs(snapshot);
       querySnapshot.forEach((doc) => {
+        
+        
+
         course.push({
           courseTitle: doc.data().courses.courseTitle,
           courseId: doc.data().courses.courseId,
