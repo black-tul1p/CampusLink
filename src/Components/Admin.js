@@ -43,9 +43,9 @@ function allyProps(index) {
 }
 
 export default function Admin() {
+  const [students, setStudents] = useState([]);
   const [instructors, setInstructors] = useState([]);
-  const [courseData, setCourseData] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [pendingInstructors, setPendingInstructors] = useState([]);
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -53,7 +53,17 @@ export default function Admin() {
   }
 
   useEffect(() => {
-    //Get students and add to list
+    getDocs(collection(firestore, 'students')) 
+    .then((studentSet) => {
+      let studentList = []
+      studentSet.forEach((doc) => {
+        studentList.push({firstName: doc.data().firstName,
+                          lastName:  doc.data().lastName,
+                          email:     doc.data().email});
+      });
+      setStudents(studentList);
+    });
+	
     getDocs(collection(firestore, 'instructors')) 
     .then((instructorSet) => {
       let instructorList = []
@@ -65,6 +75,19 @@ export default function Admin() {
         }
       });
       setInstructors(instructorList);
+    });
+
+	getDocs(collection(firestore, 'instructors')) 
+    .then((pendingInstructorSet) => {
+      let pendingInstructorList = []
+      pendingInstructorSet.forEach((doc) => {
+        if (!doc.data().accepted) {
+        pendingInstructorList.push({firstName: doc.data().firstName,
+                          lastName:  doc.data().lastName,
+                          email:     doc.data().email});
+        }
+      });
+      setPendingInstructors(pendingInstructorList);
     });
   }, []);
 
@@ -78,13 +101,80 @@ export default function Admin() {
             </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-            This is changed
+		<div className="adminPage">
+      	<div className="classlist-wrapper">
+        <h1 className="title" >Student List</h1>
+
+        <table className="classlist">
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+
+            {students.map(student => (
+              <tr>
+                <td>{student.lastName}, {student.firstName}</td>
+                <td>{student.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p id="student-count-label">Total Students: {students.length}</p>
+      </div>
+    </div>
         </TabPanel>
         <TabPanel value={value} index={1}>
-            Instructor 
+		<div className="adminPage">
+      	<div className="classlist-wrapper">
+        <h1 className="title" >Instructor List</h1>
+
+        <table className="classlist">
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+
+            {instructors.map(instructor => (
+              <tr>
+                <td>{instructor.lastName}, {instructor.firstName}</td>
+                <td>{instructor.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p id="student-count-label">Total Instructors: {instructors.length}</p>
+      </div>
+    </div> 
         </TabPanel>
         <TabPanel value={value} index={2}>
-            Pending Requests
+		<div className="adminPage">
+      	<div className="classlist-wrapper">
+        <h1 className="title" >Pending Instructor List</h1>
+
+        <table className="classlist">
+          <tbody>
+            <tr>
+              <th className="accountTypeColumn">Status</th>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+
+            {pendingInstructors.map(pendingInstructor => (
+              <tr>
+                <td className="userTypeColumn">
+                  Approve Deny
+                </td>
+                <td>{pendingInstructor.lastName}, {pendingInstructor.firstName}</td>
+                <td>{pendingInstructor.email}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p id="student-count-label">Total Pending Instructors: {pendingInstructors.length}</p>
+      </div>
+    </div>
         </TabPanel>
     </Box>
   );
