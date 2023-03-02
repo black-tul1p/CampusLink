@@ -1,7 +1,7 @@
 import "./Classlist.css";
 import {doc, getDoc} from "@firebase/firestore";
 import { firestore } from "../Backend/firebase";
-import ProfilePic from './default_profile_picture.png'
+import ProfilePic from '../Assets/default_profile_picture.png'
 //import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
 import { useSearchParams } from 'react-router-dom'
