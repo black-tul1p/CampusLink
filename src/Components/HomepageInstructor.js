@@ -3,14 +3,22 @@ import "./HomepageStudent";
 import { getAllCourses } from "../Backend/course";
 import { useState, useEffect } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Snackbar, SnackbarContent } from "@mui/material";
+import { auth } from "../Backend/firebase";
+import { CheckCircle } from "@mui/icons-material";
 
-function HomepageInstructor() {
+function HomepageInstructor(props) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const showAlert = () => {
     alert("Add new Course!");
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   useEffect(() => {
@@ -18,10 +26,14 @@ function HomepageInstructor() {
       .then((res) => {
         setCourses(res);
         setLoading(false);
+        setSnackbarMessage(`Welcome, ${auth.currentUser.displayName}`);
       })
       .catch((error) => {
         console.log(error.message);
         setLoading(false);
+      })
+      .finally(() => {
+        setOpenSnackbar(true);
       });
   }, []);
 
@@ -71,6 +83,37 @@ function HomepageInstructor() {
           </div>
         </div>
       )}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+      >
+        <SnackbarContent
+          style={{
+            backgroundColor: "green",
+            display: "flex",
+            alignItems: "center",
+          }}
+          message={
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <CheckCircle />
+              <span
+                style={{
+                  marginLeft: "1em",
+                  alignSelf: "center",
+                }}
+              >
+                {snackbarMessage}
+              </span>
+            </div>
+          }
+        />
+      </Snackbar>
     </div>
   );
 }

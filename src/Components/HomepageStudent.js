@@ -3,7 +3,7 @@ import "../App.css";
 import { getAllCourses } from "../Backend/course";
 import { useState, useEffect } from "react";
 
-function HomepageStudent() {
+function HomepageStudent(props) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 

@@ -13,6 +13,7 @@ import {
   deleteUser,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { auth, firestore } from "./firebase";
 
@@ -48,6 +49,10 @@ export async function createUser(email, password, firstName, lastName, role) {
     }
   });
   const user = userCredential.user;
+
+  // set display name for user
+  const displayName = firstName + " " + lastName;
+  await updateProfile(user, { displayName: displayName });
 
   // // set custom claim to indicate role as student
   // await auth.setCustomUserClaims(user.uid, { role: role });
@@ -158,24 +163,60 @@ export function getLoggedInUserId() {
 }
 
 /**
- * Retrieves the ID of a student by their email address from the Firestore database.
+ * Retrieves a user document from the Firestore database by their email
  *
- * @param {string} email - Email address of the student to retrieve the ID for.
- * @returns {string|null} - The ID of the student, or null if no student was found with the given email address.
+ * @param {string} email - The email of the user to retrieve
+ * @returns {Promise<Object>} - A promise that resolves to the user document object, or null if not found
+ * @throws {Error} Throws an error if there is an issue finding the user doc in the database
  */
-export async function getUserIdByEmail(email) {
+export async function getUserByEmail(email) {
+  const instructorsRef = collection(firestore, "instructors");
+  const q1 = query(instructorsRef, where("email", "==", email));
+
   const studentsRef = collection(firestore, "students");
-  const q = query(studentsRef, where("email", "==", email));
-  const querySnapshot = await getDocs(q);
+  const q2 = query(studentsRef, where("email", "==", email));
 
-  if (querySnapshot.docs.length === 0) {
-    console.log("No student found with email: ", email);
-    return null;
+  try {
+    const querySnapshot1 = await getDocs(q1);
+    const instructorsId = querySnapshot1.docs[0];
+    if (instructorsId) return instructorsId;
+
+    const querySnapshot2 = await getDocs(q2);
+    const studentId = querySnapshot2.docs[0];
+    if (studentId) return studentId;
+
+    return false;
+  } catch (error) {
+    throw new Error(`Error finding user doc in DB: ${error.message}`);
   }
+}
 
-  const studentId = querySnapshot.docs[0].id;
-  console.log("Found a student with ID: ", studentId);
-  return studentId;
+/**
+ * Gets the user document from Firestore based on the currently logged in user's UID
+ *
+ * @returns {boolean|DocumentSnapshot} Returns the user's document if found, false otherwise
+ * @throws {Error} Throws an error if there is an issue finding the user doc in the database
+ */
+export async function getUserDoc() {
+  const user = auth.currentUser;
+  const studentRef = collection(firestore, "students");
+  const instructorRef = collection(firestore, "instructors");
+
+  try {
+    const studentDoc = await getDoc(doc(studentRef, user.uid));
+    if (studentDoc.exists()) {
+      return studentDoc;
+    }
+
+    const instructorDoc = await getDoc(doc(instructorRef, user.uid));
+    if (instructorDoc.exists()) {
+      return instructorDoc;
+    }
+
+    return false;
+  } catch (error) {
+    throw new Error(`Error finding user doc in DB: ${error.message}`);
+  }
 }
 
 /**

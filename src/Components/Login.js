@@ -22,11 +22,14 @@ export default function Login() {
     e.preventDefault();
 
     // Returns true if signed in
-    const signedIn = await loginUser(email.trim(), pass).catch((error) => {
-      setError(error.message);
-    });
-
-    if (signedIn) navigate("/home");
+    await loginUser(email.trim(), pass)
+      .then(() => {
+        // console.log(auth.currentUser);
+        navigate("/home");
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   };
 
   return (
