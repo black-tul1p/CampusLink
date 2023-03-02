@@ -4,8 +4,6 @@ import {
     addDoc,
     deleteDoc,
     getDocs,
-    query,
-    where,
   } from "@firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -43,6 +41,7 @@ import { firestore } from "./firebase";
         capacity: capacity,
         registeredStudents: registeredStudents,
         description: description,
+        enrolledStudents: []
     };
   
     try {
