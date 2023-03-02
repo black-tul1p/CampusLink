@@ -25,6 +25,7 @@ function Homepage() {
       });
     console.log(role);
 
+    // Get courses
     // if (role === "instructor") {
     //   getInstructorCourses()
     //     .then((res) => {
@@ -48,6 +49,7 @@ function Homepage() {
     //   } else {
     //     console.error("Could not resolve user role");
     //   }
+
     // REMOVE WHEN DONE
     setLoading(false);
   }, [courses]);
@@ -55,7 +57,14 @@ function Homepage() {
   return (
     <div className="homepage-student">
       <div className="header-container">
-        <p>My Courses</p>
+        <div className="header-titles">
+          <p>My Courses</p>
+          {role === "instructor" ? (
+            <p style={{ fontStyle: "italic" }}>Instructor View</p>
+          ) : (
+            <p style={{ fontStyle: "italic" }}>Student View</p>
+          )}
+        </div>
         <div className="divider"></div>
       </div>
       {loading ? (

@@ -63,6 +63,8 @@ export async function createUser(email, password, firstName, lastName, role) {
     firstName: firstName,
     lastName: lastName,
     email: email,
+    preferredName: "",
+    courses: [],
   });
 }
 
@@ -190,7 +192,6 @@ export async function getUserByEmail(email) {
     throw new Error(`Error finding user doc in DB: ${error.message}`);
   }
 }
-
 
 /**
  * Retrieves the currently logged in user's information from Firestore

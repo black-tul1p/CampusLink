@@ -226,6 +226,14 @@ html, body {
   width: auto;
 }
 
+.header-titles {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 50px;
+  width: auto;
+}
+
 .divider {
   margin-right: 3em;
   height: 0.15em;
