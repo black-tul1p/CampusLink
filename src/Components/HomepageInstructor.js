@@ -6,10 +6,12 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Button from "@mui/material/Button";
 import { CircularProgress } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function HomepageInstructor() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const showAlert = () => {
     alert("Add new Course!");
@@ -55,7 +57,11 @@ function HomepageInstructor() {
                   course.description && course.courseId && course.courseTitle
               )
               .map((course) => (
-                <div className="course-container">
+                <div className="course-container"
+                  onClick={() => {
+                    navigate("/Announcements");
+                  }}
+                >
                   <div className="course-container-top">
                     <div className="title-container">
                       <h3>{course.courseTitle} {course.courseId} :</h3>

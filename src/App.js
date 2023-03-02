@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import styled from "@emotion/styled";
+import HomepageInstructor from "./Components/HomepageInstructor";
 import NavBar from "./Components/NavBar";
 import CourseNavBar from "./Components/CourseNavBar";
 import Announcements from "./CoursePages/Announcements";
@@ -21,7 +22,7 @@ function App() {
     <div ClassName='App'>
       <Router>
       <Routes>
-      {/* <Route
+      <Route
           path="/"
           element={
             <Container>
@@ -29,8 +30,8 @@ function App() {
               <HomepageInstructor />
             </Container>
           }
-      /> */}
-      <Route
+      />
+      {/* <Route
           path="/"
           element={
             <Container>
@@ -39,7 +40,7 @@ function App() {
               <Announcements />
             </Container>
           }
-      />
+      /> */}
       <Route
           path="/announcements"
           element={

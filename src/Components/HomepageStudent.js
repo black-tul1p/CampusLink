@@ -2,10 +2,12 @@ import React from "react";
 import "../App.css";
 import { getAllCourses } from "../Backend/course";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function HomepageStudent() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllCourses()
@@ -33,7 +35,11 @@ function HomepageStudent() {
                 course.description && course.courseId && course.courseTitle
             )
             .map((course) => (
-              <div className="course-container">
+              <div className="course-container"
+                onClick={() => {
+                  navigate("/Announcements");
+                }}
+              >
                 <div className="course-container-top">
                   <h3>
                     {course.courseTitle} {course.courseId} :
