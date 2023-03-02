@@ -5,15 +5,24 @@ import {
   Button,
   FormControl,
   InputAdornment,
+  Snackbar,
+  SnackbarContent,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { Email, Person, VpnKey, School } from "@mui/icons-material";
+import {
+  Email,
+  Person,
+  VpnKey,
+  School,
+  CheckCircle,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { createUser, verifyEmail } from "../Backend/user";
 import styled from "@emotion/styled";
 import ErrorBox from "./Error";
+import { AuthContext } from "../Contexts/AuthContext";
 
 export default function Registration() {
   const [firstName, setFirstName] = useState("");
@@ -23,6 +32,8 @@ export default function Registration() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [role, setRole] = useState("student");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const navigate = useNavigate();
 
   const StudToggleButton = styled(ToggleButton)({
@@ -54,6 +65,10 @@ export default function Registration() {
     return true;
   };
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   const handleRegistration = async (e) => {
     e.preventDefault();
 
@@ -73,7 +88,11 @@ export default function Registration() {
       // Redirect to Login page if registered successfully
       await createUser(email, password, firstName, lastName, role)
         .then(() => {
-          navigate("/");
+          setSnackbarMessage("Account successfully created");
+          setOpenSnackbar(true);
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
         })
         .catch((error) => {
           console.log(error.message);
@@ -240,6 +259,38 @@ export default function Registration() {
           </Button>
         </div>
       </FormControl>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+      >
+        <SnackbarContent
+          style={{
+            backgroundColor: "green",
+            display: "flex",
+            alignItems: "center",
+          }}
+          message={
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <CheckCircle />
+              <span
+                style={{
+                  marginLeft: "1em",
+                  alignSelf: "center",
+                }}
+              >
+                {snackbarMessage}
+              </span>
+            </div>
+          }
+        />
+      </Snackbar>
     </Box>
   );
 }

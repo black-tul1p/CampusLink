@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import app from "../Backend/firebase";
-import { loginUser } from "../Backend/user";
+import React, { useState } from "react";
 
 export const AuthContext = React.createContext();
 
@@ -14,11 +12,6 @@ export const AuthProvider = ({ children }) => {
   function handleLogout() {
     setUser(null);
   }
-
-  // useEffect(() => {
-  //   app.auth().onAuthStateChanged(setUser);
-  //   console.log("JWT LOGIN!");
-  // }, []);
 
   return (
     <AuthContext.Provider value={{ user, handleLogin, handleLogout }}>

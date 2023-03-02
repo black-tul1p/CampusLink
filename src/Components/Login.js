@@ -17,9 +17,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   const { handleLogin } = useContext(AuthContext);
-  // console.log(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
