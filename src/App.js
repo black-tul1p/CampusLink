@@ -5,7 +5,7 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Admin from "./Components/Admin";
 import NavBar from "./Components/NavBar";
-import HomepageInstructor from "./Components/HomepageInstructor";
+import Homepage from "./Components/Home";
 import SettingsPage from "./Components/Settings";
 import FAQ from "./Components/FAQ";
 
@@ -25,7 +25,7 @@ function App() {
           element={
             <Container>
               <NavBar />
-              <HomepageInstructor />
+              <Homepage />
             </Container>
           }
         />
