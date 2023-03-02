@@ -42,14 +42,6 @@ function allyProps(index) {
 	};
 }
 
-const handleApprove = () => {
-	alert("approve");
-};
-
-const handleDeny = () => {
-	alert("deny");
-}
-
 export default function Admin() {
   const [students, setStudents] = useState([]);
   const [instructors, setInstructors] = useState([]);
@@ -177,12 +169,12 @@ export default function Admin() {
               <tr>
                 <td className="userTypeColumn">
                   <Button className="Mini-button"
-				  	onClick={handleApprove()}
+				  	onClick={handleApprove}
 					>
 						Approve
 					</Button> 
 					<Button className="Mini-button"
-				  	onClick={handleDeny()}
+				  	onClick={handleDeny}
 					>
 						Deny
 					</Button>
@@ -215,4 +207,12 @@ InstructorInfoRow.defaultProps = {
   firstName: "Firstname",
   lastName: "Lastname",
   email: "example@gmail.com",
+}
+
+const handleApprove = (e, user) => {
+	alert("approve");
+};
+
+const handleDeny = (e, user) => {
+	alert("deny");
 }
