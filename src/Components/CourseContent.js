@@ -11,6 +11,8 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
+import { getInstructorCourses } from "../Backend/instructor";
+
 //import CS307Syllabus from "../Assets/CS307-Syllabus.pdf";
 //import { Document,Page } from 'react-pdf';
 
@@ -57,8 +59,8 @@ export default function CourseContent() {
   //  const [content_page, setCounter] = useState("Syllabus");
 
 
-
     return ( <div>
+
 
             <div className='CCBannerContainer'>
                 <img className="CCBanner" src={Banner} alt="CampusLink Logo"/>

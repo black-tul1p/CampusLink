@@ -6,6 +6,7 @@ import {
   getDocs,
   query,
   where,
+  getDoc,
 } from "@firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -62,6 +63,16 @@ export async function removeCourse(courseId) {
   }
 }
 
+export async function getCourseDetailsById(coursesRef) {
+  const coursesData = collection(firestore, "courses");
+  const snapshot = await getDoc(doc(coursesData, coursesRef))
+  
+  const actualCourse = snapshot.data();
+ // console.log(actualCourse)
+
+  return actualCourse
+
+}
 
 // export async function getCourseIdByDetails(courseTitle, courseId) {
 //   const coursesRef = collection(firestore, "courses");
