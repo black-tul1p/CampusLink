@@ -190,9 +190,14 @@
     background-color: #0a2232;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
-    min-height: 100px;
-    max-height: 100px;
+    min-height: 120px;
+    max-height: 120px;
     border: 20px solid #0a2232;
+  }
+
+  .title-container {
+    display: flex;
+    justify-content: space-between;
   }
   
   .course-container-bottom {
@@ -210,7 +215,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    height: 11.25em;
+    height: 12.45em;
     transition: transform 0.15s ease-out;
     cursor: pointer;
   }

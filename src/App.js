@@ -3,9 +3,14 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import styled from "@emotion/styled";
 import NavBar from "./Components/NavBar";
-import HomepageInstructor from "./Components/HomepageInstructor";
-import SettingsPage from "./Components/Settings";
-import FAQ from "./Components/FAQ";
+import CourseNavBar from "./Components/CourseNavBar";
+import Announcements from "./CoursePages/Announcements";
+import Assignments from "./CoursePages/Assignments";
+import Syllabus from "./CoursePages/Syllabus";
+import Classlist from "./CoursePages/Classlist";
+import Discussions from "./CoursePages/Discussions";
+import Grades from "./CoursePages/Grades";
+import Quizzes from "./CoursePages/Quizzes";
 
 const Container = styled.div`
   display: flex;
@@ -16,7 +21,7 @@ function App() {
     <div ClassName='App'>
       <Router>
       <Routes>
-      <Route
+      {/* <Route
           path="/"
           element={
             <Container>
@@ -24,34 +29,88 @@ function App() {
               <HomepageInstructor />
             </Container>
           }
-      />
+      /> */}
       <Route
-          path="/home"
+          path="/"
           element={
             <Container>
               <NavBar />
-              <HomepageInstructor />
+              <CourseNavBar />
+              <Announcements />
             </Container>
           }
       />
       <Route
-          path="/settings"
+          path="/announcements"
           element={
             <Container>
               <NavBar />
-              <SettingsPage />
+              <CourseNavBar />
+              <Announcements />
+            </Container>
+          }
+      />
+      <Route
+          path="/assignments"
+          element={
+            <Container>
+              <NavBar />
+              <CourseNavBar />
+              <Assignments />
+            </Container>
+          }
+        />
+      <Route
+          path="/discussions"
+          element={
+            <Container>
+              <NavBar />
+              <CourseNavBar />
+              <Discussions />
+            </Container>
+          }
+        />
+      <Route
+          path="/grades"
+          element={
+            <Container>
+              <NavBar />
+              <CourseNavBar />
+              <Grades />
+            </Container>
+          }
+        />
+      <Route
+          path="/syllabus"
+          element={
+            <Container>
+              <NavBar />
+              <CourseNavBar />
+              <Syllabus />
             </Container>
           }
         />
         <Route
-          path="/faq"
+          path="/quizzes"
           element={
             <Container>
               <NavBar />
-              <FAQ />
+              <CourseNavBar />
+              <Quizzes />
             </Container>
           }
         />
+        <Route
+          path="/classlist"
+          element={
+            <Container>
+              <NavBar />
+              <CourseNavBar />
+              <Classlist />
+            </Container>
+          }
+        />
+        
       </Routes>
       </Router> 
        

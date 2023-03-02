@@ -25,7 +25,7 @@ import { logoutUser } from "../Backend/user";
 // CSS Styles
 const Sidebar = styled.div`
   flex-shrink: 0;
-  width: 5em;
+  width: 6vw;
   height: 100vh;
   background-color: #20232a;
   display: flex;

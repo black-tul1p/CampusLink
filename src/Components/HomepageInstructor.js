@@ -3,6 +3,8 @@ import "./HomepageStudent";
 import { getAllCourses } from "../Backend/course";
 import { useState, useEffect } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Button from "@mui/material/Button";
 import { CircularProgress } from "@mui/material";
 
 function HomepageInstructor() {
@@ -55,9 +57,12 @@ function HomepageInstructor() {
               .map((course) => (
                 <div className="course-container">
                   <div className="course-container-top">
-                    <h3>
-                      {course.courseTitle} {course.courseId} :
-                    </h3>
+                    <div className="title-container">
+                      <h3>{course.courseTitle} {course.courseId} :</h3>
+                      <Button variant="outlined" style={{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}>
+                            <MoreVertIcon />
+                      </Button>
+                    </div>
                     <h3>{course.description}</h3>
                   </div>
                   <div className="course-container-bottom"></div>
