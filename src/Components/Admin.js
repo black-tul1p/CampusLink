@@ -94,7 +94,11 @@ export default function Admin() {
   return (
     <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} >
+            <Tabs 
+			value={value}
+			onChange={handleChange}
+			centered
+			>
                 <Tab label="Students" {...allyProps(0)} />
                 <Tab label="Instructors" {...allyProps(1)} />
                 <Tab label="Pending Requests" {...allyProps(2)} />
