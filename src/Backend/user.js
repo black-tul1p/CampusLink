@@ -211,7 +211,7 @@ export async function getCurrentUser() {
 
     const instructorDoc = await getDoc(doc(instructorRef, user.uid));
     if (instructorDoc.exists()) {
-      return instructorDoc.data*;
+      return instructorDoc.data();
     }
 
     return false;
