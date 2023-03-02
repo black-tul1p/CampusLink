@@ -1,24 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { updateUserProfile } from "../Backend/user"
 import './Profile.css';
 import { FiEdit2 } from 'react-icons/fi';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { auth } from '../Backend/firebase';
+import { TextField, Button } from '@mui/material';
 
 function Profile(props) {
   const [photoUrl, setPhotoUrl] = useState(props.photo);
-  const [firstName, setFirstName] = useState(props.firstName);
-  const [lastName, setLastName] = useState(props.lastName);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [preferredName, setPreferredName] = useState(props.preferredName);
   const [usePreferredName, setUsePreferredName] = useState(false);
   const [editMode, setEditMode] = useState(false);
+
+  const loadUserData = () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      setFirstName(currentUser.displayName.split(' ')[0]);
+      setLastName(currentUser.displayName.split(' ')[1]);
+    }
+  };
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     const url = URL.createObjectURL(file);
     setPhotoUrl(url);
   };
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
 
   const handleUsePreferredNameChange = (event) => {
     setUsePreferredName(event.target.checked);
@@ -49,8 +62,13 @@ function Profile(props) {
   };
 
   return (
-    <div className="profile">
-      <h1>Account Setting</h1>
+    <div>
+      <div className="header-container">
+        <h1>Account Setting</h1>
+        <div className="divider"></div>
+      </div>
+      <div className="profile">
+        <h1>User information</h1>
       <div className="profile-photo">
         <img src={photoUrl} alt="Profile" />
         <label className="edit-icon" htmlFor="photo-upload">
@@ -64,55 +82,69 @@ function Profile(props) {
           />
         </label>
       </div>
-      <div className="name-inputs">
-        <div className="name-input">
-          <label htmlFor="first-name-input">First name:</label>
-          <input
+      <p>{props.email}</p>
+      <div className="Input-fields" style={{ marginBottom: '1rem' }}>
+          <TextField
+            variant="outlined"
             id="first-name-input"
-            type="text"
+            label="First Name"
             value={firstName}
             onChange={(event) => setFirstName(event.target.value)}
             disabled={!editMode}
+            InputProps={{
+              style: {
+                color: "white",
+                borderColor: "white"
+              }
+            }}
+            InputLabelProps={{
+              style: { color: "white" }
+            }}
           />
-        </div>
-        <div className="name-input">
-          <label htmlFor="last-name-input">Last name:</label>
-          <input
+          <TextField
+            variant="outlined"
             id="last-name-input"
-            type="text"
+            label="Last Name"
             value={lastName}
             onChange={(event) => setLastName(event.target.value)}
             disabled={!editMode}
+            InputProps={{
+              style: {
+                color: "white",
+                borderColor: "white"
+              }
+            }}
+            InputLabelProps={{
+              style: { color: "white" }
+            }}
           />
-        </div>
-        <div className="name-input">
-          <label htmlFor="preferred-name-input">
-            Preferred name:
-            <input
-              id="preferred-name-checkbox"
-              type="checkbox"
-              checked={usePreferredName}
-              onChange={handleUsePreferredNameChange}
-              disabled={!editMode}
-            />
-          </label>
-          <input
+          <TextField
+            variant="outlined"
             id="preferred-name-input"
-            type="text"
+            label="Preferred Name"
             value={preferredName}
             onChange={(event) => setPreferredName(event.target.value)}
-            disabled={!usePreferredName || !editMode}
+            disabled={!editMode}
+            InputProps={{
+              style: {
+                color: "white",
+                borderColor: "white"
+              }
+            }}
+            InputLabelProps={{
+              style: { color: "white" }
+            }}
           />
-        </div>
       </div>
-      <p>Email: {props.email}</p>
       {editMode ? (
-        <div>
-          <button onClick={handleSaveClick}>Save</button>
-          <button onClick={handleCancelClick}>Cancel</button>
-        </div>
-      ) : 
-      (<button onClick={() => setEditMode(true)}>Edit Profile</button>)}
+  <div className="save-cancel-container">
+    <button onClick={handleSaveClick} className="button-primary">Save</button>
+    <button onClick={handleCancelClick} className="button-cancel">Cancel</button>
+  </div>
+) : 
+  (<button onClick={() => setEditMode(true)} className="edit-profile-button">Edit Profile</button>)
+}
+      </div>
     </div>
   );
 }

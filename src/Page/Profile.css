@@ -1,79 +1,145 @@
 body {
-    background-color: #102e44;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-  
-  .profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .profile-photo {
-    border-radius: 50%;
-    overflow: hidden;
-    width: 150px;
-    height: 150px;
-    margin-bottom: 20px;
-    position: relative; 
-  }
-  
-  .profile-photo img {
-    width: 100%;
-    height: auto;
-  }
-  
-  .name-inputs .preferred-name {
-    margin-left: -80px;
-  }
-  
+  background-color: #102e44;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 
-  .name-input {
-    border-radius: 10px;
-    padding: 5px;
-    margin: 5px;
-    background-color: white;
-  }
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
 
-  .profile p {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .edit-icon {
-    background-color: #fff;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    bottom: 50%;
-    right: 50%;
-    transform: translate(50%, 50%);
-    width: 40px;
-    height: 40px;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
-    opacity: 0.3;
-  }
-  
-  
-  .edit-icon:hover {
-    background-color: #eee;
-  }
-  
+.header-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 50px;
+  width: auto;
+  color: white;
+}
 
-  input[type=file] {
-    opacity: 0;
-    position: absolute;
-    z-index: -1;
-  }
-  
+.profile-photo {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+  position: relative;
+}
 
-  label {
-    cursor: pointer;
-  }
-  
+.profile-photo img {
+  width: 100%;
+  height: auto;
+}
+
+.name-inputs .preferred-name {
+  margin-left: -80px;
+}
+
+.Input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.name-input {
+  /*
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
+  background-color: white;
+  */
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profile p {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.edit-icon {
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  transform: translate(50%, 50%);
+  width: 40px;
+  height: 40px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
+  opacity: 0.3;
+}
+
+
+.edit-icon:hover {
+  background-color: #eee;
+}
+
+
+input[type=file] {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+
+label {
+  cursor: pointer;
+}
+
+
+.divider {
+  margin-right: 3em;
+  height: 0.15em;
+  background-color: aliceblue;
+}
+
+button {
+  background-color: blue;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkblue;
+}
+
+.button-primary {
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-cancel {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-cancel-container button {
+  width: 100px;
+  height: 40px;
+  margin: 10px;
+}
