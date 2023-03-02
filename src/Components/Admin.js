@@ -42,11 +42,11 @@ function allyProps(index) {
 	};
 }
 
-function handleApprove() {
+const handleApprove = () => {
 	alert("approve");
-}
+};
 
-function handleDeny() {
+const handleDeny = () => {
 	alert("deny");
 }
 
@@ -177,12 +177,12 @@ export default function Admin() {
               <tr>
                 <td className="userTypeColumn">
                   <Button className="Mini-button"
-				  	onClick={handleApprove}
+				  	onClick={handleApprove()}
 					>
 						Approve
 					</Button> 
 					<Button className="Mini-button"
-				  	onClick={handleDeny}
+				  	onClick={handleDeny()}
 					>
 						Deny
 					</Button>
