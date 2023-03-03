@@ -133,7 +133,8 @@ export async function loginUser(email, password) {
  * @throws {Error} - If there was an error during authentication, or if the authenticated user has an invalid role.
  */
 export async function loginAdmin(email, password) {
-  if (isAdmin(email)) {
+  const admin = await isAdmin(email);
+  if (admin) {
     try {
       // sign in user with the provided credentials
       const userCredential = await signInWithEmailAndPassword(
