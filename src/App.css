@@ -186,7 +186,6 @@ html, body {
   transform: scale(1.1);
 }
 
-
 .course-container:hover > .delete-course-container {
   opacity: 0.3;
 }
@@ -242,6 +241,14 @@ html, body {
   display: flex;
   flex-direction: column;
   padding-left: 50px;
+  width: auto;
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 50px;
   width: auto;
 }
 

@@ -1,25 +1,21 @@
-import { createContext, useState, useEffect, useContext } from "react";
-import { onIdTokenChanged } from "firebase/auth";
-import { auth } from "../Backend/firebase";
+import React, { useState } from "react";
 
-const AuthContext = createContext({});
+export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    return onIdTokenChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-  }, []);
+  function handleLogin(user) {
+    if (user) setUser(user);
+  }
+
+  function handleLogout() {
+    setUser(null);
+  }
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, handleLogin, handleLogout }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

@@ -13,6 +13,7 @@ import {
   deleteUser,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { auth, firestore } from "./firebase";
 
@@ -44,21 +45,35 @@ export async function createUser(email, password, firstName, lastName, role) {
       case "auth/weak-password":
         throw new Error("Password too weak");
       default:
-        throw new Error("Error creating user: ", error.code);
+        throw new Error(`Error creating user: ${error.code}`);
     }
   });
   const user = userCredential.user;
 
-  // // set custom claim to indicate role as student
-  // await auth.setCustomUserClaims(user.uid, { role: role });
+  // set display name for user
+  const displayName = firstName + " " + lastName;
+  await updateProfile(user, { displayName: displayName });
 
-  // create document for student in the appropriate collection
+  // create document for user in the appropriate collection
   const userRef = doc(firestore, role + "s", user.uid);
-  await setDoc(userRef, {
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-  });
+  if (role === "instructor") {
+    await setDoc(userRef, {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      preferredName: "",
+      courses: [],
+      accepted: false,
+    });
+  } else {
+    await setDoc(userRef, {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      preferredName: "",
+      courses: [],
+    });
+  }
 }
 
 /**
@@ -71,6 +86,15 @@ export async function createUser(email, password, firstName, lastName, role) {
  * @throws {Error} - If there was an error during authentication, or if the authenticated user has an invalid role.
  */
 export async function loginUser(email, password) {
+  await getUserRoleByEmail(email).then(async (role) => {
+    if (role === "instructor") {
+      await isAcceptedInstructor(email).then((accepted) => {
+        if (!accepted) {
+          throw new Error(`Please wait for Instructor account approval`);
+        }
+      });
+    }
+  });
   try {
     // sign in user with the provided credentials
     const userCredential = await signInWithEmailAndPassword(
@@ -87,14 +111,11 @@ export async function loginUser(email, password) {
             "Too many attempts. Please reset password or try again later."
           );
         default:
-          throw new Error("Error logging in: ", error.code);
+          throw new Error(`Error logging in: ${error.code}`);
       }
     });
     const user = userCredential.user;
-    // JWT
-    const token = await user.getIdToken();
-    localStorage.setItem("token", token);
-    return true;
+    return user;
   } catch (error) {
     throw new Error(error.message);
   }
@@ -130,6 +151,32 @@ export async function getUserRole() {
 }
 
 /**
+ * Checks if the user with the specified email has a document in the students or instructors collection.
+ * Returns the role accordingly.
+ *
+ * @param {string} email - The email of the user to check.
+ * @returns {Promise<string>} - A Promise that resolves to a string ("student" or "instructor") if the user is found, or false if not found.
+ * @throws {Error} - If there was an error retrieving data from Firestore.
+ */
+export async function getUserRoleByEmail(email) {
+  const instructorsRef = collection(firestore, "instructors");
+  const instQuery = query(instructorsRef, where("email", "==", email));
+
+  const studentsRef = collection(firestore, "students");
+  const studQuery = query(studentsRef, where("email", "==", email));
+
+  try {
+    const instSnapshot = await getDocs(instQuery);
+    if (instSnapshot.docs.length > 0) return "instructor";
+
+    const studSnapshot = await getDocs(studQuery);
+    if (studSnapshot.docs.length > 0) return "student";
+  } catch (error) {
+    throw new Error(`Error checking user role: ${error.message}`);
+  }
+}
+
+/**
  * Signs out the currently logged-in user from Firebase Authentication.
  *
  * @throws {Error} - If there was an error signing out the user.
@@ -158,24 +205,60 @@ export function getLoggedInUserId() {
 }
 
 /**
- * Retrieves the ID of a student by their email address from the Firestore database.
+ * Retrieves user information from the Firestore database by their email
  *
- * @param {string} email - Email address of the student to retrieve the ID for.
- * @returns {string|null} - The ID of the student, or null if no student was found with the given email address.
+ * @param {string} email - The email of the user to retrieve
+ * @returns {Promise<Object>} - A promise that resolves to the user fields object, or null if not found
+ * @throws {Error} Throws an error if there is an issue finding the user doc in the database
  */
-export async function getUserIdByEmail(email) {
+export async function getUserByEmail(email) {
+  const instructorsRef = collection(firestore, "instructors");
+  const q1 = query(instructorsRef, where("email", "==", email));
+
   const studentsRef = collection(firestore, "students");
-  const q = query(studentsRef, where("email", "==", email));
-  const querySnapshot = await getDocs(q);
+  const q2 = query(studentsRef, where("email", "==", email));
 
-  if (querySnapshot.docs.length === 0) {
-    console.log("No student found with email: ", email);
+  try {
+    const querySnapshot1 = await getDocs(q1);
+    const instructorDoc = querySnapshot1.docs[0];
+    if (instructorDoc) return instructorDoc.data();
+
+    const querySnapshot2 = await getDocs(q2);
+    const studentDoc = querySnapshot2.docs[0];
+    if (studentDoc) return studentDoc.data();
+
     return null;
+  } catch (error) {
+    throw new Error(`Error finding user doc in DB: ${error.message}`);
   }
+}
 
-  const studentId = querySnapshot.docs[0].id;
-  console.log("Found a student with ID: ", studentId);
-  return studentId;
+/**
+ * Retrieves the currently logged in user's information from Firestore
+ *
+ * @returns {boolean|Object} Returns the user's document if found, false otherwise
+ * @throws {Error} Throws an error if there is an issue finding the user doc in the database
+ */
+export async function getCurrentUser() {
+  const user = auth.currentUser;
+  const studentRef = collection(firestore, "students");
+  const instructorRef = collection(firestore, "instructors");
+
+  try {
+    const studentDoc = await getDoc(doc(studentRef, user.uid));
+    if (studentDoc.exists()) {
+      return studentDoc.data();
+    }
+
+    const instructorDoc = await getDoc(doc(instructorRef, user.uid));
+    if (instructorDoc.exists()) {
+      return instructorDoc.data();
+    }
+
+    return false;
+  } catch (error) {
+    throw new Error(`Error finding user doc in DB: ${error.message}`);
+  }
 }
 
 /**
@@ -214,4 +297,33 @@ export function verifyEmail(email) {
   }
 
   return true;
+}
+
+/**
+ * Checks if the user with the specified email is an approved instructor
+ *
+ * @param {string} email - The email of the user to check.
+ * @returns {Promise<boolean>|string} - A promise that resolves to true if the user is an accepted instructor,
+ * false otherwise.
+ * @throws {Error} - If there was an error querying the Firestore database.
+ */
+async function isAcceptedInstructor(email) {
+  const instructorsRef = collection(firestore, "instructors");
+  const querySnapshot = await getDocs(
+    query(instructorsRef, where("email", "==", email))
+  );
+  const docs = querySnapshot.docs;
+
+  if (docs.length === 0) {
+    return "none"; // no instructor with this email exists
+  }
+
+  const instructorDoc = docs[0];
+  const data = instructorDoc.data();
+
+  if (data.accepted !== true) {
+    return false; // instructor's accepted field is not true
+  }
+
+  return true; // instructor exists and accepted field is true
 }
