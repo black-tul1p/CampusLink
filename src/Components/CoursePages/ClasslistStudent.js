@@ -12,11 +12,11 @@ function ClasslistStudent() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
   const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   //Initialize data which comes from the database
   useEffect(() => {
     // Get course title and description
-    const location = useLocation();
     const courseID = location.state?.courseId;
     // const courseID = "iR8l666mgOfQLNUXjjLO"
     if (courseID === null) {
