@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "@emotion/styled";
 import logo_mini from "../Assets/campuslink_logo.jpg";
 import {
@@ -21,6 +21,7 @@ import {
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../Backend/user";
+import { AuthContext } from "../Contexts/AuthContext";
 
 // CSS Styles
 const Sidebar = styled.div`
@@ -95,17 +96,19 @@ const SidebarIcon = styled.div`
   }
 `;
 
-export default function NavBar() {
+export default function Navbar() {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const navigate = useNavigate();
+  const { handleLogout } = useContext(AuthContext);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleLogout = (event) => {
+  const handleClick = (event) => {
     handleClose(event);
+    handleLogout();
     logoutUser();
     navigate("/");
   };
@@ -160,11 +163,7 @@ export default function NavBar() {
           }
           placement="right"
         >
-          <SidebarButton
-            onClick={() => {
-              navigate("/announcements");
-            }}
-          >
+          <SidebarButton>
             <SidebarIcon>
               <Notifications style={{ color: "#fff" }} />
             </SidebarIcon>
@@ -240,7 +239,7 @@ export default function NavBar() {
                         />
                         Account Settings
                       </MenuItem>
-                      <MenuItem onClick={handleLogout}>
+                      <MenuItem onClick={handleClick}>
                         <ExitToApp
                           fontSize="small"
                           sx={{ mr: 1 }}

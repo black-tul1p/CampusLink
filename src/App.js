@@ -1,6 +1,18 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./Components/Login";
+import Register from "./Components/Register";
+import Admin from "./Components/Admin";
+import Landing, { PageList } from "./Components/Landing";
+import { useContext, useState } from "react";
+import { AuthContext } from "./Contexts/AuthContext";
+
 import styled from "@emotion/styled";
 import HomepageInstructor from "./Components/HomepageInstructor";
 import NavBar from "./Components/NavBar";
@@ -18,29 +30,36 @@ const Container = styled.div`
   display: flex;
 `;
 
+function AuthorizedRoute(props) {
+  const { user } = useContext(AuthContext);
+  if (user) {
+    return props.children;
+  }
+  return <Navigate to="/login" />;
+}
+
 function App() {
+  const [isDark, setisDark] = useState(true);
+
   return (
     <div ClassName='App'>
       <Router>
       <Routes>
-      <Route
-          path="/"
-          element={
-            <Container>
-              <NavBar />
-              <HomepageInstructor />
-            </Container>
-          }
-      />
-      <Route
-          path="/home"
-          element={
-            <Container>
-              <NavBar />
-              <HomepageInstructor />
-            </Container>
-          }
-      />
+      <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/join" element={<Register />} />
+        <Route path="/admin" element={<Admin />} />
+        {Object.values(PageList).map((path) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <AuthorizedRoute>
+                <Landing page={path} theme={isDark} />
+              </AuthorizedRoute>
+            }
+          />
+        ))}
       <Route
           path="/faq"
           element={
@@ -50,16 +69,7 @@ function App() {
             </Container>
           }
       />
-      {/* <Route
-          path="/"
-          element={
-            <Container>
-              <NavBar />
-              <CourseNavBar />
-              <Announcements />
-            </Container>
-          }
-      /> */}
+      
       <Route
           path="/announcements"
           element={
