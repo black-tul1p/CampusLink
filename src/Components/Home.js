@@ -103,7 +103,6 @@ function Homepage() {
           <DialogContentText>
           </DialogContentText>
           <TextField
-              required
               label="Course Title"
               sx={{ margin : '5px', width: "50%", 
                     "& .MuiInputBase-input": { color: 'black !important' },
@@ -112,7 +111,6 @@ function Homepage() {
               onChange={e => {setNewCourseTitle(e.target.value);}}
           />
           <TextField
-              required
               label="Course ID"
               sx={{ margin : '5px', width: "25%",
                     "& .MuiInputBase-input": { color: 'black !important' },
@@ -121,7 +119,6 @@ function Homepage() {
               onChange={e => {setNewCourseId(e.target.value);}}
           />
           <TextField
-              required
               label="Department"
               sx={{ margin : '5px',
                     "& .MuiInputBase-input": { color: 'black !important' },
@@ -131,7 +128,6 @@ function Homepage() {
               onChange={e => {setNewCourseDept(e.target.value);}}
           />
           <TextField
-              required
               label="Description"
               sx={{ margin : '5px',
                     "& .MuiInputBase-input": { color: 'black !important' },
