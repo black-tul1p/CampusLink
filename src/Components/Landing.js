@@ -89,9 +89,8 @@ export default function Landing(props) {
     );
   } else if (props.page === PageList.Classlist) {
     content = (
-      <CourseNavBar>
+        <CourseNavBar/>,
         <Classlist theme={props} />
-      </CourseNavBar>
     );
   } else if (props.page === PageList.ClasslistStud) {
     content = (
