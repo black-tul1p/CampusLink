@@ -121,7 +121,6 @@ export const getUserCourses = async (role) => {
 
     let getData = collection(firestore, "students");
     if (role === "instructor") {
-      console.log("INSTRUCT");
       getData = collection(firestore, "instructors");
     }
 
@@ -149,7 +148,7 @@ export const getUserCourses = async (role) => {
       })
     );
 
-    console.log("All courses fetched:", courses.length);
+    // console.log("All courses fetched:", courses.length);
     return courses;
   } catch (error) {
     throw new Error("Error fetching courses:", error);
