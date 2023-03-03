@@ -8,3 +8,5 @@ function Grades() {
 }
 
 export default Grades
+
+export default grades

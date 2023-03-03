@@ -92,10 +92,11 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container"
+                  <div
+                    className="course-container"
                     onClick={() => {
                       const courseId = course.databaseId;
-                      navigate("/announcements", { state: {courseId} });
+                      navigate("/announcements", { state: { courseId } });
                     }}
                   >
                     <div className="course-container-top">
@@ -114,10 +115,11 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container"
+                  <div
+                    className="course-container"
                     onClick={() => {
                       const courseId = course.databaseId;
-                      navigate("/announcements", { state: {courseId} });
+                      navigate("/announcements", { state: { courseId } });
                     }}
                   >
                     <div className="course-container-top">
