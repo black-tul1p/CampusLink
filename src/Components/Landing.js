@@ -2,7 +2,6 @@ import React from "react";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import FAQ from "./FAQ";
-// import Account from "./Account";
 import SettingsPage from "./Settings";
 import styled from "@emotion/styled";
 import Profile from "./Profile";
