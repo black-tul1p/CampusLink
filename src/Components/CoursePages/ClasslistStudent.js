@@ -1,12 +1,14 @@
-import "./Classlist.css";
+import React from 'react'
+import "../Classlist.css"
+//import Classlist from '../Classlist';
 import {doc, getDoc} from "@firebase/firestore";
-import { firestore } from "../Backend/firebase";
-import ProfilePic from '../Assets/default_profile_picture.png'
+import { firestore } from "../../Backend/firebase";
+import ProfilePic from '../../Assets/user_logo.jpg'
 //import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
 import { useSearchParams } from 'react-router-dom'
 
-function Classlist() {
+function ClasslistStudent() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
   const [searchParams] = useSearchParams();
@@ -14,9 +16,8 @@ function Classlist() {
   //Initialize data which comes from the database
   useEffect(() => {
     // Get course title and description
-    const courseID = searchParams.get('course_id')
+    const courseID = "iR8l666mgOfQLNUXjjLO"
     if (courseID === null) {
-      alert("Course not specified!");
       console.log("Course not specified!");
     } else {
       const course = doc(firestore, 'courses', courseID)
@@ -38,22 +39,9 @@ function Classlist() {
 
   return (
     <div className="Registration-page">
-      <h1 className="course-name" >{courseData.courseTitle} {courseData.courseId}</h1>
-      <h2 className="course-name" >{courseData.description}</h2>
       <div className="classlist-wrapper">
         <h1 className="title" >Course Classlist</h1>
 
-        <button className="add-button" onClick={() => {
-          //Append placeholder student
-          /*
-          setStudents([
-            ...students, {
-             firstName: "Firstname",
-             lastName: "Lastname",
-             email: "example@gmail.com"
-            }
-          ]);*/
-        }}>Add Students</button>
 
         <table className="classlist">
           <tbody>
@@ -96,4 +84,4 @@ StudentInfoRow.defaultProps = {
   email: "example@gmail.com",
 }
 
-export default Classlist;
+export default ClasslistStudent;

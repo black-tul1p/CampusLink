@@ -23,6 +23,7 @@ import Discussions from "./Components/CoursePages/Discussions";
 import Grades from "./Components/CoursePages/Grades";
 import Quizzes from "./Components/CoursePages/Quizzes";
 import Profile from "./Components/Profile";
+import ClasslistStudent from "./Components/CoursePages/ClasslistStudent";
 
 const Container = styled.div`
   display: flex;
@@ -134,6 +135,16 @@ function App() {
               <NavBar />
               <CourseNavBar />
               <Classlist />
+            </Container>
+          }
+        />
+        <Route
+          path="/classlistStudent"
+          element={
+            <Container>
+              <NavBar />
+              <CourseNavBar />
+              <ClasslistStudent />
             </Container>
           }
         />
