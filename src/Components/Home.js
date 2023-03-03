@@ -44,9 +44,20 @@ function Homepage() {
     setOpen(false);
   };
   const submitCourseDialogue = () => {
-    createCourse(newCourseTitle, newCourseId, 3, newCourseDept, 150, 0, newCourseDesc, getLoggedInUserId())
-      .then(() => {fetchData();});
-    closeCourseDialogue();
+    if (!newCourseTitle || !newCourseId || !newCourseDept || !newCourseDesc) {
+      setSnackbarMessage(`Failed to create course`);
+      setOpenSnackbar(true);
+      return;
+    }
+
+    try {
+      createCourse(newCourseTitle, newCourseId, 3, newCourseDept, 150, 0, newCourseDesc, getLoggedInUserId())
+        .then(() => {fetchData();});
+      closeCourseDialogue();
+    } catch (error) {
+      setSnackbarMessage(`Failed to create course`);
+      setOpenSnackbar(true);
+    }
   }
 
   const showAlert = () => {
@@ -90,61 +101,7 @@ function Homepage() {
 
   return (
     <div className="homepage-student">
-      <Dialog class="create-course-dialogue" open={open} onClose={closeCourseDialogue} sx={{
-        "& .MuiDialog-container": {
-          "& .MuiPaper-root": {
-            width: "100%",
-            maxWidth: "500px",  // Set your width here
-          },
-        },
-      }}>
-        <DialogTitle>Create New Course</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          </DialogContentText>
-          <TextField
-              label="Course Title"
-              sx={{ margin : '5px', width: "50%", 
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              onChange={e => {setNewCourseTitle(e.target.value);}}
-          />
-          <TextField
-              label="Course ID"
-              sx={{ margin : '5px', width: "25%",
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              onChange={e => {setNewCourseId(e.target.value);}}
-          />
-          <TextField
-              label="Department"
-              sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              fullWidth
-              onChange={e => {setNewCourseDept(e.target.value);}}
-          />
-          <TextField
-              label="Description"
-              sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              minRows="2"
-              fullWidth
-              multiline
-              onChange={e => {setNewCourseDesc(e.target.value);}}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeCourseDialogue}>Cancel</Button>
-          <Button onClick={submitCourseDialogue}>Create</Button>
-        </DialogActions>
-      </Dialog>
-
+      
       <div className="header-container">
         <div className="header-titles">
           <p>My Courses</p>
@@ -182,7 +139,12 @@ function Homepage() {
                   <div className="course-container" forcourse={course.databaseId}>
                     <div className="delete-course-container" onClick={(event) => {
                         const id = event.currentTarget.parentElement.getAttribute('forcourse');
-                        removeCourse(id).then(() => {fetchData();});
+                        try {
+                          removeCourse(id).then(() => {fetchData();});
+                        } catch (error) {
+                          setSnackbarMessage(`Failed to remove course`);
+                          setOpenSnackbar(true);
+                        }
                      }}>
                        <DeleteIcon fontSize="large" />
                     </div>
@@ -276,6 +238,62 @@ function Homepage() {
           }
         />
       </Snackbar>
+
+      <Dialog class="create-course-dialogue" open={open} onClose={closeCourseDialogue} sx={{
+        "& .MuiDialog-container": {
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxWidth: "500px",  // Set your width here
+          },
+        },
+      }}>
+        <DialogTitle>Create New Course</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+          </DialogContentText>
+          <TextField
+              label="Course Title"
+              sx={{ margin : '5px', width: "50%", 
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              onChange={e => {setNewCourseTitle(e.target.value);}}
+          />
+          <TextField
+              label="Course ID"
+              sx={{ margin : '5px', width: "25%",
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              onChange={e => {setNewCourseId(e.target.value);}}
+          />
+          <TextField
+              label="Department"
+              sx={{ margin : '5px',
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              fullWidth
+              onChange={e => {setNewCourseDept(e.target.value);}}
+          />
+          <TextField
+              label="Description"
+              sx={{ margin : '5px',
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              minRows="2"
+              fullWidth
+              multiline
+              onChange={e => {setNewCourseDesc(e.target.value);}}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeCourseDialogue}>Cancel</Button>
+          <Button onClick={submitCourseDialogue}>Create</Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
   );
 }
