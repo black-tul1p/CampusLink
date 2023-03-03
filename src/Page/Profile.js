@@ -14,12 +14,14 @@ function Profile(props) {
   const [preferredName, setPreferredName] = useState(props.preferredName);
   const [usePreferredName, setUsePreferredName] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [email, setEmail] = useState('');
 
   const loadUserData = () => {
     const currentUser = auth.currentUser;
     if (currentUser) {
       setFirstName(currentUser.displayName.split(' ')[0]);
       setLastName(currentUser.displayName.split(' ')[1]);
+      setEmail(currentUser.email);
     }
   };
 
@@ -82,7 +84,7 @@ function Profile(props) {
           />
         </label>
       </div>
-      <p>{props.email}</p>
+      <p>{email}</p>
       <div className="Input-fields" style={{ marginBottom: '1rem' }}>
           <TextField
             variant="outlined"
