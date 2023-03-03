@@ -71,13 +71,11 @@ export async function createCourse(
 
   try {
     const docRef = await addDoc(collection(firestore, "courses"), data);
-    //const instructorRef = collection(firestore, "instructors");
-    //const instructor = await getDoc(doc(instructorRef, instructorId)); 
-    //await updateDoc(instructor, {'array':FieldValue.arrayUnion([docRef])});
+    const instructorRef = collection(firestore, "instructors");
+    await updateDoc(doc(instructorRef, instructorId), {courses: arrayUnion(docRef)});
     console.log("Course added with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding course: ", data);
-    console.log(e);
   }
 }
 
@@ -118,9 +116,7 @@ export async function getCourseDetailsById(coursesRef) {
   const snapshot = await getDoc(doc(coursesData, coursesRef));
 
   const actualCourse = snapshot.data();
-  // console.log(actualCourse)
-
-  return actualCourse;
+  return {...actualCourse, databaseId: snapshot.id};
 }
 
 export const getUserCourses = async (role) => {
@@ -156,6 +152,7 @@ export const getUserCourses = async (role) => {
     console.log("All courses fetched:", courses.length);
     return courses;
   } catch (error) {
+    console.log(error);
     throw new Error("Error fetching courses:", error);
   }
 };

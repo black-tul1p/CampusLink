@@ -183,9 +183,9 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container">
+                  <div className="course-container" forcourse={course.databaseId}>
                     <div className="delete-course-container" onClick={(event) => {
-                        const id = event.currentTarget.parentElement.getAttribute('forCourse');
+                        const id = event.currentTarget.parentElement.getAttribute('forcourse');
                         removeCourse(id).then(() => {fetchData();});
                      }}>
                        <DeleteIcon fontSize="large" />
