@@ -5,8 +5,9 @@ import { firestore } from "../../Backend/firebase";
 import ProfilePic from '../../Assets/user_logo.jpg'
 //import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { getCourseDetailsById } from '../../Backend/course';
+import "./Announcements.css"
 
 function Announcements() {
 
@@ -16,7 +17,11 @@ function Announcements() {
 
   const [cDetails, setCourseData] = useState([]);
 
-  const course = doc(firestore, 'courses', "iR8l666mgOfQLNUXjjLO");
+  //const location = useLocation();
+  //const courseID = location.state?.courseID;
+  const courseID = "iR8l666mgOfQLNUXjjLO";
+
+  const course = doc(firestore, 'courses', courseID);
 
   useEffect( () => {
     try {
@@ -37,8 +42,8 @@ function Announcements() {
   
   
   return (
-    <div>
-      <h1>Course Name: {cDetails.courseTitle} {cDetails.courseID}</h1>
+    <div className='courseInfo'>
+      <h1>Course Name: {cDetails.courseTitle}  {cDetails.courseId}</h1>
       <h1>Course Description: {cDetails.description}</h1>
       <h1>Course Credits: {cDetails.credit}</h1>
       <h1>Course Capacity:{cDetails.capacity}</h1> 
