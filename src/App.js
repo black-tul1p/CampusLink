@@ -12,6 +12,9 @@ import Landing, { PageList } from "./Components/Landing";
 import { useContext, useState } from "react";
 import { AuthContext } from "./Contexts/AuthContext";
 
+import { logoutUser } from "./Backend/user";
+import Announcements from "./Components/CoursePages/Announcements"
+
 function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
   if (user) {
@@ -21,15 +24,17 @@ function AuthorizedRoute(props) {
 }
 
 function App() {
-  const [isDark, setisDark] = useState(true); // For later dark mode implementation
-
-  return (
+  //const [isDark, setisDark] = useState(true); // For later dark mode implementation
+ // logoutUser();
+  
+  /* return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Register />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/ann" element={<Announcements />} />
         {Object.values(PageList).map((path) => (
           <Route
             key={path}
@@ -42,8 +47,11 @@ function App() {
           />
         ))}
       </Routes>
-    </Router>
+    </Router> 
   );
+} */
+
+return <Announcements/>
 }
 
 export default App;
