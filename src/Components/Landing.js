@@ -5,6 +5,16 @@ import FAQ from "./FAQ";
 // import Account from "./Account";
 import SettingsPage from "./Settings";
 import styled from "@emotion/styled";
+import Profile from "./Profile";
+import Announcements from "./CoursePages/Announcements";
+import Assignments from "./CoursePages/Assignments";
+import Discussions from "./CoursePages/Discussions";
+import Grades from "./CoursePages/Grades";
+import Syllabus from "./CoursePages/Syllabus";
+import Quizzes from "./CoursePages/Quizzes";
+import ClasslistStudent from "./CoursePages/ClasslistStudent";
+import Classlist from "./CoursePages/Classlist";
+import CourseNavBar from "./CourseNavBar";
 
 const Container = styled.div`
   display: flex;
@@ -14,20 +24,82 @@ const Container = styled.div`
 export const PageList = {
   Home: "/home",
   Settings: "/settings",
-  Account: "/account",
   FAQ: "/faq",
+  Profile: "/profile",
+  Announce: "/announcements",
+  HW: "/assignments",
+  Discuss: "/discussions",
+  Grades: "/grades",
+  Syllabus: "/syllabus",
+  Quiz: "/quizzes",
+  Classlist: "/classlist",
+  ClasslistStud: "/classlistStudent",
 };
 
 export default function Landing(props) {
   var content = null;
   if (props.page === PageList.Home) {
     content = <Home theme={props.theme} />;
-    //   } else if (props.page === PageList.Account) {
-    //     content = <Account theme={props.theme} />;
   } else if (props.page === PageList.Settings) {
     content = <SettingsPage theme={props.theme} />;
   } else if (props.page === PageList.FAQ) {
     content = <FAQ theme={props.theme} />;
+  } else if (props.page === PageList.Profile) {
+    content = <Profile theme={props.theme} />;
+  } else if (props.page === PageList.Announce) {
+    content = (
+      <CourseNavBar>
+        <Announcements theme={props.theme} />
+      </CourseNavBar>
+    );
+  } else if (props.page === PageList.HW) {
+    content = (
+      <CourseNavBar>
+        <Assignments theme={props} />
+      </CourseNavBar>
+      
+    );
+    
+  } else if (props.page === PageList.Discuss) {
+    content = (
+      <CourseNavBar>
+        <Discussions theme={props} />
+      </CourseNavBar>
+      
+    );
+  } else if (props.page === PageList.Grades) {
+    content = (
+      <CourseNavBar>
+        <Grades theme={props} />
+      </CourseNavBar>
+      
+    );
+  } else if (props.page === PageList.Syllabus) {
+    content = (
+      <CourseNavBar>
+        <Syllabus theme={props} />
+      </CourseNavBar>
+      
+    );
+  } else if (props.page === PageList.Quiz) {
+    content = (
+      <CourseNavBar>
+        <Quizzes theme={props} />
+      </CourseNavBar>
+    );
+  } else if (props.page === PageList.Classlist) {
+    content = (
+      <CourseNavBar>
+        <Classlist theme={props} />
+      </CourseNavBar>
+    );
+  } else if (props.page === PageList.ClasslistStud) {
+    content = (
+      <CourseNavBar>
+        <ClasslistStudent theme={props} />
+      </CourseNavBar>
+      
+    );
   } else {
     content = <p>Invalid page.</p>;
   }
