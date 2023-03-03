@@ -12,6 +12,21 @@ import Landing, { PageList } from "./Components/Landing";
 import { useContext, useState } from "react";
 import { AuthContext } from "./Contexts/AuthContext";
 
+import styled from "@emotion/styled";
+import NavBar from "./Components/Navbar";
+import CourseNavBar from "./Components/CourseNavBar";
+import Announcements from "./CoursePages/Announcements";
+import Assignments from "./CoursePages/Assignments";
+import Syllabus from "./CoursePages/Syllabus";
+import Classlist from "./Components/Classlist";
+import Discussions from "./CoursePages/Discussions";
+import Grades from "./CoursePages/Grades";
+import Quizzes from "./CoursePages/Quizzes";
+
+const Container = styled.div`
+  display: flex;
+`;
+
 function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
   if (user) {
