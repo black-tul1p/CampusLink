@@ -57,9 +57,9 @@ function Profile(props) {
   const handleCancelClick = () => {
     setEditMode(false);
     setPhotoUrl(props.photo);
-    setFirstName(props.firstName);
-    setLastName(props.lastName);
-    setPreferredName(props.preferredName);
+    setFirstName(firstName);
+    setLastName(lastName);
+    setPreferredName(preferredName);
     setUsePreferredName(false);
   };
 
