@@ -43,10 +43,11 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Register />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/ann" element={<Announcements />} />
         {Object.values(PageList).map((path) => (
           <Route
             key={path}
@@ -77,8 +78,8 @@ function App() {
               <Announcements />
             </Container>
           }
-      />
-      <Route
+        />
+        <Route
           path="/assignments"
           element={
             <Container>
@@ -88,7 +89,7 @@ function App() {
             </Container>
           }
         />
-      <Route
+        <Route
           path="/discussions"
           element={
             <Container>
@@ -98,7 +99,7 @@ function App() {
             </Container>
           }
         />
-      <Route
+        <Route
           path="/grades"
           element={
             <Container>
@@ -108,7 +109,7 @@ function App() {
             </Container>
           }
         />
-      <Route
+        <Route
           path="/syllabus"
           element={
             <Container>
@@ -148,7 +149,6 @@ function App() {
             </Container>
           }
         />
-
       </Routes>
     </Router>
   );

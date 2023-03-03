@@ -1,23 +1,23 @@
-import "../Classlist.css";
+import  "./Classlist.css";
 import {doc, getDoc} from "@firebase/firestore";
-import { firestore } from "../../Backend/firebase";
-import ProfilePic from '../../images/default_profile_picture.png'
+import { firestore } from "../Backend/firebase";
+import ProfilePic from '../Assets/user_logo.jpg'
+//import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
 function Classlist() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   //Initialize data which comes from the database
   useEffect(() => {
     // Get course title and description
-    const courseID = location.state?.courseId;
-    if (courseID === undefined) {
+    const courseID = searchParams.get('course_id')
+    if (courseID === null) {
       console.log("Course not specified!");
     } else {
-      console.log(courseID);
       const course = doc(firestore, 'courses', courseID)
       getDoc(course).then((courseDoc) => {
         if (courseDoc.exists()) {
@@ -33,10 +33,10 @@ function Classlist() {
         }
       });
     }
-  }, [location]);
+  }, [searchParams]);
 
   return (
-    <div className="classlist-page">
+    <div className="Registration-page">
       <h1 className="course-name" >{courseData.courseTitle} {courseData.courseId}</h1>
       <h2 className="course-name" >{courseData.description}</h2>
       <div className="classlist-wrapper">
