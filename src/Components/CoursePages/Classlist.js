@@ -17,6 +17,7 @@ function Classlist() {
     if (courseID === undefined) {
       console.log("Course not specified!");
     } else {
+      console.log(courseID);
       const course = doc(firestore, 'courses', courseID)
       getDoc(course).then((courseDoc) => {
         if (courseDoc.exists()) {
@@ -35,7 +36,7 @@ function Classlist() {
   }, [location]);
 
   return (
-    <div className="Registration-page">
+    <div className="classlist-page">
       <h1 className="course-name" >{courseData.courseTitle} {courseData.courseId}</h1>
       <h2 className="course-name" >{courseData.description}</h2>
       <div className="classlist-wrapper">
