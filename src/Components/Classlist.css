@@ -97,6 +97,20 @@ html, body {
   box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
 }
 
+.email-button {
+  display: block;
+  margin: 10px auto;
+  width: 30%;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.2em;
+  background-color: #257;
+  color: #EEE;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+}
+
 .add-button:hover {
   background-color: #368;
   transition-duration: 0.2s;

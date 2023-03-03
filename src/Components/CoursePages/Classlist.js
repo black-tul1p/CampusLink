@@ -20,9 +20,7 @@ function Classlist() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
   const [courseDocId, setCourseDocId] = useState("");
-  const [open, setOpen] = useState(false);
-  const [emailSubject, setEmailSubject] = useState("");
-  const [emailBody, setEmailBody] = useState("");
+  const [mailingList, setMailingList] = useState("");
   const location = useLocation();
 
   const updateClassList = (courseID) => {
@@ -38,23 +36,16 @@ function Classlist() {
           //Add enrolled students to classlist
           const enrolled = courseDoc.data().enrolledStudents;
           Promise.all(enrolled.map(getDoc)).then(
-            stdnts => setStudents(stdnts)
+            stdnts => {
+              setStudents(stdnts);
+              setMailingList("mailto:" + stdnts.map(s => s.data().email).join(';'));
+            }
           ); 
         } else {
           console.log("Course not found!");
         }
       });
     }
-  }
-
-  const openEmailDialogue = () => {
-    setOpen(true);
-  };
-  const closeEmailDialogue = () => {
-    setOpen(false);
-  };
-  const submitEmailDialogue = () => {
-   closeEmailDialogue(); 
   }
 
   //Initialize data which comes from the database
@@ -85,9 +76,8 @@ function Classlist() {
         }}>Add Students</button>
 
 
-        <button className="add-button" onClick={() => {
-          openEmailDialogue();
-        }}>Email All</button>
+        <a href={mailingList} className="email-button" onClick={() => {
+        }}>Email All</a>
 
         <table className="classlist">
           <tbody>
@@ -121,46 +111,6 @@ function Classlist() {
         </table>
         <p id="student-count-label">Total Students: {students.length}</p>
       </div>
-
-      <Dialog open={open} onClose={closeEmailDialogue} sx={{
-        "& .MuiDialog-container": {
-          "& .MuiPaper-root": {
-            width: "100%",
-            maxWidth: "500px",  // Set your width here
-          },
-        },
-      }}>
-        <DialogTitle>Send Email to all Students</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          </DialogContentText>
-          <TextField
-              label="Subject"
-              sx={{ margin : '5px', width: "50%", 
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              fullWidth
-              onChange={e => {setEmailSubject(e.target.value);}}
-          />
-          <TextField
-              label="Message"
-              sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              minRows="5"
-              fullWidth
-              multiline
-              onChange={e => {setEmailBody(e.target.value);}}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeEmailDialogue}>Cancel</Button>
-          <Button onClick={submitEmailDialogue}>Send</Button>
-        </DialogActions>
-      </Dialog>
-
     </div>
   );
 }
