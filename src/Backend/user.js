@@ -327,3 +327,15 @@ async function isAcceptedInstructor(email) {
 
   return true; // instructor exists and accepted field is true
 }
+
+export async function updateUserProfile(firstName, lastName) {
+  try {
+    const role = await getUserRole();
+    const userRef = doc(firestore, role + "s", getLoggedInUserId());
+    await setDoc(userRef, { firstName, lastName }, { merge: true });
+    console.log("User profile updated successfully");
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+}

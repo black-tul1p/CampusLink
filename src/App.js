@@ -21,8 +21,6 @@ function AuthorizedRoute(props) {
 }
 
 function App() {
-  const [isDark, setisDark] = useState(true); // For later dark mode implementation
-
   return (
     <Router>
       <Routes>
