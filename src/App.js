@@ -24,10 +24,10 @@ function AuthorizedRoute(props) {
 }
 
 function App() {
-  //const [isDark, setisDark] = useState(true); // For later dark mode implementation
+  const [isDark, setisDark] = useState(true); // For later dark mode implementation
  // logoutUser();
   
-  /* return (
+   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -49,9 +49,7 @@ function App() {
       </Routes>
     </Router> 
   );
-} */
+} 
 
-return <Announcements/>
-}
 
 export default App;
