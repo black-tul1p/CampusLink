@@ -245,14 +245,14 @@ export async function getCurrentUser() {
   const instructorRef = collection(firestore, "instructors");
 
   try {
-    const studentDoc = await getDoc(doc(studentRef, user.uid));
-    if (studentDoc.exists()) {
-      return studentDoc.data();
-    }
-
     const instructorDoc = await getDoc(doc(instructorRef, user.uid));
     if (instructorDoc.exists()) {
       return instructorDoc.data();
+    }
+
+    const studentDoc = await getDoc(doc(studentRef, user.uid));
+    if (studentDoc.exists()) {
+      return studentDoc.data();
     }
 
     return false;
@@ -326,4 +326,23 @@ async function isAcceptedInstructor(email) {
   }
 
   return true; // instructor exists and accepted field is true
+}
+
+/**
+ * Updates the user's first and last name in Firestore
+ *
+ * @param {string} firstName - The user's first name
+ * @param {string} lastName - The user's last name
+ * @throws {Error} Throws an error if there is an issue updating the user's profile in the database
+ */
+export async function updateUserProfile(firstName, lastName) {
+  try {
+    const role = await getUserRole();
+    const userRef = doc(firestore, role + "s", getLoggedInUserId());
+    await setDoc(userRef, { firstName, lastName }, { merge: true });
+    console.log("User profile updated successfully");
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
 }

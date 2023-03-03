@@ -1,4 +1,3 @@
-import React from "react";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -13,23 +12,6 @@ import Landing, { PageList } from "./Components/Landing";
 import { useContext, useState } from "react";
 import { AuthContext } from "./Contexts/AuthContext";
 
-import styled from "@emotion/styled";
-import HomepageInstructor from "./Components/HomepageInstructor";
-import NavBar from "./Components/NavBar";
-import CourseNavBar from "./Components/CourseNavBar";
-import Announcements from "./CoursePages/Announcements";
-import Assignments from "./CoursePages/Assignments";
-import Syllabus from "./CoursePages/Syllabus";
-import Classlist from "./Components/Classlist";
-import Discussions from "./CoursePages/Discussions";
-import Grades from "./CoursePages/Grades";
-import Quizzes from "./CoursePages/Quizzes";
-import FAQ from "./Components/FAQ";
-
-const Container = styled.div`
-  display: flex;
-`;
-
 function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
   if (user) {
@@ -39,11 +21,10 @@ function AuthorizedRoute(props) {
 }
 
 function App() {
-  const [isDark, setisDark] = useState(true);
+  const [isDark, setIsDark] = useState(false); // For future Dark Mode implementation
 
   return (
-    <div ClassName='App'>
-      <Router>
+    <Router>
       <Routes>
       <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
@@ -60,17 +41,7 @@ function App() {
             }
           />
         ))}
-      <Route
-          path="/faq"
-          element={
-            <Container>
-              <NavBar />
-              <FAQ />
-            </Container>
-          }
-      />
-      
-      <Route
+        <Route
           path="/announcements"
           element={
             <Container>
@@ -140,11 +111,9 @@ function App() {
             </Container>
           }
         />
-        
+
       </Routes>
-      </Router> 
-       
-    </div>
+    </Router>
   );
 }
 

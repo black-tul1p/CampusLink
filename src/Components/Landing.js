@@ -1,6 +1,6 @@
 import React from "react";
 import Home from "./Home";
-import Navbar from "./NavBar";
+import Navbar from "./Navbar";
 import FAQ from "./FAQ";
 // import Account from "./Account";
 import SettingsPage from "./Settings";
@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 
 const Container = styled.div`
   display: flex;
+  min-width: 620px;
 `;
 
 export const PageList = {
