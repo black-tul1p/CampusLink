@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
-import Admin from "./Components/Admin";
+import AdminLogin from "./Components/AdminLogin";
 import Landing, { PageList } from "./Components/Landing";
 import { useContext, useState } from "react";
 import { AuthContext } from "./Contexts/AuthContext";
@@ -29,7 +29,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Register />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={<AdminLogin />} />
         {Object.values(PageList).map((path) => (
           <Route
             key={path}

@@ -177,6 +177,28 @@ export async function getUserRoleByEmail(email) {
 }
 
 /**
+ * Checks if the user with the specified email is an admin.
+ * Returns true if email exists in the admin collection, false otherwise.
+ *
+ * @param {string} email - The email of the user to check.
+ * @returns {Promise<boolean>} - A Promise that resolves to a boolean.
+ * @throws {Error} - If there was an error retrieving data from Firestore.
+ */
+export async function isAdmin(email) {
+  const adminsRef = collection(firestore, "admins");
+  const adminQuery = query(adminsRef, where("email", "==", email));
+
+  try {
+    const instSnapshot = await getDocs(adminQuery);
+    if (instSnapshot.docs.length > 0) return true;
+  } catch (error) {
+    throw new Error(`Error checking user role: ${error.message}`);
+  }
+
+  return false;
+}
+
+/**
  * Signs out the currently logged-in user from Firebase Authentication.
  *
  * @throws {Error} - If there was an error signing out the user.
