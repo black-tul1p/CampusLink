@@ -1,15 +1,21 @@
 import  "./Classlist.css";
-import {doc, getDoc} from "@firebase/firestore";
+import {doc, getDoc, updateDoc, arrayUnion } from "@firebase/firestore";
 import { firestore } from "../Backend/firebase";
 import ProfilePic from '../Assets/user_logo.jpg'
 //import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
 import { useSearchParams } from 'react-router-dom'
+import { getUserByEmail } from "../Backend/user";
+import { TextField } from "@mui/material";
+import ErrorBox from "./Error";
 
 function Classlist() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
   const [searchParams] = useSearchParams();
+  const [addStudent, setAddStudent] = useState("");
+  const [course, setCourse] = useState();
+  const [error, setError] = useState("");
 
   //Initialize data which comes from the database
   useEffect(() => {
@@ -18,7 +24,7 @@ function Classlist() {
     if (courseID === null) {
       console.log("Course not specified!");
     } else {
-      const course = doc(firestore, 'courses', courseID)
+      setCourse(doc(firestore, 'courses', courseID))
       getDoc(course).then((courseDoc) => {
         if (courseDoc.exists()) {
           setCourseData(courseDoc.data());
@@ -35,25 +41,45 @@ function Classlist() {
     }
   }, [searchParams]);
 
+  const handleAdd = (e) => {
+    getUserByEmail(addStudent)
+    .then((user) => {
+      const userId = user.id;
+      const userRef = doc(firestore, "students", userId);
+      let studentList = students;
+      studentList.push({firstName: userRef.data().firstName,
+      lastName: userRef.data().lastName, 
+      email: userRef.data().email})
+      setStudents(studentList);
+      updateDoc(userRef, {courses: arrayUnion(course)});
+      updateDoc(course, {enrolled: arrayUnion(userId)});
+    })
+    .catch((error) => {
+      setError(error.message)
+    })
+  }
+
   return (
     <div className="Registration-page">
       <h1 className="course-name" >{courseData.courseTitle} {courseData.courseId}</h1>
       <h2 className="course-name" >{courseData.description}</h2>
       <div className="classlist-wrapper">
         <h1 className="title" >Course Classlist</h1>
-
-        <button className="add-button" onClick={() => {
-          //Append placeholder student
-          /*
-          setStudents([
-            ...students, {
-             firstName: "Firstname",
-             lastName: "Lastname",
-             email: "example@gmail.com"
-            }
-          ]);*/
-        }}>Add Students</button>
-
+        {error && <ErrorBox text={error} />}
+        <TextField
+              required
+              id="f-name-input"
+              label="Student Email to Add"
+              variant="outlined"
+              placeholder="email@organization.edu"
+              value={addStudent}
+              onChange={(e) => {
+                setAddStudent(e.target.value);
+              }}
+            />
+        <button className="add-button" onClick={handleAdd}>
+          Add Students
+          </button>
         <table className="classlist">
           <tbody>
             <tr>
