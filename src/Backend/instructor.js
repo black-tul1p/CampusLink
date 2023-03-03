@@ -1,6 +1,5 @@
 import { collection, getDocs, query, where, addDoc } from "@firebase/firestore";
 import { firestore } from "./firebase";
-import { getCourseDetailsById } from "./course";
 
 export async function createInstructor(first, last, email, password) {
   let data = {
@@ -19,50 +18,3 @@ export async function createInstructor(first, last, email, password) {
     console.error("Error adding instructor: ", data);
   }
 }
-
-export const getInstructorCourses = async () => {
-  try {
-    var course = [];
-
-    const getData = collection(firestore, "instructors");
-
-    const snapshot = query(getData, where("email", "==", "test@test.edu"));
-    const querySnapshot = await getDocs(snapshot);
-
-    if (querySnapshot.docs.length === 0) {
-      alert("No instructor found with email");
-    }
-
-    querySnapshot.forEach(async (doc) => {
-      //console.log(doc.data().courses)
-
-      doc.data().courses.forEach(async (doc2) => {
-        const sTest = new String(doc2.path);
-        const courseIDF = sTest.slice(8);
-        //console.log(courseIDF);
-        //console.log(doc.data().courses[0].path);
-
-        await getCourseDetailsById(courseIDF).then((res) => {
-          //console.log(res);
-          /*course.push({
-              courseTitle: res.courseTitle,
-              courseId: res.courseId,
-              credit: res.credit,
-              department: res.department,
-              capacity: res.capacity,
-              registeredStudents: res.registeredStudents,
-              description: res.description,
-            }); */
-          if (res) course.push(res);
-        });
-
-        // console.log(course.length)
-      });
-      console.log(course);
-    });
-    //console.log("All courses fetched:", course.length);
-    return course;
-  } catch (error) {
-    throw new Error("Error fetching courses:", error);
-  }
-};

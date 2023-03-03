@@ -7,7 +7,7 @@ import {
   SnackbarContent,
   Typography,
 } from "@mui/material";
-import { getInstructorCourses } from "../Backend/instructor";
+import { getUserCourses } from "../Backend/course";
 import { getUserRole } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
@@ -29,49 +29,35 @@ function Homepage() {
   };
 
   useEffect(() => {
-    // Get user role
-    getUserRole()
-      .then((res) => {
-        setRole(res);
+    async function fetchData() {
+      try {
+        // Get user role
+        const role = await getUserRole();
+        setRole(role);
         setSnackbarMessage(`Hello, ${user.displayName}`);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
         setOpenSnackbar(true);
-      });
-    // console.log(role);
 
-    // Get courses
-    if (role === "instructor") {
-      getInstructorCourses()
-        .then((res) => {
-          setCourses(res);
+        // Get courses
+        if (role === "instructor") {
+          const courses = await getUserCourses(role);
+          setCourses(courses);
           setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error.message);
-          setLoading(false);
-        });
+        }
+        // else if (role === "student") {
+        //   const courses = await getStudentCourses();
+        //   setCourses(courses);
+        //   setLoading(false);
+        // } else {
+        //   console.error("Could not resolve user role");
+        // }
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
     }
-    // else if (role === "student") {
-    //   getStudentCourses()
-    //     .then((res) => {
-    //       setCourses(res);
-    //       setLoading(false);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.message);
-    //       setLoading(false);
-    //     });
-    // } else {
-    //   console.error("Could not resolve user role");
-    // }
 
-    // REMOVE WHEN DONE
-    setLoading(false);
-  }, [user.displayName]);
+    fetchData();
+  }, []);
 
   return (
     <div className="homepage-student">

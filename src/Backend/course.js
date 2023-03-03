@@ -5,8 +5,10 @@ import {
   deleteDoc,
   getDocs,
   getDoc,
+  query,
+  where,
 } from "@firebase/firestore";
-import { firestore } from "./firebase";
+import { auth, firestore } from "./firebase";
 
 export const getAllCourses = async () => {
   try {
@@ -112,3 +114,40 @@ export async function getCourseDetailsById(coursesRef) {
 
   return actualCourse;
 }
+
+export const getUserCourses = async (role) => {
+  try {
+    const courses = [];
+
+    let getData = collection(firestore, "students");
+    if (role === "instructor") {
+      getData = collection(firestore, "instructors");
+    }
+
+    const snapshot = await getDocs(
+      query(getData, where("email", "==", auth.currentUser.email))
+    );
+
+    if (snapshot.docs.length === 0) {
+      throw new Error("No instructor found with email");
+    }
+
+    await Promise.all(
+      snapshot.docs.map(async (doc) => {
+        const coursesData = doc.data().courses;
+        await Promise.all(
+          coursesData.map(async (course) => {
+            const courseIDF = course.path.slice(8);
+            const res = await getCourseDetailsById(courseIDF);
+            if (res) courses.push(res);
+          })
+        );
+      })
+    );
+
+    console.log("All courses fetched:", courses.length);
+    return courses;
+  } catch (error) {
+    throw new Error("Error fetching courses:", error);
+  }
+};

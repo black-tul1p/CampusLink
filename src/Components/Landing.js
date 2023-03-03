@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 
 const Container = styled.div`
   display: flex;
+  min-width: 620px;
 `;
 
 export const PageList = {
