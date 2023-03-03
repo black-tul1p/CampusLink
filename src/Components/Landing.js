@@ -13,7 +13,7 @@ import Grades from "./CoursePages/Grades";
 import Syllabus from "./CoursePages/Syllabus";
 import Quizzes from "./CoursePages/Quizzes";
 import ClasslistStudent from "./CoursePages/ClasslistStudent";
-import Classlist from "./CoursePages/Classlist";
+import Classlist from "./Classlist";
 import CourseNavBar from "./CourseNavBar";
 
 const Container = styled.div`
@@ -48,44 +48,38 @@ export default function Landing(props) {
     content = <Profile theme={props.theme} />;
   } else if (props.page === PageList.Announce) {
     content = (
-      <CourseNavBar>
+        <CourseNavBar/>,
         <Announcements theme={props.theme} />
-      </CourseNavBar>
     );
   } else if (props.page === PageList.HW) {
     content = (
-      <CourseNavBar>
+        <CourseNavBar/>,
         <Assignments theme={props} />
-      </CourseNavBar>
       
     );
     
   } else if (props.page === PageList.Discuss) {
     content = (
-      <CourseNavBar>
-        <Discussions theme={props} />
-      </CourseNavBar>
+      <CourseNavBar/>,
+      <Discussions theme={props} />
       
     );
   } else if (props.page === PageList.Grades) {
     content = (
-      <CourseNavBar>
+        <CourseNavBar/>,
         <Grades theme={props} />
-      </CourseNavBar>
       
     );
   } else if (props.page === PageList.Syllabus) {
     content = (
-      <CourseNavBar>
+        <CourseNavBar/>,
         <Syllabus theme={props} />
-      </CourseNavBar>
       
     );
   } else if (props.page === PageList.Quiz) {
     content = (
-      <CourseNavBar>
+        <CourseNavBar/>,
         <Quizzes theme={props} />
-      </CourseNavBar>
     );
   } else if (props.page === PageList.Classlist) {
     content = (
@@ -94,10 +88,8 @@ export default function Landing(props) {
     );
   } else if (props.page === PageList.ClasslistStud) {
     content = (
-      <CourseNavBar>
+        <CourseNavBar/>,
         <ClasslistStudent theme={props} />
-      </CourseNavBar>
-      
     );
   } else {
     content = <p>Invalid page.</p>;

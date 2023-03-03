@@ -1,7 +1,7 @@
-import "../Classlist.css";
+import "./Classlist.css";
 import {doc, getDoc} from "@firebase/firestore";
-import { firestore } from "../../Backend/firebase";
-import ProfilePic from '../../images/default_profile_picture.png'
+import { firestore } from "../Backend/firebase";
+import ProfilePic from '../Assets/default_profile_picture.png'
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 
