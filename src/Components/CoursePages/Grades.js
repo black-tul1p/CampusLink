@@ -1,10 +1,10 @@
 import React from 'react'
 
-function grades() {
+function Grades() {
   return (
     <div>
     </div>
   )
 }
 
-export default grades
+export default Grades

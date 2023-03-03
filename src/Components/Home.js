@@ -11,6 +11,7 @@ import { getUserCourses } from "../Backend/course";
 import { getUserRole } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Homepage() {
   const [courses, setCourses] = useState([]);
@@ -19,6 +20,7 @@ function Homepage() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [role, setRole] = useState("");
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const showAlert = () => {
     alert("Add new Course!");
@@ -90,7 +92,12 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container">
+                  <div className="course-container"
+                    onClick={() => {
+                      const courseId = course.databaseId;
+                      navigate("/announcements", { state: {courseId} });
+                    }}
+                  >
                     <div className="course-container-top">
                       <h3>
                         {course.courseTitle} {course.courseId} :
@@ -107,7 +114,12 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container">
+                  <div className="course-container"
+                    onClick={() => {
+                      const courseId = course.databaseId;
+                      navigate("/announcements", { state: {courseId} });
+                    }}
+                  >
                     <div className="course-container-top">
                       <h3>
                         {course.courseTitle} {course.courseId} :

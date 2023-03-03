@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import {
   Typography
 } from "@mui/material";
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { getUserRole } from "../Backend/user";
+import { AuthContext } from "../Contexts/AuthContext";
 
 // CSS Styles
 const Sidebar = styled.div`
@@ -14,7 +17,9 @@ const Sidebar = styled.div`
   background-color: #20232a;
   display: flex;
   flex-direction: row;
-  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 6vw;
 `;
 
 
@@ -63,15 +68,32 @@ const SidebarText = styled.div`
 `;
 
 export default function NavBar() {
+  const location = useLocation();
+  const courseId = location.state?.courseId;
   const navigate = useNavigate();
+  const [role, setRole] = useState("");
+  const { user } = useContext(AuthContext);
 
+  useEffect(() => {
+    async function fetchrole() {
+      try {
+        const role = await getUserRole();
+        setRole(role);
+        console.log(role);
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+    fetchrole();
+  }, []);
   return (
     <Sidebar>
       <SidebarDivider />
       <SidebarRow>
         <SidebarButton
           onClick={() => {
-            navigate("/announcements");
+            navigate("/announcements", { state: {courseId} });
           }}
         >
             <SidebarText>
@@ -80,7 +102,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
           onClick={() => {
-            navigate("/syllabus");
+            navigate("/syllabus" , { state: {courseId} });
           }}
         >
             <SidebarText>
@@ -89,7 +111,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
             onClick={() => {
-              navigate("/assignments");
+              navigate("/assignments", { state: {courseId} });
             }}
           >
             <SidebarText>
@@ -98,7 +120,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
             onClick={() => {
-              navigate("/grades");
+              navigate("/grades", { state: {courseId} });
             }}
           >
             <SidebarText>
@@ -108,7 +130,7 @@ export default function NavBar() {
         
         <SidebarButton
             onClick={() => {
-              navigate("/quizzes");
+              navigate("/quizzes", { state: {courseId} });
             }}
           >
             <SidebarText>
@@ -117,7 +139,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
             onClick={() => {
-              navigate("/discussions");
+              navigate("/discussions", { state: {courseId} });
             }}
           >
             <SidebarText>
@@ -126,7 +148,13 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
             onClick={() => {
-              navigate("/classlist");
+              if(role === "instructor") {
+                navigate("/classlist", { state: {courseId} });
+              }
+              else {
+                navigate("/classlistStudent", { state: {courseId} });
+              }
+              
             }}
           >
             <SidebarText>
