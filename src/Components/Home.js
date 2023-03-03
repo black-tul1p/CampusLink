@@ -38,18 +38,13 @@ function Homepage() {
         setOpenSnackbar(true);
 
         // Get courses
-        if (role === "instructor") {
-          const courses = await getUserCourses(role);
+        const courses = await getUserCourses(role);
+        if (courses.length === 0) {
+          setCourses([]);
+        } else {
           setCourses(courses);
-          setLoading(false);
         }
-        // else if (role === "student") {
-        //   const courses = await getStudentCourses();
-        //   setCourses(courses);
-        //   setLoading(false);
-        // } else {
-        //   console.error("Could not resolve user role");
-        // }
+        setLoading(false);
       } catch (error) {
         console.error(error);
         setLoading(false);
@@ -156,8 +151,9 @@ function Homepage() {
       )}
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={2000}
+        autoHideDuration={1000}
         onClose={handleCloseSnackbar}
+        style={{ marginLeft: "4em" }}
       >
         <SnackbarContent
           style={{

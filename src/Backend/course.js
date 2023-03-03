@@ -121,6 +121,7 @@ export const getUserCourses = async (role) => {
 
     let getData = collection(firestore, "students");
     if (role === "instructor") {
+      console.log("INSTRUCT");
       getData = collection(firestore, "instructors");
     }
 
@@ -129,12 +130,15 @@ export const getUserCourses = async (role) => {
     );
 
     if (snapshot.docs.length === 0) {
-      throw new Error("No instructor found with email");
+      throw new Error("No user found with email");
     }
 
     await Promise.all(
       snapshot.docs.map(async (doc) => {
         const coursesData = doc.data().courses;
+        if (!coursesData || coursesData.length === 0) {
+          return;
+        }
         await Promise.all(
           coursesData.map(async (course) => {
             const courseIDF = course.path.slice(8);
