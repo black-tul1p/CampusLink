@@ -44,8 +44,19 @@ function Homepage() {
     // console.log(role);
 
     // Get courses
-    // if (role === "instructor") {
-    //   getInstructorCourses()
+    if (role === "instructor") {
+      getInstructorCourses()
+        .then((res) => {
+          setCourses(res);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error.message);
+          setLoading(false);
+        });
+    }
+    // else if (role === "student") {
+    //   getStudentCourses()
     //     .then((res) => {
     //       setCourses(res);
     //       setLoading(false);
@@ -54,23 +65,13 @@ function Homepage() {
     //       console.log(error.message);
     //       setLoading(false);
     //     });
-    //   } else if (role === "student") {
-    //     getStudentCourses()
-    //     .then((res) => {
-    //       setCourses(res);
-    //       setLoading(false);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.message);
-    //       setLoading(false);
-    //     });
-    //   } else {
-    //     console.error("Could not resolve user role");
-    //   }
+    // } else {
+    //   console.error("Could not resolve user role");
+    // }
 
     // REMOVE WHEN DONE
     setLoading(false);
-  }, [courses, user.displayName]);
+  }, [user.displayName]);
 
   return (
     <div className="homepage-student">
