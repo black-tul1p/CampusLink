@@ -32,6 +32,7 @@ function Homepage() {
     setOpenSnackbar(false);
   };
 
+
   useEffect(() => {
     // Get user role
     getUserRole()
@@ -124,7 +125,8 @@ function Homepage() {
                 .map((course) => (
                   <div className="course-container"
                     onClick={() => {
-                      navigate("/Announcements");
+                      const courseId = course.courseId;
+                      navigate("/Announcements", { state: {courseId} });
                     }}
                   >
                     <div className="course-container-top">
@@ -145,7 +147,8 @@ function Homepage() {
                 .map((course) => (
                   <div className="course-container"
                     onClick={() => {
-                      navigate("/Announcements");
+                      const courseId = course.courseId;
+                      navigate("/Announcements", { state: {courseId} });
                     }}
                   >
                     <div className="course-container-top">
