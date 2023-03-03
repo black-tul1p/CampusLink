@@ -2,7 +2,7 @@ import { collection, doc, getDoc, getDocs } from "@firebase/firestore";
 import { useState, useEffect } from "react";
 import { firestore } from "../Backend/firebase";
 import { useSearchParams } from "react-router-dom";
-import "./Classlist.css";
+import "./CoursePages/Classlist.css";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import styled from "@emotion/styled";
 
