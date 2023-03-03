@@ -15,14 +15,13 @@ import { AuthContext } from "./Contexts/AuthContext";
 import styled from "@emotion/styled";
 import NavBar from "./Components/Navbar";
 import CourseNavBar from "./Components/CourseNavBar";
-import Announcements from "./CoursePages/Announcements";
-import Assignments from "./CoursePages/Assignments";
-import Syllabus from "./CoursePages/Syllabus";
-//import Classlist from "./Components/Classlist";
+import Announcements from "./Components/CoursePages/Announcements";
+import Assignments from "./Components/CoursePages/Assignments";
+import Syllabus from "./Components/CoursePages/Syllabus";
 import Classlist from "./Components/CoursePages/Classlist";
-import Discussions from "./CoursePages/Discussions";
-import Grades from "./CoursePages/Grades";
-import Quizzes from "./CoursePages/Quizzes";
+import Discussions from "./Components/CoursePages/Discussions";
+import Grades from "./Components/CoursePages/Grades";
+import Quizzes from "./Components/CoursePages/Quizzes";
 import Profile from "./Components/Profile";
 
 const Container = styled.div`

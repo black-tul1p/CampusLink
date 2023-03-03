@@ -1,9 +1,11 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+
 
 function Announcements() {
   return (
     <div>
-        <h1></h1>
     </div>
   )
 }

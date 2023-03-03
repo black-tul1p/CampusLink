@@ -116,7 +116,7 @@ function Homepage() {
                 .map((course) => (
                   <div className="course-container"
                     onClick={() => {
-                      const courseId = course.courseId;
+                      const courseId = course.databaseId;
                       navigate("/announcements", { state: {courseId} });
                     }}
                   >
