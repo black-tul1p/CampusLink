@@ -113,6 +113,11 @@ export default function Navbar() {
     navigate("/");
   };
 
+  const navigateToProfile = (event) => {
+    handleClose(event);
+    navigate("/profile");
+  };
+
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
@@ -235,7 +240,7 @@ export default function Navbar() {
                       id="menu-list-grow"
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={handleClose}>
+                      <MenuItem onClick={navigateToProfile}>
                         <Settings
                           fontSize="small"
                           sx={{ mr: 1 }}

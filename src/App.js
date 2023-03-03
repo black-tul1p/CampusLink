@@ -22,6 +22,7 @@ import Classlist from "./Components/Classlist";
 import Discussions from "./CoursePages/Discussions";
 import Grades from "./CoursePages/Grades";
 import Quizzes from "./CoursePages/Quizzes";
+import Profile from "./Components/Profile";
 
 const Container = styled.div`
   display: flex;
@@ -56,6 +57,16 @@ function App() {
             }
           />
         ))}
+
+        <Route
+          path="/profile"
+          element={
+            <Container>
+              <NavBar />
+              <Profile />
+            </Container>
+          }
+        />
         <Route
           path="/announcements"
           element={

@@ -66,7 +66,6 @@ export default function NavBar() {
   const location = useLocation();
   const courseId = location.state?.courseId;
   const navigate = useNavigate();
-  alert({courseId});
   return (
     <Sidebar>
       <SidebarDivider />
