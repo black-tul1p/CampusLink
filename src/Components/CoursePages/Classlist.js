@@ -3,18 +3,18 @@ import {doc, getDoc} from "@firebase/firestore";
 import { firestore } from "../../Backend/firebase";
 import ProfilePic from '../../images/default_profile_picture.png'
 import { useState, useEffect } from "react";
-import { useSearchParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 function Classlist() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   //Initialize data which comes from the database
   useEffect(() => {
     // Get course title and description
-    const courseID = searchParams.get('course_id')
-    if (courseID === null) {
+    const courseID = location.state?.courseId;
+    if (courseID === undefined) {
       console.log("Course not specified!");
     } else {
       const course = doc(firestore, 'courses', courseID)
@@ -32,7 +32,7 @@ function Classlist() {
         }
       });
     }
-  }, [searchParams]);
+  }, [location]);
 
   return (
     <div className="Registration-page">

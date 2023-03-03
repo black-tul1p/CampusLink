@@ -4,7 +4,7 @@ import {
   Typography
 } from "@mui/material";
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // CSS Styles
 const Sidebar = styled.div`
@@ -63,15 +63,16 @@ const SidebarText = styled.div`
 `;
 
 export default function NavBar() {
+  const location = useLocation();
+  const courseId = location.state?.courseId;
   const navigate = useNavigate();
-
   return (
     <Sidebar>
       <SidebarDivider />
       <SidebarRow>
         <SidebarButton
           onClick={() => {
-            navigate("/announcements");
+            navigate("/announcements", { state: {courseId} });
           }}
         >
             <SidebarText>
@@ -80,7 +81,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
           onClick={() => {
-            navigate("/syllabus");
+            navigate("/syllabus" , { state: {courseId} });
           }}
         >
             <SidebarText>
@@ -89,7 +90,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
             onClick={() => {
-              navigate("/assignments");
+              navigate("/assignments", { state: {courseId} });
             }}
           >
             <SidebarText>
@@ -98,7 +99,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
             onClick={() => {
-              navigate("/grades");
+              navigate("/grades", { state: {courseId} });
             }}
           >
             <SidebarText>
@@ -108,7 +109,7 @@ export default function NavBar() {
         
         <SidebarButton
             onClick={() => {
-              navigate("/quizzes");
+              navigate("/quizzes", { state: {courseId} });
             }}
           >
             <SidebarText>
@@ -117,7 +118,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
             onClick={() => {
-              navigate("/discussions");
+              navigate("/discussions", { state: {courseId} });
             }}
           >
             <SidebarText>
@@ -126,7 +127,7 @@ export default function NavBar() {
         </SidebarButton>
         <SidebarButton
             onClick={() => {
-              navigate("/classlist");
+              navigate("/classlist", { state: {courseId} });
             }}
           >
             <SidebarText>
