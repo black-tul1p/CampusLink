@@ -110,3 +110,13 @@ html, body {
   font-family: sans-serif;
   font-size: 1em;
 }
+
+.remove-student-container {
+  display:inline;
+  opacity: 0.3;
+  transition-duration: 0.15s;
+}
+
+.remove-student-container:hover {
+  opacity: 0.8;
+}
