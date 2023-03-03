@@ -10,7 +10,7 @@ import {
 import { Email, VpnKey } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import ErrorBox from "./Error";
-import { loginAdmin, logoutUser } from "../Backend/user";
+import { loginAdmin } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 
 export default function Login() {
@@ -22,8 +22,6 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // logoutUser();
 
     await loginAdmin(email.trim(), pass)
       .then((res) => {
