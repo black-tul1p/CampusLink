@@ -6,10 +6,23 @@ import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import {
+  Dialog,
+  DialogActions, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle
+} from '@mui/material';
+
 function Classlist() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
   const [courseDocId, setCourseDocId] = useState("");
+  const [open, setOpen] = useState(false);
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailBody, setEmailBody] = useState("");
   const location = useLocation();
 
   const updateClassList = (courseID) => {
@@ -33,6 +46,17 @@ function Classlist() {
       });
     }
   }
+
+  const openEmailDialogue = () => {
+    setOpen(true);
+  };
+  const closeEmailDialogue = () => {
+    setOpen(false);
+  };
+  const submitEmailDialogue = () => {
+   closeEmailDialogue(); 
+  }
+
   //Initialize data which comes from the database
   useEffect(() => {
     // Get course title and description
@@ -59,6 +83,11 @@ function Classlist() {
             }
           ]);*/
         }}>Add Students</button>
+
+
+        <button className="add-button" onClick={() => {
+          openEmailDialogue();
+        }}>Email All</button>
 
         <table className="classlist">
           <tbody>
@@ -92,6 +121,46 @@ function Classlist() {
         </table>
         <p id="student-count-label">Total Students: {students.length}</p>
       </div>
+
+      <Dialog open={open} onClose={closeEmailDialogue} sx={{
+        "& .MuiDialog-container": {
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxWidth: "500px",  // Set your width here
+          },
+        },
+      }}>
+        <DialogTitle>Send Email to all Students</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+          </DialogContentText>
+          <TextField
+              label="Subject"
+              sx={{ margin : '5px', width: "50%", 
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              fullWidth
+              onChange={e => {setEmailSubject(e.target.value);}}
+          />
+          <TextField
+              label="Message"
+              sx={{ margin : '5px',
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              minRows="5"
+              fullWidth
+              multiline
+              onChange={e => {setEmailBody(e.target.value);}}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeEmailDialogue}>Cancel</Button>
+          <Button onClick={submitEmailDialogue}>Send</Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
   );
 }
