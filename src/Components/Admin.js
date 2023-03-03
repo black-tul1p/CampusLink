@@ -6,7 +6,7 @@ import "./Classlist.css";
 import { Box, Button, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import ErrorBox from "./Error";
-import { getUserByEmail } from "../Backend/user";
+import { getUserByEmail, getUserIdByEmail } from "../Backend/user";
 import "../App.css";
 
 //From Material UI website example
@@ -58,16 +58,15 @@ export default function Admin() {
   };
 
   const handleApprove = (e) => {
-    getUserByEmail(selectedInstructor).then((user) => {
-      const userId = user.id;
+    const approve = async () => {
+      const user = await getUserIdByEmail(selectedInstructor);
+      console.log("USER", user);
       const newField = { accepted: true };
-      const userRef = doc(firestore, "instructors", userId);
-      updateDoc(userRef, newField).then(() => {
-        //alert("approve");
-        // window.location.reload();
-        //setReload(false);
-      });
-    });
+      const userRef = doc(firestore, "instructors", user);
+      await updateDoc(userRef, newField);
+    };
+
+    approve();
   };
 
   const handleDeny = (e, user) => {

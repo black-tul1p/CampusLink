@@ -221,6 +221,27 @@ export async function getUserRoleByEmail(email) {
 }
 
 /**
+ * Retrieves the user ID associated with the specified email address.
+ *
+ * @param {string} email - The email address of the user to search for.
+ * @returns {Promise<string|null>} - A Promise that resolves to the user ID if the user is found, or null if the user is not found.
+ * @throws {Error} - If there was an error retrieving data from Firestore.
+ */
+export async function getUserIdByEmail(email) {
+  const usersRef = collection(firestore, "instructors");
+  const querySnapshot = await getDocs(
+    query(usersRef, where("email", "==", email))
+  );
+
+  if (querySnapshot.docs.length > 0) {
+    const userId = querySnapshot.docs[0].id;
+    return userId;
+  } else {
+    return null;
+  }
+}
+
+/**
  * Checks if the user with the specified email is an admin.
  * Returns true if email exists in the admin collection, false otherwise.
  *
