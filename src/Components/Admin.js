@@ -1,11 +1,13 @@
-import {collection, doc, getDoc, getDocs} from "@firebase/firestore";
+import {collection, doc, getDoc, getDocs, updateDoc} from "@firebase/firestore";
 import {useState, useEffect} from "react";
 import { firestore } from "../Backend/firebase";
-import { useSearchParams } from "react-router-dom";
+import { Person } from "@mui/icons-material";
 import "./Classlist.css";
-import { Box, Button, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Button, Tab, Tabs, TextField,Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import { PropTypes } from "prop-types";
+import ErrorBox from "./Error";
+import { getUserByEmail } from "../Backend/user";
 
 //From Material UI website example
 
@@ -17,7 +19,7 @@ function TabPanel(props) {
         	role="tabpanel"
         	hidden={value !== index}
         	id={`simple-tabpanel-${index}`}
-			aria-labelledby={`simple-tab-${index}`}
+			    aria-labelledby={`simple-tab-${index}`}
         	{...other}
         >
             {value === index && (
@@ -47,9 +49,33 @@ export default function Admin() {
   const [instructors, setInstructors] = useState([]);
   const [pendingInstructors, setPendingInstructors] = useState([]);
   const [value, setValue] = useState(0);
-
+  const [selectedInstructor, setSelectedInstructor] = useState("");
+  const [error, setError] = useState("");
+  const [reload, setReload] = useState(true);
+  
+  
   const handleChange = (event, newValue) => {
 	setValue(newValue);
+  }
+
+  const handleApprove = (e) => {
+    getUserByEmail(selectedInstructor)
+    .then((user) => {
+      const userId = user.id;
+      const newField = {accepted: true};
+      const userRef = doc(firestore, "instructors", userId);
+      updateDoc(userRef, newField)
+      .then(() => {
+        //alert("approve");
+        // window.location.reload();
+        //setReload(false);
+      })
+    });
+    
+  }
+  
+  const handleDeny = (e, user) => {
+    alert("deny");
   }
 
   useEffect(() => {
@@ -89,7 +115,7 @@ export default function Admin() {
       });
       setPendingInstructors(pendingInstructorList);
     });
-  }, []);
+  }, [pendingInstructors]);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -153,41 +179,54 @@ export default function Admin() {
     </div> 
         </TabPanel>
         <TabPanel value={value} index={2}>
-		<div className="adminPage">
+		{reload && <div className="adminPage">
       	<div className="classlist-wrapper">
         <h1 className="title" >Pending Instructor List</h1>
-
+        {error && <ErrorBox text={error}/>}
+        <TextField
+              required
+              id="f-name-input"
+              label="Email to Approve/Deny"
+              variant="outlined"
+              placeholder="email@organization.edu"
+              value={selectedInstructor}
+              onChange={(e) => {
+                setSelectedInstructor(e.target.value);
+              }}
+            />
+            <Button className="Mini-button"
+				  	onClick={handleApprove}
+					  >
+						  Approve
+					  </Button> 
+					  <Button className="Mini-button"
+				  	  onClick={handleDeny}
+					  >
+						  Deny
+					  </Button>
         <table className="classlist">
-          <tbody>
+          <thead>
             <tr>
-              <th className="accountTypeColumn">Status</th>
+              <th className="accountTypeColumn">Email</th>
               <th>Name</th>
-              <th>Email</th>
+              <th>Status</th>
             </tr>
-
+          </thead>
+          <tbody>
             {pendingInstructors.map(pendingInstructor => (
               <tr>
                 <td className="userTypeColumn">
-                  <Button className="Mini-button"
-				  	onClick={handleApprove}
-					>
-						Approve
-					</Button> 
-					<Button className="Mini-button"
-				  	onClick={handleDeny}
-					>
-						Deny
-					</Button>
+                  {pendingInstructor.email}
                 </td>
                 <td>{pendingInstructor.lastName}, {pendingInstructor.firstName}</td>
-                <td>{pendingInstructor.email}</td>
+                <td>Pending</td>
               </tr>
             ))}
           </tbody>
         </table>
         <p id="student-count-label">Total Pending Instructors: {pendingInstructors.length}</p>
       </div>
-    </div>
+    </div>}
         </TabPanel>
     </Box>
   );
@@ -207,12 +246,4 @@ InstructorInfoRow.defaultProps = {
   firstName: "Firstname",
   lastName: "Lastname",
   email: "example@gmail.com",
-}
-
-const handleApprove = (e, user) => {
-	alert("approve");
-};
-
-const handleDeny = (e, user) => {
-	alert("deny");
 }

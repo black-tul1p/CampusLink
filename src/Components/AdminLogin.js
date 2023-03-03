@@ -37,6 +37,7 @@ export default function Login() {
             Admin Login
         </h1>
         <FormControl className="Login-form">
+          {error && <ErrorBox text={error} />}
           <div className="Input-fields">
             <TextField
               id="email-input"
