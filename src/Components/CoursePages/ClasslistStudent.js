@@ -6,7 +6,7 @@ import { firestore } from "../../Backend/firebase";
 import ProfilePic from '../../Assets/user_logo.jpg'
 //import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
-import { useSearchParams } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 
 function ClasslistStudent() {
   const [students, setStudents] = useState([]);
@@ -16,7 +16,9 @@ function ClasslistStudent() {
   //Initialize data which comes from the database
   useEffect(() => {
     // Get course title and description
-    const courseID = "iR8l666mgOfQLNUXjjLO"
+    const location = useLocation();
+    const courseID = location.state?.courseId;
+   // const courseID = "iR8l666mgOfQLNUXjjLO"
     if (courseID === null) {
       console.log("Course not specified!");
     } else {

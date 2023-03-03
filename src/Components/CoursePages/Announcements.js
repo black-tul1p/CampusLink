@@ -18,7 +18,7 @@ function Announcements() {
   const [cDetails, setCourseData] = useState([]);
 
   const location = useLocation();
-  const courseID = location.state?.courseID;
+  const courseID = location.state?.courseId;
   //const courseID = "iR8l666mgOfQLNUXjjLO";
 
   //lines 20 and 21 of Announcement.js are for 
