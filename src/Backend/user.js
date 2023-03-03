@@ -90,9 +90,11 @@ export async function loginUser(email, password) {
     if (role === "instructor") {
       await isAcceptedInstructor(email).then((accepted) => {
         if (!accepted) {
-          throw new Error(`Please wait for Instructor account approval`);
+          throw new Error("Please wait for Instructor account approval");
         }
       });
+    } else if (role !== "student") {
+      throw new Error("No such account exists");
     }
   });
   try {
@@ -118,6 +120,47 @@ export async function loginUser(email, password) {
     return user;
   } catch (error) {
     throw new Error(error.message);
+  }
+}
+
+/**
+ * Authenticates a user with an email address and password and stores an access token in local storage.
+ *
+ * @param {string} email - The email address of the user to authenticate.
+ * @param {string} password - The password of the user to authenticate.
+ * @param {string} role - The role that the user should have in order to be authenticated.
+ * @returns {boolean} - True if the user is authenticated successfully.
+ * @throws {Error} - If there was an error during authentication, or if the authenticated user has an invalid role.
+ */
+export async function loginAdmin(email, password) {
+  if (isAdmin(email)) {
+    try {
+      // sign in user with the provided credentials
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      ).catch((error) => {
+        switch (error.code) {
+          case "auth/user-not-found": // Handle both together for security
+          case "auth/wrong-password":
+            throw new Error("Incorrect email or password");
+          case "auth/too-many-requests":
+            throw new Error(
+              "Too many attempts. Please reset password or try again later."
+            );
+          default:
+            throw new Error(`Error logging in: ${error.code}`);
+        }
+      });
+      const user = userCredential.user;
+      return user;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  } else {
+    console.log("Not an Admin");
+    throw new Error("Incorrect email or password");
   }
 }
 

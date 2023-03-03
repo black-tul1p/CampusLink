@@ -1,5 +1,5 @@
 import Banner from "../Assets/banner_logo.jpg";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -8,34 +8,37 @@ import {
   TextField,
 } from "@mui/material";
 import { Email, VpnKey } from "@mui/icons-material";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import ErrorBox from "./Error";
-import {loginUser} from "../Backend/user";
+import { loginAdmin, logoutUser } from "../Backend/user";
+import { AuthContext } from "../Contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
+  const { handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await loginUser(email.trim(), pass)
-        .then(() => {
-            navigate("/adminHome");
-        })
-        .catch((error) => {
-            setError(error.message);
-        })
-  }
+    // logoutUser();
+
+    await loginAdmin(email.trim(), pass)
+      .then((res) => {
+        handleLogin(res);
+        navigate("/adminHome");
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  };
 
   return (
     <div>
       <Box className="Default-card">
-        <h1>
-            Admin Login
-        </h1>
+        <h1>Admin Login</h1>
         <FormControl className="Login-form">
           {error && <ErrorBox text={error} />}
           <div className="Input-fields">
@@ -79,11 +82,7 @@ export default function Login() {
               />
             </div>
           </div>
-          <Button
-            disableElevation
-            variant="contained"
-            onClick={handleLogin}
-          >
+          <Button disableElevation variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
         </FormControl>
