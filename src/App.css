@@ -355,3 +355,27 @@ h3 {
   width: 100%;
   text-align: center;
 }
+
+#Approve-box {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: center;
+  padding: 0 1em 1em;
+}
+
+#f-name-input {
+  width: 100%;
+}
+
+#Approve-box > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+#Approve-box Button {
+  padding: 1em;
+  border-radius: 1em;
+  width: 90px;
+}

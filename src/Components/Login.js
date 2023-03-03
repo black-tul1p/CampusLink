@@ -86,7 +86,7 @@ export default function Login() {
             </div>
           </div>
           <Button disableElevation variant="contained" onClick={handleSubmit}>
-            Submit
+            Log in
           </Button>
           <div style={{ color: "white", alignSelf: "center" }}>
             Don't have an account?

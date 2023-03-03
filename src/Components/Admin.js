@@ -1,19 +1,13 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from "@firebase/firestore";
+import { collection, doc, getDocs, updateDoc } from "@firebase/firestore";
 import { useState, useEffect } from "react";
 import { firestore } from "../Backend/firebase";
 import { Person } from "@mui/icons-material";
 import "./Classlist.css";
 import { Box, Button, Tab, Tabs, TextField, Typography } from "@mui/material";
-import styled from "@emotion/styled";
 import { PropTypes } from "prop-types";
 import ErrorBox from "./Error";
 import { getUserByEmail } from "../Backend/user";
+import "../App.css";
 
 //From Material UI website example
 
@@ -29,7 +23,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3, minWidth: "56em", height: "100vh" }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -81,36 +75,27 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    getDocs(collection(firestore, "students")).then((studentSet) => {
-      let studentList = [];
-      studentSet.forEach((doc) => {
-        studentList.push({
+    async function fetchData() {
+      try {
+        const [studentSet, instructorSet] = await Promise.all([
+          getDocs(collection(firestore, "students")),
+          getDocs(collection(firestore, "instructors")),
+        ]);
+
+        const studentList = studentSet.docs.map((doc) => ({
           firstName: doc.data().firstName,
           lastName: doc.data().lastName,
           email: doc.data().email,
-        });
-      });
-      setStudents(studentList);
-    });
+        }));
 
-    getDocs(collection(firestore, "instructors")).then((instructorSet) => {
-      let instructorList = [];
-      instructorSet.forEach((doc) => {
-        if (doc.data().accepted) {
-          instructorList.push({
-            firstName: doc.data().firstName,
-            lastName: doc.data().lastName,
-            email: doc.data().email,
-          });
-        }
-      });
-      setInstructors(instructorList);
-    });
+        const instructorList = instructorSet.docs.map((doc) => ({
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          email: doc.data().email,
+        }));
 
-    getDocs(collection(firestore, "instructors")).then(
-      (pendingInstructorSet) => {
         let pendingInstructorList = [];
-        pendingInstructorSet.forEach((doc) => {
+        instructorSet.forEach((doc) => {
           if (!doc.data().accepted) {
             pendingInstructorList.push({
               firstName: doc.data().firstName,
@@ -119,13 +104,20 @@ export default function Admin() {
             });
           }
         });
+
+        setStudents(studentList);
+        setInstructors(instructorList);
         setPendingInstructors(pendingInstructorList);
+      } catch (error) {
+        console.error(error);
       }
-    );
+    }
+
+    fetchData();
   }, []);
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", maxHeight: "100vh", overflow: "hidden" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} centered>
           <Tab label="Students" {...allyProps(0)} />
@@ -137,24 +129,29 @@ export default function Admin() {
         <div className="adminPage">
           <div className="classlist-wrapper">
             <h1 className="title">Student List</h1>
-
-            <table className="classlist">
-              <tbody>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                </tr>
-
-                {students.map((student) => (
+            <div
+              style={{ overflow: "auto", maxHeight: "70vh", marginBottom: 3 }}
+            >
+              <table className="classlist">
+                <tbody>
                   <tr>
-                    <td>
-                      {student.lastName}, {student.firstName}
-                    </td>
-                    <td>{student.email}</td>
+                    <th>Name</th>
+                    <th>Email</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                  {console.log(students)}
+                  {students.map((student) => (
+                    <tr>
+                      <td>
+                        {student.firstName && student.lastName
+                          ? `${student.firstName} ${student.lastName}`
+                          : "Name not available"}
+                      </td>
+                      <td>{student.email}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <p id="student-count-label">Total Students: {students.length}</p>
           </div>
         </div>
@@ -163,24 +160,27 @@ export default function Admin() {
         <div className="adminPage">
           <div className="classlist-wrapper">
             <h1 className="title">Instructor List</h1>
-
-            <table className="classlist">
-              <tbody>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                </tr>
-
-                {instructors.map((instructor) => (
+            <div
+              style={{ overflow: "auto", maxHeight: "70vh", marginBottom: 3 }}
+            >
+              <table className="classlist">
+                <tbody>
                   <tr>
-                    <td>
-                      {instructor.lastName}, {instructor.firstName}
-                    </td>
-                    <td>{instructor.email}</td>
+                    <th>Name</th>
+                    <th>Email</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+
+                  {instructors.map((instructor) => (
+                    <tr>
+                      <td>
+                        {instructor.lastName}, {instructor.firstName}
+                      </td>
+                      <td>{instructor.email}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             <p id="student-count-label">
               Total Instructors: {instructors.length}
             </p>
@@ -193,46 +193,61 @@ export default function Admin() {
             <div className="classlist-wrapper">
               <h1 className="title">Pending Instructor List</h1>
               {error && <ErrorBox text={error} />}
-              <TextField
-                required
-                id="f-name-input"
-                label="Email to Approve/Deny"
-                variant="outlined"
-                placeholder="email@organization.edu"
-                value={selectedInstructor}
-                onChange={(e) => {
-                  setSelectedInstructor(e.target.value);
-                }}
-              />
-              <Button className="Mini-button" onClick={handleApprove}>
-                Approve
-              </Button>
-              <Button className="Mini-button" onClick={handleDeny}>
-                Deny
-              </Button>
-              <table className="classlist">
-                <thead>
-                  <tr>
-                    <th className="accountTypeColumn">Email</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pendingInstructors.map((pendingInstructor) => (
+              <div id="Approve-box">
+                <TextField
+                  required
+                  id="f-name-input"
+                  variant="outlined"
+                  placeholder="email@organization.edu"
+                  value={selectedInstructor}
+                  onChange={(e) => {
+                    setSelectedInstructor(e.target.value);
+                  }}
+                />
+                <div>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleApprove}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDeny}
+                  >
+                    Deny
+                  </Button>
+                </div>
+              </div>
+              <div
+                style={{ overflow: "auto", maxHeight: "70vh", marginBottom: 3 }}
+              >
+                <table className="classlist">
+                  <thead>
                     <tr>
-                      <td className="userTypeColumn">
-                        {pendingInstructor.email}
-                      </td>
-                      <td>
-                        {pendingInstructor.lastName},{" "}
-                        {pendingInstructor.firstName}
-                      </td>
-                      <td>Pending</td>
+                      <th className="accountTypeColumn">Email</th>
+                      <th>Name</th>
+                      <th>Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {pendingInstructors.map((pendingInstructor) => (
+                      <tr>
+                        <td className="userTypeColumn">
+                          {pendingInstructor.email}
+                        </td>
+                        <td>
+                          {pendingInstructor.lastName},
+                          {pendingInstructor.firstName}
+                        </td>
+                        <td>Pending</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <p id="student-count-label">
                 Total Pending Instructors: {pendingInstructors.length}
               </p>
