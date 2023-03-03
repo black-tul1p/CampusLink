@@ -293,27 +293,3 @@ export default function Registration() {
     </Box>
   );
 }
-
-          <Button
-            disableElevation
-            variant="contained"
-            onClick={handleRegistration}
-          >
-            Register
-          </Button>
-          <div style={{ color: "white", alignSelf: "center" }}>
-            Already have an account?
-            <Button
-              className="Mini-button"
-              onClick={() => {
-                navigate("/");
-              }}
-            >
-              Login
-            </Button>
-          </div>
-        </FormControl>
-      </Box>
-    </div>
-  );
-}

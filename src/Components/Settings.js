@@ -73,36 +73,3 @@ export default function SettingsPage() {
     </Container>
   );
 }
-
-  return (
-    <Container>
-      <Title>Sample Settings</Title>
-      <FormGroup>
-        <SettingsItem>
-          <Label>Dark Mode</Label>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={darkMode}
-                onChange={handleDarkModeChange}
-                name="darkMode"
-              />
-            }
-          />
-        </SettingsItem>
-        <SettingsItem>
-          <Label>Notifications</Label>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={notifications}
-                onChange={handleNotificationsChange}
-                name="notifications"
-              />
-            }
-          />
-        </SettingsItem>
-      </FormGroup>
-    </Container>
-  );
-}
