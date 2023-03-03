@@ -1,22 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "@emotion/styled";
-import {
-  Typography
-} from "@mui/material";
-import { useRef } from "react";
+import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 // CSS Styles
 const Sidebar = styled.div`
   flex-shrink: 0;
-  width:94vw;
+  width: 94vw;
   height: 5em;
   background-color: #20232a;
   display: flex;
   flex-direction: row;
   overflow: hidden;
 `;
-
 
 const SidebarDivider = styled.div`
   flex-shrink: 0;
@@ -74,64 +70,64 @@ export default function NavBar() {
             navigate("/announcements");
           }}
         >
-            <SidebarText>
-              <Typography style={{ fontSize: "1em" }}>Announcements</Typography>
-            </SidebarText>
+          <SidebarText>
+            <Typography style={{ fontSize: "1em" }}>Announcements</Typography>
+          </SidebarText>
         </SidebarButton>
         <SidebarButton
           onClick={() => {
             navigate("/syllabus");
           }}
         >
-            <SidebarText>
-              <Typography style={{ fontSize: "1em" }}>Syllabus</Typography>
-            </SidebarText>
+          <SidebarText>
+            <Typography style={{ fontSize: "1em" }}>Syllabus</Typography>
+          </SidebarText>
         </SidebarButton>
         <SidebarButton
-            onClick={() => {
-              navigate("/assignments");
-            }}
-          >
-            <SidebarText>
-              <Typography style={{ fontSize: "1em" }}>Assignments</Typography>
-            </SidebarText>
+          onClick={() => {
+            navigate("/assignments");
+          }}
+        >
+          <SidebarText>
+            <Typography style={{ fontSize: "1em" }}>Assignments</Typography>
+          </SidebarText>
         </SidebarButton>
         <SidebarButton
-            onClick={() => {
-              navigate("/grades");
-            }}
-          >
-            <SidebarText>
-              <Typography style={{ fontSize: "1em" }}>Grades</Typography>
-            </SidebarText>
+          onClick={() => {
+            navigate("/grades");
+          }}
+        >
+          <SidebarText>
+            <Typography style={{ fontSize: "1em" }}>Grades</Typography>
+          </SidebarText>
         </SidebarButton>
-        
+
         <SidebarButton
-            onClick={() => {
-              navigate("/quizzes");
-            }}
-          >
-            <SidebarText>
-              <Typography style={{ fontSize: "1em" }}>Quizzes</Typography>
-            </SidebarText>
-        </SidebarButton>
-        <SidebarButton
-            onClick={() => {
-              navigate("/discussions");
-            }}
-          >
-            <SidebarText>
-              <Typography style={{ fontSize: "1em" }}>Discussions</Typography>
-            </SidebarText>
+          onClick={() => {
+            navigate("/quizzes");
+          }}
+        >
+          <SidebarText>
+            <Typography style={{ fontSize: "1em" }}>Quizzes</Typography>
+          </SidebarText>
         </SidebarButton>
         <SidebarButton
-            onClick={() => {
-              navigate("/classlist");
-            }}
-          >
-            <SidebarText>
-              <Typography style={{ fontSize: "1em" }}>Classlist</Typography>
-            </SidebarText>
+          onClick={() => {
+            navigate("/discussions");
+          }}
+        >
+          <SidebarText>
+            <Typography style={{ fontSize: "1em" }}>Discussions</Typography>
+          </SidebarText>
+        </SidebarButton>
+        <SidebarButton
+          onClick={() => {
+            navigate("/classlist");
+          }}
+        >
+          <SidebarText>
+            <Typography style={{ fontSize: "1em" }}>Classlist</Typography>
+          </SidebarText>
         </SidebarButton>
       </SidebarRow>
     </Sidebar>

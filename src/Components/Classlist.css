@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   background-color: #102e44;
   height: 100%;
 }
@@ -41,7 +42,9 @@ html, body {
   border-style: hidden;
 }
 
-.classlist tr:nth-child(even){background-color: #0002;}
+.classlist tr:nth-child(even) {
+  background-color: #0002;
+}
 
 .classlist th {
   color: white;
@@ -50,14 +53,14 @@ html, body {
   text-align: left;
   background-color: #0006;
   color: white;
-  border-left: 1px solid #FFF1;
+  border-left: 1px solid #fff1;
 }
 
 .classlist td {
   padding: 20px 10px;
   color: white;
   text-align: left;
-  border-left: 1px solid #FFF1;
+  border-left: 1px solid #fff1;
 }
 
 .profile-pic-column {
@@ -87,7 +90,7 @@ html, body {
   padding: 10px;
   font-size: 1.2em;
   background-color: #257;
-  color: #EEE;
+  color: #eee;
   border: none;
   border-radius: 5px;
   box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);

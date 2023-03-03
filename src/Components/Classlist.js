@@ -1,22 +1,10 @@
-import "./Classlist.css";
-import { getStudentIdByEmail } from "../Backend/student";
-import {
-  collection,
-  doc,
-  addDoc,
-  deleteDoc,
-  getDoc,
-  getDocs,
-  query,
-  data,
-  where,
-} from "@firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "@firebase/firestore";
 import { firestore } from "../Backend/firebase";
-import logo from "../images/campuslink_banner.png";
 import ProfilePic from "../images/default_profile_picture.png";
 import LogoBanner from "../Components/LogoBanner.js";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import "./Classlist.css";
 
 function Classlist() {
   const [students, setStudents] = useState([]);

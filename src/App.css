@@ -1,16 +1,17 @@
 :root {
-  --dark-blue: rgb(16,46,68);
-  --light-blue: rgb(185,230,233);
-  --blue: rgb(0,100,255);
-  --white: rgba(255,255,255);
+  --dark-blue: rgb(16, 46, 68);
+  --light-blue: rgb(185, 230, 233);
+  --blue: rgb(0, 100, 255);
+  --white: rgba(255, 255, 255);
 
-  --font-fancy: 'Times New Roman';
+  --font-fancy: "Times New Roman";
 
   background-color: var(--dark-blue);
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
 }
 
-html, body {
+html,
+body {
   scroll-behavior: smooth;
 }
 
@@ -66,16 +67,16 @@ html, body {
   font-size: 1em;
 }
 
-.MuiOutlinedInput-notchedOutline{
+.MuiOutlinedInput-notchedOutline {
   border-radius: 1em !important;
   border-color: white !important;
 }
 
-.MuiInputLabel-root{
-  color: rgba(255,255,255, 0.5) !important;
+.MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.5) !important;
 }
 
-.MuiInputBase-input{
+.MuiInputBase-input {
   color: var(--white) !important;
 }
 
@@ -97,9 +98,7 @@ html, body {
   background-color: whitesmoke;
 }
 
-
 /********************************** Registration Page **********************************/
-
 
 .Default-card .Registration-form {
   display: flex;
@@ -114,7 +113,7 @@ html, body {
 }
 
 .Toggle-button {
-  color:  white;
+  color: white;
   display: grid;
   gap: 1em;
 }
@@ -124,7 +123,6 @@ html, body {
   grid-template-columns: 1fr 1fr;
   gap: 1em;
 }
-
 
 /********************************** Home Page **********************************/
 
@@ -241,13 +239,13 @@ html, body {
 }
 
 p {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   color: aliceblue;
   font-size: 2.15em;
   line-height: 0px;
 }
 
 h3 {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
   color: aliceblue;
 }

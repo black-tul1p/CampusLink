@@ -1,64 +1,57 @@
 .CCHeader {
-    text-align: center;
-    color: white;
-
+  text-align: center;
+  color: white;
 }
 
 .CCBanner {
-    width: 225px;
-    height: 75px;
+  width: 225px;
+  height: 75px;
 }
 
 .CCBannerContainer {
-    display: block;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .CCNavBar {
-
-    background-color: rgba(13, 37, 54, 1);
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: 0px;
-    padding: 0px 0px;
+  background-color: rgba(13, 37, 54, 1);
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 0px;
+  padding: 0px 0px;
 }
 
 .CCNavButton {
-    color: white;
-    pad: 0px 0px;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    ;
+  color: white;
+  pad: 0px 0px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .CCSyllabusContainer {
-    color: white;
-    background-color: white;
-    display: contents;
+  color: white;
+  background-color: white;
+  display: contents;
 }
 
 .CCAssignment {
-    background-color: white;
-    color: black; 
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    display: grid;
-    display: flex;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: 0px;
-    padding: 10px 0px;
-    width: 200px;
-    height: 100px;
-    cursor: pointer;
+  background-color: white;
+  color: black;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: grid;
+  display: flex;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 0px;
+  padding: 10px 0px;
+  width: 200px;
+  height: 100px;
+  cursor: pointer;
 }
-
-
-
