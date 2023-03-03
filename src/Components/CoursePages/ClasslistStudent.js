@@ -7,6 +7,7 @@ import ProfilePic from "../../Assets/user_logo.jpg";
 //import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
+import CourseNavBar from "../CourseNavBar"
 
 function ClasslistStudent() {
   const [students, setStudents] = useState([]);
@@ -40,9 +41,10 @@ function ClasslistStudent() {
   }, [searchParams]);
 
   return (
+    <div><CourseNavBar/>
     <div className="Registration-page">
       <div className="classlist-wrapper">
-        <h1 className="title">Course Classlist</h1>
+        <h3 className="title">Course Classlist</h3>
 
         <table className="classlist">
           <tbody>
@@ -71,6 +73,7 @@ function ClasslistStudent() {
         </table>
         <p id="student-count-label">Total Students: {students.length}</p>
       </div>
+    </div>
     </div>
   );
 }

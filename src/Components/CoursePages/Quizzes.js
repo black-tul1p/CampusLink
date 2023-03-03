@@ -1,7 +1,11 @@
 import React from "react";
-
+import CourseNavBar from "../CourseNavBar";
 function Quizzes() {
-  return <div></div>;
+  return (
+    <div>
+      <CourseNavBar />
+    </div>
+  );
 }
 
 export default Quizzes;
