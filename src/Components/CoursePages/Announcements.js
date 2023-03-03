@@ -8,8 +8,11 @@ import { useState, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { getCourseDetailsById } from "../../Backend/course";
 import "./Announcements.css";
+import CourseNavBar from "../CourseNavBar"
 
 function Announcements() {
+  
+  
   //useEffect(async () => {
   //const courseDetails = await getCourseDetailsById("iR8l666mgOfQLNUXjjLO");
   //});
@@ -40,14 +43,19 @@ function Announcements() {
   console.log(cDetails.courseID);
 
   return (
-    <div className="courseInfo">
-      <h1>
+    <div>
+      <CourseNavBar />
+     <div className="courseInfo">
+      <h2>
         Course Name: {cDetails.courseTitle} {cDetails.courseId}
-      </h1>
-      <h1>Course Description: {cDetails.description}</h1>
-      <h1>Course Credits: {cDetails.credit}</h1>
-      <h1>Course Capacity:{cDetails.capacity}</h1>
+      </h2>
+      <h2>Course Description: {cDetails.description}</h2>
+      <h2>Course Credits: {cDetails.credit}</h2>
+      <h2>Course Capacity:{cDetails.capacity}</h2>
+      </div>
+      
     </div>
+   
   );
 }
 

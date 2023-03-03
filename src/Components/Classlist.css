@@ -2,6 +2,7 @@ html,
 body {
   background-color: #102e44;
   height: 100%;
+  padding-top: 10px;
 }
 
 .classlist-page {
