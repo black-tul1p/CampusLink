@@ -14,7 +14,9 @@ const Sidebar = styled.div`
   background-color: #20232a;
   display: flex;
   flex-direction: row;
-  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 6vw;
 `;
 
 

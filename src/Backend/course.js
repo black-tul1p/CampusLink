@@ -112,7 +112,7 @@ export async function getCourseDetailsById(coursesRef) {
   const actualCourse = snapshot.data();
   // console.log(actualCourse)
 
-  return actualCourse;
+  return {...actualCourse, databaseId: snapshot.id};
 }
 
 export const getUserCourses = async (role) => {

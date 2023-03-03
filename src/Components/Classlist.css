@@ -2,6 +2,11 @@ html, body {
     background-color: #102e44;
     height: 100%;
   }
+
+  .classlist-page {
+    position: absolute;
+    top: 5em;
+  }
   
   .logo-header {
     position: sticky;
