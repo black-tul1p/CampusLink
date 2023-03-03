@@ -42,6 +42,8 @@ body {
   flex-direction: column;
   width: 50vw;
   gap: 1em;
+}
+
 /********************************** Login Page **********************************/
 
 .Banner-logo {
@@ -177,17 +179,8 @@ body {
   .homepage-student-container {
     grid-template-columns: repeat(3, 1fr);
   }
-@media (max-width: 1650px) {
-  /* Change to two columns on screens smaller than 768px */
-  .homepage-student-container {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
-@media (max-width: 1225px) {
-  /* Change to two columns on screens smaller than 768px */
-  .homepage-student-container {
-    grid-template-columns: repeat(2, 1fr);
 @media (max-width: 1225px) {
   /* Change to two columns on screens smaller than 768px */
   .homepage-student-container {
@@ -199,6 +192,7 @@ body {
   /* Change to one column on screens smaller than 480px */
   .homepage-student-container {
     grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 760px) {

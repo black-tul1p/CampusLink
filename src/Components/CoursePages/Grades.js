@@ -1,12 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function Grades() {
-  return (
-    <div>
-    </div>
-  )
+  return <div></div>;
 }
 
-export default Grades
-
-export default grades
+export default Grades;
