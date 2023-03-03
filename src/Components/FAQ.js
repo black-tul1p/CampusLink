@@ -139,13 +139,16 @@ export default function FAQ() {
   }, []);
 
   const handleSubmit = () => {
-    // Verify that suggestionRef contains defined data
-    if (!suggestionRef) {
-      console.log("Invalid form data");
+    // Verify that suggestionRef contains valid input
+    const error = validateSuggestion();
+    if (error) {
+      setSnackbarMessage(error);
+      setOpenSnackbar(true);
       return;
     }
+
     // Send suggestion to the database
-    sendSuggestion(suggestionRef.current.value)
+    sendSuggestion(suggestionRef.current.value.trim())
       .then(() => {
         setSnackbarMessage("Thank you for your suggestion!");
       })
@@ -160,12 +163,33 @@ export default function FAQ() {
     suggestionRef.current = "";
   };
 
+  const validateSuggestion = () => {
+    var error;
+
+    // Check if suggestion is empty
+    if (!suggestionRef.current.value.trim()) {
+      return "Suggestion cannot be empty";
+    }
+
+    // Verify that suggestionRef only contains characters typically used in English
+    const regex = /^[a-zA-Z0-9\s.,?'"()/-]+$/;
+    if (!regex.test(suggestionRef.current.value.trim())) {
+      return "Text contains invalid characters";
+    }
+
+    // Check if suggestion is too long
+    if (suggestionRef.current.value.length > 500) {
+      return "Suggestion is too long";
+    }
+  };
+
   const handleQnASubmit = () => {
     // Verify that the refs contain defined data
     if (!qRef || !aRef) {
       console.log("Invalid form data");
       return;
     }
+
     // Send submission to the database
     updateFAQ(qRef.current.value, aRef.current.value)
       .then(() => {
@@ -277,7 +301,7 @@ export default function FAQ() {
           </StyledFormTwo>
           <Snackbar
             open={openSnackbar}
-            autoHideDuration={5000}
+            autoHideDuration={2000}
             onClose={handleCloseSnackbar}
             message={snackbarMessage}
           />

@@ -1,5 +1,5 @@
 import Banner from "../Assets/banner_logo.jpg";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -11,22 +11,28 @@ import { Email, VpnKey } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../Backend/user";
 import ErrorBox from "./Error";
+import { AuthContext } from "../Contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
+  const { handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Returns true if signed in
-    const signedIn = await loginUser(email.trim(), pass).catch((error) => {
-      setError(error.message);
-    });
-
-    if (signedIn) navigate("/home");
+    await loginUser(email.trim(), pass)
+      .then((res) => {
+        // console.log(res);
+        handleLogin(res);
+        navigate("/home");
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   };
 
   return (
@@ -79,7 +85,7 @@ export default function Login() {
               <Button className="Mini-button">Forgot Password?</Button>
             </div>
           </div>
-          <Button disableElevation variant="contained" onClick={handleLogin}>
+          <Button disableElevation variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
           <div style={{ color: "white", alignSelf: "center" }}>

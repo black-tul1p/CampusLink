@@ -1,5 +1,5 @@
-import {collection, doc, getDoc, getDocs} from "@firebase/firestore";
-import {useState, useEffect} from "react";
+import { collection, doc, getDoc, getDocs } from "@firebase/firestore";
+import { useState, useEffect } from "react";
 import { firestore } from "../Backend/firebase";
 import { useSearchParams } from "react-router-dom";
 import "./Classlist.css";
@@ -13,14 +13,15 @@ export default function Admin() {
 
   useEffect(() => {
     //Get students and add to list
-    getDocs(collection(firestore, 'instructors')) 
-    .then((instructorSet) => {
-      let instructorList = []
+    getDocs(collection(firestore, "instructors")).then((instructorSet) => {
+      let instructorList = [];
       instructorSet.forEach((doc) => {
         if (doc.data().accepted) {
-        instructorList.push({firstName: doc.data().firstName,
-                          lastName:  doc.data().lastName,
-                          email:     doc.data().email});
+          instructorList.push({
+            firstName: doc.data().firstName,
+            lastName: doc.data().lastName,
+            email: doc.data().email,
+          });
         }
       });
       setInstructors(instructorList);
@@ -30,7 +31,7 @@ export default function Admin() {
   return (
     <div className="adminPage">
       <div className="classlist-wrapper">
-        <h1 className="title" >Instructor List</h1>
+        <h1 className="title">Instructor List</h1>
 
         <table className="classlist">
           <tbody>
@@ -40,12 +41,12 @@ export default function Admin() {
               <th>Email</th>
             </tr>
 
-            {instructors.map(instructor => (
+            {instructors.map((instructor) => (
               <tr>
-                <td className="userTypeColumn">
-                  Approved
+                <td className="userTypeColumn">Approved</td>
+                <td>
+                  {instructor.lastName}, {instructor.firstName}
                 </td>
-                <td>{instructor.lastName}, {instructor.firstName}</td>
                 <td>{instructor.email}</td>
               </tr>
             ))}
@@ -61,7 +62,9 @@ function InstructorInfoRow(props) {
   return (
     <tr>
       <td className="profile-pic"></td>
-      <td>{props.lastName}, {props.firstName}</td>
+      <td>
+        {props.lastName}, {props.firstName}
+      </td>
       <td>{props.email}</td>
     </tr>
   );
@@ -71,4 +74,9 @@ InstructorInfoRow.defaultProps = {
   firstName: "Firstname",
   lastName: "Lastname",
   email: "example@gmail.com",
-}
+};
+InstructorInfoRow.defaultProps = {
+  firstName: "Firstname",
+  lastName: "Lastname",
+  email: "example@gmail.com",
+};
