@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { useState, useEffect } from "react";
-import ReactSwitch from 'react-switch';
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {
   CircularProgress,
@@ -8,12 +7,11 @@ import {
   SnackbarContent,
   Typography,
 } from "@mui/material";
-import { getInstructorCourses } from "../Backend/instructor";
+import { getUserCourses } from "../Backend/course";
 import { getUserRole } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
-import {getAllCourses} from "../Backend/course";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Homepage() {
   const [courses, setCourses] = useState([]);
@@ -32,60 +30,31 @@ function Homepage() {
     setOpenSnackbar(false);
   };
 
-
   useEffect(() => {
-    // Get user role
-    getUserRole()
-      .then((res) => {
-        setRole(res);
+    async function fetchData() {
+      try {
+        // Get user role
+        const role = await getUserRole();
+        setRole(role);
         setSnackbarMessage(`Hello, ${user.displayName}`);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
         setOpenSnackbar(true);
-      });
-    // console.log(role);
 
-    //Get courses
-    // if (role === "instructor") {
-    //   getInstructorCourses()
-    //     .then((res) => {
-    //       setCourses(res);
-    //       setLoading(false);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.message);
-    //       setLoading(false);
-    //     });
-    //   } else if (role === "student") {
-    //     getStudentCourses()
-    //     .then((res) => {
-    //       setCourses(res);
-    //       setLoading(false);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.message);
-    //       setLoading(false);
-    //     });
-    //   } else {
-    //     console.error("Could not resolve user role");
-    //   }
+        // Get courses
+        const courses = await getUserCourses(role);
+        if (courses.length === 0) {
+          setCourses([]);
+        } else {
+          setCourses(courses);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    }
 
-    // REMOVE WHEN DONE
-    getAllCourses()
-        .then((res) => {
-          setCourses(res);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error.message);
-          setLoading(false);
-    setLoading(false);
-  });
-
-  }, [courses, user.displayName]);
+    fetchData();
+  }, []);
 
   return (
     <div className="homepage-student">
@@ -126,7 +95,7 @@ function Homepage() {
                   <div className="course-container"
                     onClick={() => {
                       const courseId = course.courseId;
-                      navigate("/Announcements", { state: {courseId} });
+                      navigate("/announcements", { state: {courseId} });
                     }}
                   >
                     <div className="course-container-top">
@@ -148,7 +117,7 @@ function Homepage() {
                   <div className="course-container"
                     onClick={() => {
                       const courseId = course.courseId;
-                      navigate("/Announcements", { state: {courseId} });
+                      navigate("/announcements", { state: {courseId} });
                     }}
                   >
                     <div className="course-container-top">
@@ -194,8 +163,9 @@ function Homepage() {
       )}
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={2000}
+        autoHideDuration={1000}
         onClose={handleCloseSnackbar}
+        style={{ marginLeft: "4em" }}
       >
         <SnackbarContent
           style={{
