@@ -114,7 +114,7 @@ export default function Navbar() {
   };
 
   const navigateToProfile = (event) => {
-    handleClose(event);
+    //handleClose(event);
     navigate("/profile");
   };
 
