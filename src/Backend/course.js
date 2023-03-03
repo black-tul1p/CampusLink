@@ -4,17 +4,10 @@ import {
   addDoc,
   deleteDoc,
   getDocs,
-  query,
-  where,
+  getDoc,
 } from "@firebase/firestore";
 import { firestore } from "./firebase";
 
-/**
- * Fetches all the courses from Firestore.
- *
- * @returns {Promise<Array>} An array of course objects containing all the courses in Firestore.
- * @throws {Error} If an error occurs while fetching courses.
- */
 export const getAllCourses = async () => {
   try {
     const getData = collection(firestore, "courses");
@@ -109,3 +102,13 @@ export async function removeCourse(courseId) {
 //   console.log("Found a course with ID: ", courseId);
 //   return courseId;
 // }
+
+export async function getCourseDetailsById(coursesRef) {
+  const coursesData = collection(firestore, "courses");
+  const snapshot = await getDoc(doc(coursesData, coursesRef));
+
+  const actualCourse = snapshot.data();
+  // console.log(actualCourse)
+
+  return actualCourse;
+}
