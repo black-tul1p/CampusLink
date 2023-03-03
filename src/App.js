@@ -8,6 +8,7 @@ import {
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Admin from "./Components/Admin";
+import Classlist from "./Components/CoursePages/Classlist"
 import Landing, { PageList } from "./Components/Landing";
 import { useContext, useState } from "react";
 import { AuthContext } from "./Contexts/AuthContext";
@@ -21,8 +22,6 @@ function AuthorizedRoute(props) {
 }
 
 function App() {
-  const [isDark, setisDark] = useState(true); // For later dark mode implementation
-
   return (
     <Router>
       <Routes>
@@ -30,13 +29,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Register />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/classlist" element={<Classlist />} />
         {Object.values(PageList).map((path) => (
           <Route
             key={path}
             path={path}
             element={
               <AuthorizedRoute>
-                <Landing page={path} theme={isDark} />
+                <Landing page={path} />
               </AuthorizedRoute>
             }
           />
