@@ -17,9 +17,13 @@ function Announcements() {
 
   const [cDetails, setCourseData] = useState([]);
 
-  //const location = useLocation();
-  //const courseID = location.state?.courseID;
-  const courseID = "iR8l666mgOfQLNUXjjLO";
+  const location = useLocation();
+  const courseID = location.state?.courseID;
+  //const courseID = "iR8l666mgOfQLNUXjjLO";
+
+  //lines 20 and 21 of Announcement.js are for 
+  //pulling course dynammically. 
+  //If not does not work then comment out and uncomment line 22
 
   const course = doc(firestore, 'courses', courseID);
 
