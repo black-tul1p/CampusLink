@@ -22,3 +22,11 @@ export default function ErrorBox(props) {
     </StyledBox>
   );
 }
+
+  return (
+    <StyledBox>
+      <Error color="warning" />
+      <span style={{ justifySelf: "center" }}> {props.text} </span>
+    </StyledBox>
+  );
+}

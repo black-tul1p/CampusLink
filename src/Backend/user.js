@@ -339,3 +339,6 @@ export async function updateUserProfile(firstName, lastName) {
     throw error;
   }
 }
+
+  return true; // instructor exists and accepted field is true
+}

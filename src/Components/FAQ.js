@@ -310,3 +310,103 @@ export default function FAQ() {
     </StyledPageContainer>
   );
 }
+
+  return (
+    <StyledPageContainer>
+      <StyledContainer maxWidth="md">
+        <StyledTitle variant="h4" gutterBottom>
+          Frequently Asked Questions
+        </StyledTitle>
+        {loading ? (
+          <StyledBox>
+            <CircularProgress />
+          </StyledBox>
+        ) : faq.length > 0 ? (
+          faq
+            .filter((q) => q.question && q.answer)
+            .map((q) => (
+              <AccordionStyled key={q.id}>
+                <StyledSummary expandIcon={<ExpandMoreIconStyled />}>
+                  <Typography variant="h6">{q.question}</Typography>
+                </StyledSummary>
+                <StyledDetails>
+                  <Typography>{q.answer}</Typography>
+                </StyledDetails>
+              </AccordionStyled>
+            ))
+        ) : (
+          <Typography>No FAQ found.</Typography>
+        )}
+      </StyledContainer>
+      <StyledSuggestionBox>
+        <StyledSuggestionTitle>
+          Have a suggestion for a new FAQ question?
+        </StyledSuggestionTitle>
+        <StyledDescription>
+          Fill out the form below and we'll review your suggestion.
+        </StyledDescription>
+        <StyledForm>
+          <TextField
+            label="Enter your question here"
+            multiline
+            rows={4}
+            variant="outlined"
+            inputRef={suggestionRef}
+            required
+          />
+          <StyledButton
+            variant="contained"
+            type="submit"
+            onClick={handleSubmit}
+          >
+            Submit
+          </StyledButton>
+        </StyledForm>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={5000}
+          onClose={handleCloseSnackbar}
+          message={snackbarMessage}
+        />
+      </StyledSuggestionBox>
+      {isTesting && (
+        <StyledSuggestionBox>
+          <StyledSuggestionTitle>
+            Enter a new FAQ question + answer
+          </StyledSuggestionTitle>
+          <StyledFormTwo>
+            <TextField
+              label="Enter your question here"
+              multiline
+              rows={4}
+              variant="outlined"
+              inputRef={qRef}
+              required
+            />
+            <TextField
+              label="Enter your answer here"
+              multiline
+              rows={4}
+              variant="outlined"
+              inputRef={aRef}
+              required
+            />
+            <StyledButton
+              variant="contained"
+              type="submit"
+              onClick={handleQnASubmit}
+            >
+              Submit
+            </StyledButton>
+          </StyledFormTwo>
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={2000}
+            onClose={handleCloseSnackbar}
+            message={snackbarMessage}
+          />
+        </StyledSuggestionBox>
+      )}
+    </StyledPageContainer>
+  );
+}

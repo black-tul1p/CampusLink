@@ -102,3 +102,27 @@ export const fetchFAQ = async () => {
     throw new Error("Error fetching FAQ:", error);
   }
 };
+
+/**
+ * Fetches the frequently asked questions (FAQ) from the Firestore database.
+ * @returns {Promise<Array>} An array of FAQ objects, each containing an id, question, and answer.
+ * @throws {Error} If there is an error fetching the FAQ from the database.
+ */
+export const fetchFAQ = async () => {
+  try {
+    const faqRef = collection(firestore, "faq");
+    const snapshot = await getDocs(faqRef);
+    const faq = [];
+    snapshot.forEach((doc) => {
+      faq.push({
+        id: doc.id,
+        question: doc.data().question,
+        answer: doc.data().answer,
+      });
+    });
+    // console.log("FAQ fetched successfully:", faq);
+    return faq;
+  } catch (error) {
+    throw new Error("Error fetching FAQ:", error);
+  }
+};
