@@ -163,7 +163,11 @@ export default function Navbar() {
           }
           placement="right"
         >
-          <SidebarButton>
+          <SidebarButton
+            onClick={() => {
+              navigate("/announcements");
+            }}
+          >
             <SidebarIcon>
               <Notifications style={{ color: "#fff" }} />
             </SidebarIcon>
