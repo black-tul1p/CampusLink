@@ -13,6 +13,7 @@ import Syllabus from "./CoursePages/Syllabus";
 import Quizzes from "./CoursePages/Quizzes";
 import ClasslistStudent from "./CoursePages/ClasslistStudent";
 import Classlist from "./CoursePages/Classlist";
+import Admin from "./Admin";
 
 const Container = styled.div`
   display: flex;
@@ -38,7 +39,9 @@ export const PageList = {
 
 export default function Landing(props) {
   var content = null;
-  if (props.page === PageList.Home) {
+  if (props.page === PageList.Admin) {
+    content = <Admin theme={props.theme} />;
+  } else if (props.page === PageList.Home) {
     content = <Home theme={props.theme} />;
   } else if (props.page === PageList.Settings) {
     content = <SettingsPage theme={props.theme} />;

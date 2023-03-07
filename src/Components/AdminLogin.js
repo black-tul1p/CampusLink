@@ -11,21 +11,18 @@ import { Email, VpnKey } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import ErrorBox from "./Error";
 import { loginAdmin } from "../Backend/user";
-import { AuthContext } from "../Contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
-  const { handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await loginAdmin(email.trim(), pass)
-      .then((res) => {
-        handleLogin(res);
+      .then(() => {
         navigate("/adminHome");
       })
       .catch((error) => {

@@ -12,6 +12,7 @@ import Landing, { PageList } from "./Components/Landing";
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "./Contexts/AuthContext";
 import { CircularProgress } from "@mui/material";
+import { isAdmin } from "./Backend/user";
 
 function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
@@ -45,6 +46,8 @@ function AuthorizedRoute(props) {
 
   if (!user) {
     return <Navigate to="/" />;
+  } else if (isAdmin(user.email)) {
+    <Navigate to="/adminHome" />;
   }
 
   return props.children;
