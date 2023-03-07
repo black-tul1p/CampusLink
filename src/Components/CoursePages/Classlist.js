@@ -1,4 +1,4 @@
-import "../Classlist.css";
+import "../../Styles/Classlist.css";
 import {
   doc,
   getDoc,
@@ -30,29 +30,43 @@ function Classlist() {
   const [mailingList, setMailingList] = useState("");
   const location = useLocation();
 
-  const updateClassList = (courseID) => {
+  const updateClassList = async (courseID) => {
     if (courseID === undefined) {
       console.log("Course not specified!");
     } else {
       console.log(courseID);
       const course = doc(firestore, "courses", courseID);
-      getDoc(course).then((courseDoc) => {
+      try {
+        const courseDoc = await getDoc(course);
         if (courseDoc.exists()) {
           setCourseData(courseDoc.data());
 
           //Add enrolled students to classlist
           const enrolled = courseDoc.data().enrolledStudents;
-          Promise.all(enrolled.map(getDoc)).then((stdnts) => {
-            setStudents(stdnts);
-            setMailingList(
-              "mailto:" + stdnts.map((s) => s.data().email).join(";")
-            );
-          });
+          const stdnts = await Promise.all(enrolled.map(getDoc));
+          setStudents(stdnts);
+          setMailingList(
+            "mailto:" + stdnts.map((s) => s.data().email).join(";")
+          );
         } else {
           console.log("Course not found!");
         }
-      });
+      } catch (error) {
+        console.log(error);
+      }
     }
+  };
+
+  const removeStudent = (event) => {
+    const id = event.currentTarget.parentElement.getAttribute("studentid");
+    console.log(courseDocId);
+    const courseRef = doc(firestore, "courses", courseDocId);
+    const students = collection(firestore, "students");
+    updateDoc(courseRef, {
+      enrolledStudents: arrayRemove(doc(students, id)),
+    }).then(() => {
+      updateClassList(courseDocId);
+    });
   };
 
   //Initialize data which comes from the database
@@ -64,31 +78,27 @@ function Classlist() {
   }, [location]);
 
   return (
-    <CourseNavBar>
+    <div>
+      <CourseNavBar />
       <div className="classlist-page">
-        <h1 className="course-name">
-          {courseData.courseTitle} {courseData.courseId}
-        </h1>
-        <h2 className="course-name">{courseData.description}</h2>
         <div className="classlist-wrapper">
           <h1 className="title">Course Classlist</h1>
-
-          <button
+          <Button
             className="add-button"
             onClick={() => {
               //Append placeholder student
               /*
-          setStudents([
-            ...students, {
-             firstName: "Firstname",
-             lastName: "Lastname",
-             email: "example@gmail.com"
-            }
-          ]);*/
+      setStudents([
+        ...students, {
+         firstName: "Firstname",
+         lastName: "Lastname",
+         email: "example@gmail.com"
+        }
+      ]);*/
             }}
           >
             Add Students
-          </button>
+          </Button>
 
           <a href={mailingList} className="email-button" onClick={() => {}}>
             Email All
@@ -107,24 +117,7 @@ function Classlist() {
                   <td className="profile-pic-column" studentid={student.id}>
                     <Button
                       className="remove-student-container"
-                      onClick={(event) => {
-                        const id =
-                          event.currentTarget.parentElement.getAttribute(
-                            "studentid"
-                          );
-                        console.log(courseDocId);
-                        const courseRef = doc(
-                          firestore,
-                          "courses",
-                          courseDocId
-                        );
-                        const students = collection(firestore, "students");
-                        updateDoc(courseRef, {
-                          enrolledStudents: arrayRemove(doc(students, id)),
-                        }).then(() => {
-                          updateClassList(courseDocId);
-                        });
-                      }}
+                      onClick={removeStudent}
                     >
                       <DeleteIcon fontSize="large" />
                     </Button>
@@ -145,7 +138,7 @@ function Classlist() {
           <p id="student-count-label">Total Students: {students.length}</p>
         </div>
       </div>
-    </CourseNavBar>
+    </div>
   );
 }
 
