@@ -10,19 +10,19 @@ const TopbarRow = styled.div`
   height: 4.5em;
   flex-grow: 1;
   display: flex;
-  padding: 0 1em;
+  padding: 0 2em;
+  justify-content: space-between;
   background-color: #20232a;
-  justify-content: space-around;
   align-items: center;
 `;
 
 const TopbarButton = styled.div`
   display: flex;
+  sizing: border-box;
   align-items: center;
-  height: 3em;
-  padding-right: 1em;
-  padding-left: 1em;
+  width: 8em;
   cursor: pointer;
+  padding: 0 0.5em;
   border-radius: 2em;
   transition: background-color 0.15s ease-in-out;
   &:hover {
