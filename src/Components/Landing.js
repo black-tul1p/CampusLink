@@ -12,7 +12,7 @@ import Grades from "./CoursePages/Grades";
 import Syllabus from "./CoursePages/Syllabus";
 import Quizzes from "./CoursePages/Quizzes";
 import ClasslistStudent from "./CoursePages/ClasslistStudent";
-import Classlist from "./CoursePages/ClasslistStudent";
+import Classlist from "./CoursePages/Classlist";
 
 const Container = styled.div`
   display: flex;
