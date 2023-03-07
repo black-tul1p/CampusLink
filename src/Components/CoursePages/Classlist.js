@@ -83,11 +83,18 @@ function Classlist() {
       <div className="classlist-page">
         <div className="classlist-wrapper">
           <h1 className="title">Course Classlist</h1>
-          <Button
-            className="add-button"
-            onClick={() => {
-              //Append placeholder student
-              /*
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              paddingBottom: "1em",
+            }}
+          >
+            <Button
+              className="add-button"
+              onClick={() => {
+                //Append placeholder student
+                /*
       setStudents([
         ...students, {
          firstName: "Firstname",
@@ -95,15 +102,20 @@ function Classlist() {
          email: "example@gmail.com"
         }
       ]);*/
-            }}
-          >
-            Add Students
-          </Button>
+              }}
+              variant="contained"
+            >
+              Add Students
+            </Button>
 
-          <a href={mailingList} className="email-button" onClick={() => {}}>
-            Email All
-          </a>
-
+            <Button
+              href={mailingList}
+              className="email-button"
+              variant="contained"
+            >
+              Email All
+            </Button>
+          </div>
           <table className="classlist">
             <tbody>
               <tr>
@@ -114,18 +126,22 @@ function Classlist() {
 
               {students.map((student) => (
                 <tr>
-                  <td className="profile-pic-column" studentid={student.id}>
+                  <td
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                    }}
+                    className="profile-pic-column"
+                    studentid={student.id}
+                  >
                     <Button
-                      className="remove-student-container"
+                      id="remove-student-container"
                       onClick={removeStudent}
                     >
                       <DeleteIcon fontSize="large" />
                     </Button>
-                    <img
-                      className="profile-pic"
-                      src={ProfilePic}
-                      alt="profile"
-                    ></img>
+                    <img id="profile-pic" src={ProfilePic} alt="profile"></img>
                   </td>
                   <td>
                     {student.data().lastName}, {student.data().firstName}
