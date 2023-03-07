@@ -24,7 +24,7 @@ export default function Login() {
     if (user) {
       navigate("/home");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,7 +86,14 @@ export default function Login() {
                   setPass(e.target.value);
                 }}
               />
-              <Button className="Mini-button">Forgot Password?</Button>
+              <Button
+                className="Mini-button"
+                onClick={() => {
+                  navigate("/forgot");
+                }}
+              >
+                Forgot Password?
+              </Button>
             </div>
           </div>
           <Button disableElevation variant="contained" onClick={handleSubmit}>

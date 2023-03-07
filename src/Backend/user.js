@@ -374,12 +374,13 @@ export async function delCurrentUser() {
 export function verifyEmail(email) {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const universityRegex = /@[a-zA-Z0-9.-]+\.(edu)$/;
+  const providerRegex = /@[a-zA-Z0-9.-]+\.(com)$/;
 
   if (!emailRegex.test(email)) {
     return false; // Email does not match standard email format
   }
 
-  if (!universityRegex.test(email)) {
+  if (!universityRegex.test(email) && !providerRegex.test(email)) {
     return false; // Email domain is not a valid university domain
   }
 
@@ -431,5 +432,28 @@ export async function updateUserProfile(firstName, lastName) {
   } catch (error) {
     console.error("Error updating user profile:", error);
     throw error;
+  }
+}
+
+/**
+ * Sends a password reset email to the user with the specified email address.
+ *
+ * @param {string} email - The email address of the user to send a password reset email to.
+ * @throws {Error} - If there was an error sending the password reset email.
+ */
+export async function sendPasswordResetEmail(email) {
+  try {
+    await auth.sendPasswordResetEmail(email);
+  } catch (error) {
+    switch (error.code) {
+      case "auth/missing-email":
+        throw new Error("Please enter an email address");
+      case "auth/user-not-found":
+        throw new Error("No account with that email exists");
+      case "auth/invalid-email":
+        throw new Error("Invalid email format");
+      default:
+        throw new Error(`Error sending request: ${error.code}`);
+    }
   }
 }
