@@ -13,7 +13,6 @@ import Syllabus from "./CoursePages/Syllabus";
 import Quizzes from "./CoursePages/Quizzes";
 import ClasslistStudent from "./CoursePages/ClasslistStudent";
 import Classlist from "./CoursePages/ClasslistStudent";
-import CourseNavBar from "./CourseNavBar";
 
 const Container = styled.div`
   display: flex;
