@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { getUserCourses } from "../Backend/course";
-import { getUserRole } from "../Backend/user";
+import { getUserRole, isAdmin } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -29,6 +29,17 @@ function Homepage() {
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const admin = await isAdmin(user.email);
+      if (admin) {
+        navigate("/adminHome");
+      }
+    };
+
+    checkAdmin();
+  }, [user]);
 
   useEffect(() => {
     async function fetchData() {

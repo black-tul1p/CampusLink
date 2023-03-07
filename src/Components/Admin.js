@@ -50,13 +50,23 @@ export default function Admin() {
   const [students, setStudents] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [pendingInstructors, setPendingInstructors] = useState([]);
-  const [value, setValue] = useState(0);
   const [selectedInstructor, setSelectedInstructor] = useState("");
+  const [value, setValue] = useState(0);
   const [error, setError] = useState("");
   const [reload, setReload] = useState(true);
-  const [admin, setAdmin] = useState(false);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const admin = await isAdmin(user.email);
+      if (!admin) {
+        navigate("/home");
+      }
+    };
+
+    checkAdmin();
+  }, [user]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
