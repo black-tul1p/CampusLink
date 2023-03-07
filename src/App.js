@@ -22,7 +22,7 @@ function AuthorizedRoute(props) {
     // Waits until user has logged in and user object is set
     const unsubscribe = setTimeout(() => {
       setIsCheckingAuth(false);
-    }, 500);
+    }, 200);
 
     return () => clearTimeout(unsubscribe);
   }, []);
