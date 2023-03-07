@@ -105,7 +105,7 @@ function Classlist() {
               {students.map((student) => (
                 <tr>
                   <td className="profile-pic-column" studentid={student.id}>
-                    <div
+                    <Button
                       className="remove-student-container"
                       onClick={(event) => {
                         const id =
@@ -127,7 +127,7 @@ function Classlist() {
                       }}
                     >
                       <DeleteIcon fontSize="large" />
-                    </div>
+                    </Button>
                     <img
                       className="profile-pic"
                       src={ProfilePic}

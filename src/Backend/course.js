@@ -135,7 +135,7 @@ export const getUserCourses = async (role) => {
     );
 
     if (snapshot.docs.length === 0) {
-      throw new Error("No instructor found with email");
+      throw new Error(`No user found with email: ${auth.currentUser.email}`);
     }
 
     await Promise.all(
@@ -143,7 +143,7 @@ export const getUserCourses = async (role) => {
         const coursesData = doc.data().courses;
         await Promise.all(
           coursesData.map(async (course) => {
-            const courseIDF = course.path.slice(8);
+            const courseIDF = course.path.split("/")[1].trim();
             const res = await getCourseDetailsById(courseIDF);
             if (res) courses.push(res);
           })
