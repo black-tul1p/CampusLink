@@ -63,9 +63,9 @@ function Homepage() {
           <p>My Courses</p>
           {role === "instructor" ? (
             <p style={{ fontStyle: "italic" }}>Instructor View</p>
-          ) : (
+          ) : role === "student" ? (
             <p style={{ fontStyle: "italic" }}>Student View</p>
-          )}
+          ) : null}
         </div>
         <div className="divider"></div>
       </div>
