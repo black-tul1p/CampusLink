@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import Reset from "./Components/Reset";
 import AdminLogin from "./Components/AdminLogin";
 import Landing, { PageList } from "./Components/Landing";
 import { useContext, useState, useEffect } from "react";
@@ -62,6 +63,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/join" element={<Register />} />
         <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/forgot" element={<Reset />} />
         {Object.values(PageList).map((path) => (
           <Route
             key={path}
