@@ -1,5 +1,5 @@
 import React from "react";
-import "../Classlist.css";
+import "../../Styles/Classlist.css";
 //import Classlist from '../Classlist';
 import { doc, getDoc } from "@firebase/firestore";
 import { firestore } from "../../Backend/firebase";
@@ -7,7 +7,7 @@ import ProfilePic from "../../Assets/user_logo.jpg";
 //import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
-import CourseNavBar from "../CourseNavBar"
+import CourseNavBar from "../CourseNavBar";
 
 function ClasslistStudent() {
   const [students, setStudents] = useState([]);
@@ -41,39 +41,40 @@ function ClasslistStudent() {
   }, [searchParams]);
 
   return (
-    <div><CourseNavBar/>
-    <div className="Registration-page">
-      <div className="classlist-wrapper">
-        <h3 className="title">Course Classlist</h3>
+    <div>
+      <CourseNavBar />
+      <div className="Registration-page">
+        <div className="classlist-wrapper">
+          <h3 className="title">Course Classlist</h3>
 
-        <table className="classlist">
-          <tbody>
-            <tr>
-              <th className="profile-pic-column"></th>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-
-            {students.map((student) => (
+          <table className="classlist">
+            <tbody>
               <tr>
-                <td className="profile-pic-column">
-                  <img
-                    className="profile-pic"
-                    src={ProfilePic}
-                    alt="profile"
-                  ></img>
-                </td>
-                <td>
-                  {student.lastName}, {student.firstName}
-                </td>
-                <td>{student.email}</td>
+                <th className="profile-pic-column"></th>
+                <th>Name</th>
+                <th>Email</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <p id="student-count-label">Total Students: {students.length}</p>
+
+              {students.map((student) => (
+                <tr>
+                  <td className="profile-pic-column">
+                    <img
+                      className="profile-pic"
+                      src={ProfilePic}
+                      alt="profile"
+                    ></img>
+                  </td>
+                  <td>
+                    {student.lastName}, {student.firstName}
+                  </td>
+                  <td>{student.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p id="student-count-label">Total Students: {students.length}</p>
+        </div>
       </div>
-    </div>
     </div>
   );
 }

@@ -1,11 +1,11 @@
-import React from 'react'
-import CourseNavBar from "../CourseNavBar"
+import React from "react";
+import CourseNavBar from "../CourseNavBar";
 function Discussions() {
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <CourseNavBar />
     </div>
-  )
+  );
 }
 
-export default Discussions
+export default Discussions;

@@ -1,26 +1,25 @@
-import { useState, useEffect } from 'react';
-import { updateUserProfile } from "../Backend/user"
-import './Profile.css';
-import { FiEdit2 } from 'react-icons/fi';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import { auth } from '../Backend/firebase';
-import { TextField, Button } from '@mui/material';
+import { useState, useEffect } from "react";
+import { updateUserProfile } from "../Backend/user";
+import { FiEdit2 } from "react-icons/fi";
+import "firebase/firestore";
+import { auth } from "../Backend/firebase";
+import { TextField, Button } from "@mui/material";
+import "../Styles/Profile.css";
 
 function Profile(props) {
   const [photoUrl, setPhotoUrl] = useState(props.photo);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [preferredName, setPreferredName] = useState(props.preferredName);
   const [usePreferredName, setUsePreferredName] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   const loadUserData = () => {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      setFirstName(currentUser.displayName.split(' ')[0]);
-      setLastName(currentUser.displayName.split(' ')[1]);
+      setFirstName(currentUser.displayName.split(" ")[0]);
+      setLastName(currentUser.displayName.split(" ")[1]);
       setEmail(currentUser.email);
     }
   };
@@ -46,7 +45,7 @@ function Profile(props) {
       lastName: lastName,
     })
       .then(() => {
-        alert('Profile updated successfully!');
+        alert("Profile updated successfully!");
         setEditMode(false);
       })
       .catch((error) => {
@@ -71,21 +70,21 @@ function Profile(props) {
       </div>
       <div className="profile">
         <h1>User information</h1>
-      <div className="profile-photo">
-        <img src={photoUrl} alt="Profile" />
-        <label className="edit-icon" htmlFor="photo-upload">
-          <FiEdit2 />
-          <input
-            id="photo-upload"
-            type="file"
-            accept=".jpg,.jpeg,.png"
-            onChange={handlePhotoChange}
-            style={{ display: editMode ? 'block' : 'none' }}
-          />
-        </label>
-      </div>
-      <p>{email}</p>
-      <div className="Input-fields" style={{ marginBottom: '1rem' }}>
+        <div className="profile-photo">
+          <img src={photoUrl} alt="Profile" />
+          <label className="edit-icon" htmlFor="photo-upload">
+            <FiEdit2 />
+            <input
+              id="photo-upload"
+              type="file"
+              accept=".jpg,.jpeg,.png"
+              onChange={handlePhotoChange}
+              style={{ display: editMode ? "block" : "none" }}
+            />
+          </label>
+        </div>
+        <p>{email}</p>
+        <div className="Input-fields" style={{ marginBottom: "1rem" }}>
           <TextField
             variant="outlined"
             id="first-name-input"
@@ -96,11 +95,11 @@ function Profile(props) {
             InputProps={{
               style: {
                 color: "white",
-                borderColor: "white"
-              }
+                borderColor: "white",
+              },
             }}
             InputLabelProps={{
-              style: { color: "white" }
+              style: { color: "white" },
             }}
           />
           <TextField
@@ -113,11 +112,11 @@ function Profile(props) {
             InputProps={{
               style: {
                 color: "white",
-                borderColor: "white"
-              }
+                borderColor: "white",
+              },
             }}
             InputLabelProps={{
-              style: { color: "white" }
+              style: { color: "white" },
             }}
           />
           <TextField
@@ -130,22 +129,31 @@ function Profile(props) {
             InputProps={{
               style: {
                 color: "white",
-                borderColor: "white"
-              }
+                borderColor: "white",
+              },
             }}
             InputLabelProps={{
-              style: { color: "white" }
+              style: { color: "white" },
             }}
           />
-      </div>
-      {editMode ? (
-  <div className="save-cancel-container">
-    <button onClick={handleSaveClick} className="button-primary">Save</button>
-    <button onClick={handleCancelClick} className="button-cancel">Cancel</button>
-  </div>
-) : 
-  (<button onClick={() => setEditMode(true)} className="edit-profile-button">Edit Profile</button>)
-}
+        </div>
+        {editMode ? (
+          <div className="save-cancel-container">
+            <button onClick={handleSaveClick} className="button-primary">
+              Save
+            </button>
+            <button onClick={handleCancelClick} className="button-cancel">
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setEditMode(true)}
+            className="edit-profile-button"
+          >
+            Edit Profile
+          </button>
+        )}
       </div>
     </div>
   );

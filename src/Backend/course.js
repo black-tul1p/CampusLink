@@ -29,7 +29,7 @@ export const getAllCourses = async () => {
         description: doc.data().description,
       });
     });
-    console.log("All courses fetched:", course);
+    // console.log("All courses fetched:", course);
     return course;
   } catch (error) {
     throw new Error("Error fetching courses:", error);
@@ -92,7 +92,7 @@ export async function createCourse(
 export async function removeCourse(courseId) {
   try {
     await deleteDoc(doc(collection(firestore, "courses"), courseId));
-    console.log("Course removed with ID: ", courseId);
+    // console.log("Course removed with ID: ", courseId);
   } catch (e) {
     console.error("Error removing course with ID ", courseId, ": ", e);
   }
@@ -151,7 +151,7 @@ export const getUserCourses = async (role) => {
       })
     );
 
-    console.log("All courses fetched:", courses.length);
+    // console.log("All courses fetched:", courses.length);
     return courses;
   } catch (error) {
     console.log(error);
