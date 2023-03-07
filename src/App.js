@@ -9,15 +9,44 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 import AdminLogin from "./Components/AdminLogin";
 import Landing, { PageList } from "./Components/Landing";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "./Contexts/AuthContext";
+import { CircularProgress } from "@mui/material";
 
 function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
-  if (user) {
-    return props.children;
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = setTimeout(() => {
+      setIsCheckingAuth(false);
+    }, 1000);
+
+    return () => clearTimeout(unsubscribe);
+  }, []);
+
+  if (isCheckingAuth) {
+    return (
+      <div
+        style={{
+          flexGrow: 1,
+          marginTop: "30vh",
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
   }
-  return <Navigate to="/login" />;
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  return props.children;
 }
 
 function App() {

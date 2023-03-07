@@ -17,7 +17,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
-  const { handleLogin } = useContext(AuthContext);
+  // const { handleLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -27,7 +27,7 @@ export default function Login() {
     await loginUser(email.trim(), pass)
       .then((res) => {
         // console.log(res);
-        handleLogin(res);
+        // handleLogin(res);
         navigate("/home");
       })
       .catch((error) => {
