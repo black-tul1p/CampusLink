@@ -1,5 +1,5 @@
 import Banner from "../Assets/banner_logo.jpg";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -17,17 +17,21 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
-  const { handleLogin } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Returns true if signed in
     await loginUser(email.trim(), pass)
-      .then((res) => {
-        // console.log(res);
-        handleLogin(res);
+      .then(() => {
         navigate("/home");
       })
       .catch((error) => {
@@ -82,11 +86,18 @@ export default function Login() {
                   setPass(e.target.value);
                 }}
               />
-              <Button className="Mini-button">Forgot Password?</Button>
+              <Button
+                className="Mini-button"
+                onClick={() => {
+                  navigate("/forgot");
+                }}
+              >
+                Forgot Password?
+              </Button>
             </div>
           </div>
           <Button disableElevation variant="contained" onClick={handleSubmit}>
-            Submit
+            Log in
           </Button>
           <div style={{ color: "white", alignSelf: "center" }}>
             Don't have an account?

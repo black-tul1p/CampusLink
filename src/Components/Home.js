@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { getUserCourses } from "../Backend/course";
-import { getUserRole } from "../Backend/user";
+import { getUserRole, isAdmin } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -29,6 +29,17 @@ function Homepage() {
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const admin = await isAdmin(user.email);
+      if (admin) {
+        navigate("/adminHome");
+      }
+    };
+
+    checkAdmin();
+  }, [user]);
 
   useEffect(() => {
     async function fetchData() {
@@ -63,9 +74,9 @@ function Homepage() {
           <p>My Courses</p>
           {role === "instructor" ? (
             <p style={{ fontStyle: "italic" }}>Instructor View</p>
-          ) : (
+          ) : role === "student" ? (
             <p style={{ fontStyle: "italic" }}>Student View</p>
-          )}
+          ) : null}
         </div>
         <div className="divider"></div>
       </div>
@@ -92,10 +103,11 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container"
+                  <div
+                    className="course-container"
                     onClick={() => {
                       const courseId = course.databaseId;
-                      navigate("/announcements", { state: {courseId} });
+                      navigate("/announcements", { state: { courseId } });
                     }}
                   >
                     <div className="course-container-top">
@@ -114,10 +126,11 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container"
+                  <div
+                    className="course-container"
                     onClick={() => {
                       const courseId = course.databaseId;
-                      navigate("/announcements", { state: {courseId} });
+                      navigate("/announcements", { state: { courseId } });
                     }}
                   >
                     <div className="course-container-top">

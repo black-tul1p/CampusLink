@@ -1,10 +1,12 @@
-import React from 'react'
+import React from "react";
+import CourseNavBar from "../CourseNavBar";
 
 function assignments() {
   return (
     <div>
+      <CourseNavBar />
     </div>
-  )
+  );
 }
 
-export default assignments
+export default assignments;

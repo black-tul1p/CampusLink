@@ -1,0 +1,132 @@
+.classlist-page {
+  padding-top: 5em;
+}
+
+.logo-header {
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: #0e293d;
+  padding-bottom: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  top: 0;
+}
+
+.logo-full {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
+
+.title {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5em;
+  text-align: center;
+  padding: 20px 0 0 0;
+}
+
+.course-name {
+  color: lightgray;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5em;
+  text-align: center;
+}
+
+.classlist {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border-style: hidden;
+}
+
+.classlist tr:nth-child(even) {
+  background-color: #0002;
+}
+
+.classlist th {
+  color: white;
+
+  padding: 12px 10px;
+  text-align: left;
+  background-color: #0006;
+  color: white;
+  border-left: 1px solid #fff1;
+}
+
+.classlist td {
+  padding: 20px 10px;
+  color: white;
+  text-align: left;
+  border-left: 1px solid #fff1;
+}
+
+.profile-pic-column {
+  width: 8em;
+}
+
+#profile-pic {
+  width: 3em;
+  height: 3em;
+  opacity: 0.8;
+}
+
+.classlist-wrapper {
+  display: block;
+  margin: auto;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  width: 60%;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.add-button {
+  display: block;
+  margin: 10px auto;
+  width: 30%;
+  padding: 10px;
+  font-size: 1.2em;
+  background-color: #257;
+  color: #eee;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.email-button {
+  display: block;
+  margin: 10px auto;
+  width: 30%;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.2em;
+  background-color: #257;
+  color: #eee;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-button:hover {
+  background-color: #368;
+  transition-duration: 0.2s;
+}
+
+#student-count-label {
+  bottom: 0;
+  color: white;
+  width: 100%;
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 1em;
+}
+
+#remove-student-container {
+  opacity: 0.3;
+  transition-duration: 0.15s;
+}
+
+#remove-student-container:hover {
+  opacity: 0.8;
+}

@@ -1,4 +1,4 @@
-import "./App.css";
+import "./Styles/App.css";
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,17 +7,51 @@ import {
 } from "react-router-dom";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import Reset from "./Components/Reset";
 import AdminLogin from "./Components/AdminLogin";
 import Landing, { PageList } from "./Components/Landing";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "./Contexts/AuthContext";
+import { CircularProgress } from "@mui/material";
+import { isAdmin } from "./Backend/user";
 
 function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
-  if (user) {
-    return props.children;
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    // Waits until user has logged in and user object is set
+    const unsubscribe = setTimeout(() => {
+      setIsCheckingAuth(false);
+    }, 200);
+
+    return () => clearTimeout(unsubscribe);
+  }, []);
+
+  if (isCheckingAuth) {
+    return (
+      <div
+        style={{
+          flexGrow: 1,
+          marginTop: "30vh",
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
   }
-  return <Navigate to="/login" />;
+
+  if (!user) {
+    return <Navigate to="/" />;
+  } else if (isAdmin(user.email)) {
+    <Navigate to="/adminHome" />;
+  }
+
+  return props.children;
 }
 
 function App() {
@@ -27,9 +61,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Register />} />
         <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/forgot" element={<Reset />} />
         {Object.values(PageList).map((path) => (
           <Route
             key={path}
@@ -41,6 +75,7 @@ function App() {
             }
           />
         ))}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

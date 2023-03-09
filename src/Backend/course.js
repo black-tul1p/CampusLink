@@ -5,8 +5,11 @@ import {
   deleteDoc,
   getDocs,
   getDoc,
+  updateDoc,
   query,
   where,
+  FieldValue,
+  arrayUnion,
 } from "@firebase/firestore";
 import { auth, firestore } from "./firebase";
 
@@ -26,7 +29,7 @@ export const getAllCourses = async () => {
         description: doc.data().description,
       });
     });
-    console.log("All courses fetched:", course);
+    // console.log("All courses fetched:", course);
     return course;
   } catch (error) {
     throw new Error("Error fetching courses:", error);
@@ -53,7 +56,8 @@ export async function createCourse(
   department,
   capacity,
   registeredStudents,
-  description
+  description,
+  instructorId
 ) {
   let data = {
     courseTitle: title,
@@ -67,6 +71,10 @@ export async function createCourse(
 
   try {
     const docRef = await addDoc(collection(firestore, "courses"), data);
+    const instructorRef = collection(firestore, "instructors");
+    await updateDoc(doc(instructorRef, instructorId), {
+      courses: arrayUnion(docRef),
+    });
     console.log("Course added with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding course: ", data);
@@ -84,7 +92,7 @@ export async function createCourse(
 export async function removeCourse(courseId) {
   try {
     await deleteDoc(doc(collection(firestore, "courses"), courseId));
-    console.log("Course removed with ID: ", courseId);
+    // console.log("Course removed with ID: ", courseId);
   } catch (e) {
     console.error("Error removing course with ID ", courseId, ": ", e);
   }
@@ -110,9 +118,7 @@ export async function getCourseDetailsById(coursesRef) {
   const snapshot = await getDoc(doc(coursesData, coursesRef));
 
   const actualCourse = snapshot.data();
-  // console.log(actualCourse)
-
-  return {...actualCourse, databaseId: snapshot.id};
+  return { ...actualCourse, databaseId: snapshot.id };
 }
 
 export const getUserCourses = async (role) => {
@@ -129,18 +135,15 @@ export const getUserCourses = async (role) => {
     );
 
     if (snapshot.docs.length === 0) {
-      throw new Error("No user found with email");
+      throw new Error(`No user found with email: ${auth.currentUser.email}`);
     }
 
     await Promise.all(
       snapshot.docs.map(async (doc) => {
         const coursesData = doc.data().courses;
-        if (!coursesData || coursesData.length === 0) {
-          return;
-        }
         await Promise.all(
           coursesData.map(async (course) => {
-            const courseIDF = course.path.slice(8);
+            const courseIDF = course.path.split("/")[1].trim();
             const res = await getCourseDetailsById(courseIDF);
             if (res) courses.push(res);
           })
@@ -151,6 +154,7 @@ export const getUserCourses = async (role) => {
     // console.log("All courses fetched:", courses.length);
     return courses;
   } catch (error) {
+    console.log(error);
     throw new Error("Error fetching courses:", error);
   }
 };
