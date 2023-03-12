@@ -11,6 +11,10 @@ import {
 
 
 export const addAssignment = async (title, description, dueDate) => {
+    // get Date
+    //July 21, 2023 01:15:00
+    const d = new Date("July 21, 2023 01:15:00");
+    const date = new firestore.Timestamp.fromDate(date);
     // Check database to see if assignment already exists
     const faqRef = collection(firestore, "assignments");
     const qRef = query(faqRef, where("title", "==", title));
@@ -21,7 +25,7 @@ export const addAssignment = async (title, description, dueDate) => {
     }
   
     let assignment = {
-      dueDate: Date.now(),
+      dueDate: date,
       title: title,
       description: description,
     };
