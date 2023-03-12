@@ -26,7 +26,7 @@ import { AuthContext } from "../Contexts/AuthContext";
 // CSS Styles
 const Sidebar = styled.div`
   flex-shrink: 0;
-  width: 6vw;
+  width: 5em;
   height: 100vh;
   background-color: #20232a;
   display: flex;
@@ -52,6 +52,7 @@ const SidebarText = styled.span`
   font-size: 1.25em;
   font-weight: 500;
   margin-left: 1em;
+
   @media (max-width: 768px) {
     font-size: 1em;
     margin-left: 0.5em;
@@ -168,11 +169,7 @@ export default function Navbar() {
           }
           placement="right"
         >
-          <SidebarButton
-            onClick={() => {
-              navigate("/announcements");
-            }}
-          >
+          <SidebarButton>
             <SidebarIcon>
               <Notifications style={{ color: "#fff" }} />
             </SidebarIcon>
@@ -240,7 +237,7 @@ export default function Navbar() {
                       id="menu-list-grow"
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={navigateToProfile}>
+                      <MenuItem onClick={handleClose}>
                         <Settings
                           fontSize="small"
                           sx={{ mr: 1 }}
