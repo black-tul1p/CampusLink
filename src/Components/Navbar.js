@@ -101,7 +101,6 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const navigate = useNavigate();
-  const { handleLogout } = useContext(AuthContext);
   const { user } = useContext(AuthContext);
 
   const handleToggle = () => {

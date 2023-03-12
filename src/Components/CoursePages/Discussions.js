@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import React from 'react'
 import { useState, useEffect } from 'react';
@@ -8,6 +9,10 @@ import { firestore } from "../../Backend/firebase";
 import './Discussions.css';
 
 
+=======
+import React from "react";
+import CourseNavBar from "../CourseNavBar";
+>>>>>>> e0483db8de20d22ce4b510ac688c70a5245895f6
 function Discussions() {
   const [currentUser, setCurrentUser] = useState('');
   const [showModal, setShowModal] = useState(false);
