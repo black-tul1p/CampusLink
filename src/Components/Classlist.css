@@ -1,5 +1,4 @@
-html,
-body {
+html, body {
   background-color: #102e44;
   height: 100%;
 }
@@ -10,7 +9,6 @@ body {
 }
 
 .logo-header {
-  position: -webkit-sticky;
   position: sticky;
   background-color: #0e293d;
   padding-bottom: 10px;
@@ -47,9 +45,7 @@ body {
   border-style: hidden;
 }
 
-.classlist tr:nth-child(even) {
-  background-color: #0002;
-}
+.classlist tr:nth-child(even){background-color: #0002;}
 
 .classlist th {
   color: white;
@@ -58,14 +54,14 @@ body {
   text-align: left;
   background-color: #0006;
   color: white;
-  border-left: 1px solid #fff1;
+  border-left: 1px solid #FFF1;
 }
 
 .classlist td {
   padding: 20px 10px;
   color: white;
   text-align: left;
-  border-left: 1px solid #fff1;
+  border-left: 1px solid #FFF1;
 }
 
 .profile-pic-column {
@@ -95,7 +91,21 @@ body {
   padding: 10px;
   font-size: 1.2em;
   background-color: #257;
-  color: #eee;
+  color: #EEE;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.email-button {
+  display: block;
+  margin: 10px auto;
+  width: 30%;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.2em;
+  background-color: #257;
+  color: #EEE;
   border: none;
   border-radius: 5px;
   box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
@@ -113,4 +123,14 @@ body {
   text-align: center;
   font-family: sans-serif;
   font-size: 1em;
+}
+
+.remove-student-container {
+  display:inline;
+  opacity: 0.3;
+  transition-duration: 0.15s;
+}
+
+.remove-student-container:hover {
+  opacity: 0.8;
 }

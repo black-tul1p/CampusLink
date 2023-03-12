@@ -52,3 +52,5 @@ function Announcements() {
 }
 
 export default Announcements;
+
+export default Announcements

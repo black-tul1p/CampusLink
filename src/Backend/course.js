@@ -1,4 +1,3 @@
-
 import {
   collection,
   doc,
@@ -6,8 +5,11 @@ import {
   deleteDoc,
   getDocs,
   getDoc,
+  updateDoc,
   query,
   where,
+  FieldValue,
+  arrayUnion
 } from "@firebase/firestore";
 import { auth, firestore } from "./firebase";
 
@@ -54,7 +56,8 @@ export async function createCourse(
   department,
   capacity,
   registeredStudents,
-  description
+  description,
+  instructorId
 ) {
   let data = {
     courseTitle: title,
@@ -68,6 +71,8 @@ export async function createCourse(
 
   try {
     const docRef = await addDoc(collection(firestore, "courses"), data);
+    const instructorRef = collection(firestore, "instructors");
+    await updateDoc(doc(instructorRef, instructorId), {courses: arrayUnion(docRef)});
     console.log("Course added with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding course: ", data);
@@ -111,8 +116,6 @@ export async function getCourseDetailsById(coursesRef) {
   const snapshot = await getDoc(doc(coursesData, coursesRef));
 
   const actualCourse = snapshot.data();
-  // console.log(actualCourse)
-
   return {...actualCourse, databaseId: snapshot.id};
 }
 
@@ -130,15 +133,12 @@ export const getUserCourses = async (role) => {
     );
 
     if (snapshot.docs.length === 0) {
-      throw new Error("No user found with email");
+      throw new Error("No instructor found with email");
     }
 
     await Promise.all(
       snapshot.docs.map(async (doc) => {
         const coursesData = doc.data().courses;
-        if (!coursesData || coursesData.length === 0) {
-          return;
-        }
         await Promise.all(
           coursesData.map(async (course) => {
             const courseIDF = course.path.slice(8);
@@ -149,9 +149,10 @@ export const getUserCourses = async (role) => {
       })
     );
 
-    // console.log("All courses fetched:", courses.length);
+    console.log("All courses fetched:", courses.length);
     return courses;
   } catch (error) {
+    console.log(error);
     throw new Error("Error fetching courses:", error);
   }
 };
