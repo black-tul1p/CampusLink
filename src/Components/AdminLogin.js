@@ -1,5 +1,5 @@
 import Banner from "../Assets/banner_logo.jpg";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -17,21 +17,26 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
-  const { handleLogin } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await loginAdmin(email.trim(), pass)
-      .then((res) => {
-        handleLogin(res);
+      .then(() => {
         navigate("/adminHome");
       })
       .catch((error) => {
         setError(error.message);
       });
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/adminHome");
+    }
+  }, [user]);
 
   return (
     <div>

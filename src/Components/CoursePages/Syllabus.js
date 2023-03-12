@@ -1,11 +1,11 @@
-import React from 'react'
-import CourseNavBar from "../CourseNavBar"
+import React from "react";
+import CourseNavBar from "../CourseNavBar";
 function Syllabus() {
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <CourseNavBar />
     </div>
-  )
+  );
 }
 
-export default Syllabus
+export default Syllabus;

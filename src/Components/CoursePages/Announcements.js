@@ -7,12 +7,10 @@ import ProfilePic from "../../Assets/user_logo.jpg";
 import { useState, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { getCourseDetailsById } from "../../Backend/course";
-import "./Announcements.css";
-import CourseNavBar from "../CourseNavBar"
+import "../../Styles/Announcements.css";
+import CourseNavBar from "../CourseNavBar";
 
 function Announcements() {
-  
-  
   //useEffect(async () => {
   //const courseDetails = await getCourseDetailsById("iR8l666mgOfQLNUXjjLO");
   //});
@@ -43,19 +41,17 @@ function Announcements() {
   console.log(cDetails.courseID);
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <CourseNavBar />
-     <div className="courseInfo">
-      <h2>
-        Course Name: {cDetails.courseTitle} {cDetails.courseId}
-      </h2>
-      <h2>Course Description: {cDetails.description}</h2>
-      <h2>Course Credits: {cDetails.credit}</h2>
-      <h2>Course Capacity:{cDetails.capacity}</h2>
+      <div className="courseInfo">
+        <h2>
+          Course Name: {cDetails.courseTitle} {cDetails.courseId}
+        </h2>
+        <h2>Course Description: {cDetails.description}</h2>
+        <h2>Course Credits: {cDetails.credit}</h2>
+        <h2>Course Capacity:{cDetails.capacity}</h2>
       </div>
-      
     </div>
-   
   );
 }
 

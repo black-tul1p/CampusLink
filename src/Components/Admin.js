@@ -1,13 +1,15 @@
 import { collection, doc, getDocs, updateDoc } from "@firebase/firestore";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { firestore } from "../Backend/firebase";
 import { Person } from "@mui/icons-material";
-import "./Classlist.css";
+import "../Styles/Classlist.css";
 import { Box, Button, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import ErrorBox from "./Error";
-import { getUserByEmail, getUserIdByEmail } from "../Backend/user";
-import "../App.css";
+import { getUserByEmail, getUserIdByEmail, isAdmin } from "../Backend/user";
+import "../Styles/App.css";
+import { AuthContext } from "../Contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 //From Material UI website example
 
@@ -48,10 +50,23 @@ export default function Admin() {
   const [students, setStudents] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [pendingInstructors, setPendingInstructors] = useState([]);
-  const [value, setValue] = useState(0);
   const [selectedInstructor, setSelectedInstructor] = useState("");
+  const [value, setValue] = useState(0);
   const [error, setError] = useState("");
   const [reload, setReload] = useState(true);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const admin = await isAdmin(user.email);
+      if (!admin) {
+        navigate("/home");
+      }
+    };
+
+    checkAdmin();
+  }, [user]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -72,6 +87,19 @@ export default function Admin() {
   const handleDeny = (e, user) => {
     alert("deny");
   };
+
+  // const setRole = async () => {
+  //   const checkAdmin = await isAdmin(user.email);
+  //   console.log(checkAdmin);
+  //   setAdmin(checkAdmin);
+  // };
+
+  // useEffect(() => {
+  //   // Waits until user has logged in and user object is set
+  //   const unsubscribe = setTimeout(() => {}, 500);
+
+  //   return () => clearTimeout(unsubscribe);
+  // }, []);
 
   useEffect(() => {
     async function fetchData() {

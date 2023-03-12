@@ -1,67 +1,43 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { Typography } from "@mui/material";
-import { useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getUserRole } from "../Backend/user";
-import { AuthContext } from "../Contexts/AuthContext";
 
 // CSS Styles
-const Sidebar = styled.div`
-  flex-shrink: 0;
-  width: 94vw;
-  height: 5em;
+const TopbarRow = styled.div`
+  height: 4.5em;
+  flex-grow: 1;
+  display: flex;
+  padding: 0 2em;
+  justify-content: space-between;
   background-color: #20232a;
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  top: 0;
-  left: 6vw;
-`;
-
-const SidebarDivider = styled.div`
-  flex-shrink: 0;
-  width: 1px;
-  background-color: #3c3f4c;
-  margin-bottom: 1em;
-  margin-top: 0.5em;
-`;
-
-const SidebarRow = styled.div`
-  flex-shrink: 0;
-  display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto;
-  justify-content: center;
-  padding-top: 1em;
-  padding-bottom: 1em;
-  margin-top: auto;
-  margin-bottom: 1em;
-  margin-left: 1em;
-`;
-
-const SidebarButton = styled.div`
-  display: flex;
   align-items: center;
-  height: 3em;
-  padding-right: 1em;
-  padding-left: 1em;
+`;
+
+const TopbarButton = styled.div`
+  display: flex;
+  sizing: border-box;
+  align-items: center;
+  width: 8em;
   cursor: pointer;
+  padding: 0 0.5em;
+  border-radius: 2em;
+  transition: background-color 0.15s ease-in-out;
   &:hover {
     background-color: teal;
   }
 `;
 
-const SidebarText = styled.div`
+const TopbarText = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 3em;
   width: 8em;
   border-radius: 1em;
-  &:hover {
-    background-color: teal;
-  }
+  font-size: 1em;
 `;
 
 export default function NavBar() {
@@ -69,93 +45,90 @@ export default function NavBar() {
   const courseId = location.state?.courseId;
   const navigate = useNavigate();
   const [role, setRole] = useState("");
-  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     async function fetchrole() {
       try {
         const role = await getUserRole();
         setRole(role);
-        console.log(role);
+        // console.log(role);
       } catch (error) {
         console.error(error);
       }
     }
     fetchrole();
   }, []);
-  return (
-    <Sidebar>
-      <SidebarDivider />
-      <SidebarRow>
-        <SidebarButton
-          onClick={() => {
-            navigate("/announcements", { state: { courseId } });
-          }}
-        >
-          <SidebarText>
-            <Typography style={{ fontSize: "1em" }}>Announcements</Typography>
-          </SidebarText>
-        </SidebarButton>
-        <SidebarButton
-          onClick={() => {
-            navigate("/syllabus", { state: { courseId } });
-          }}
-        >
-          <SidebarText>
-            <Typography style={{ fontSize: "1em" }}>Syllabus</Typography>
-          </SidebarText>
-        </SidebarButton>
-        <SidebarButton
-          onClick={() => {
-            navigate("/assignments", { state: { courseId } });
-          }}
-        >
-          <SidebarText>
-            <Typography style={{ fontSize: "1em" }}>Assignments</Typography>
-          </SidebarText>
-        </SidebarButton>
-        <SidebarButton
-          onClick={() => {
-            navigate("/grades", { state: { courseId } });
-          }}
-        >
-          <SidebarText>
-            <Typography style={{ fontSize: "1em" }}>Grades</Typography>
-          </SidebarText>
-        </SidebarButton>
 
-        <SidebarButton
-          onClick={() => {
-            navigate("/quizzes", { state: { courseId } });
-          }}
-        >
-          <SidebarText>
-            <Typography style={{ fontSize: "1em" }}>Quizzes</Typography>
-          </SidebarText>
-        </SidebarButton>
-        <SidebarButton
-          onClick={() => {
-            navigate("/discussions", { state: { courseId } });
-          }}
-        >
-          <SidebarText>
-            <Typography style={{ fontSize: "1em" }}>Discussions</Typography>
-          </SidebarText>
-        </SidebarButton>
-        <SidebarButton
-          onClick={() => {
-            if (role === "instructor") {
-              navigate("/classlist", { state: { courseId } });
-            } else {
-              navigate("/classlistStudent", { state: { courseId } });
-            }
-          }}
-        >
-          <SidebarText>
-            <Typography style={{ fontSize: "1em" }}>Classlist</Typography>
-          </SidebarText>
-        </SidebarButton>
-      </SidebarRow>
-    </Sidebar>
+  return (
+    <TopbarRow>
+      <TopbarButton
+        onClick={() => {
+          navigate("/announcements", { state: { courseId } });
+        }}
+      >
+        <TopbarText>
+          <Typography>Announcements</Typography>
+        </TopbarText>
+      </TopbarButton>
+      <TopbarButton
+        onClick={() => {
+          navigate("/syllabus", { state: { courseId } });
+        }}
+      >
+        <TopbarText>
+          <Typography>Syllabus</Typography>
+        </TopbarText>
+      </TopbarButton>
+      <TopbarButton
+        onClick={() => {
+          navigate("/assignments", { state: { courseId } });
+        }}
+      >
+        <TopbarText>
+          <Typography>Assignments</Typography>
+        </TopbarText>
+      </TopbarButton>
+      <TopbarButton
+        onClick={() => {
+          navigate("/grades", { state: { courseId } });
+        }}
+      >
+        <TopbarText>
+          <Typography>Grades</Typography>
+        </TopbarText>
+      </TopbarButton>
+
+      <TopbarButton
+        onClick={() => {
+          navigate("/quizzes", { state: { courseId } });
+        }}
+      >
+        <TopbarText>
+          <Typography>Quizzes</Typography>
+        </TopbarText>
+      </TopbarButton>
+      <TopbarButton
+        onClick={() => {
+          navigate("/discussions", { state: { courseId } });
+        }}
+      >
+        <TopbarText>
+          <Typography>Discussions</Typography>
+        </TopbarText>
+      </TopbarButton>
+      <TopbarButton
+        onClick={() => {
+          if (role === "instructor") {
+            navigate("/classlist", { state: { courseId } });
+          } else {
+            navigate("/classlistStudent", { state: { courseId } });
+          }
+        }}
+      >
+        <TopbarText>
+          <Typography>Classlist</Typography>
+        </TopbarText>
+      </TopbarButton>
+    </TopbarRow>
   );
 }

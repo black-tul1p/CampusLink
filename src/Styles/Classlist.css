@@ -1,16 +1,9 @@
-html,
-body {
-  background-color: #102e44;
-  height: 100%;
-  padding-top: 10px;
-}
-
 .classlist-page {
-  position: absolute;
-  top: 5em;
+  padding-top: 5em;
 }
 
 .logo-header {
+  position: -webkit-sticky;
   position: sticky;
   background-color: #0e293d;
   padding-bottom: 10px;
@@ -69,13 +62,13 @@ body {
 }
 
 .profile-pic-column {
-  width: 10%;
+  width: 8em;
 }
 
-.profile-pic {
-  width: 40px;
+#profile-pic {
+  width: 3em;
+  height: 3em;
   opacity: 0.8;
-  float: right;
 }
 
 .classlist-wrapper {
@@ -129,12 +122,11 @@ body {
   font-size: 1em;
 }
 
-.remove-student-container {
-  display: inline;
+#remove-student-container {
   opacity: 0.3;
   transition-duration: 0.15s;
 }
 
-.remove-student-container:hover {
+#remove-student-container:hover {
   opacity: 0.8;
 }
