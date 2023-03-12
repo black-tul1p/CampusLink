@@ -3,7 +3,7 @@ import CourseNavBar from "../CourseNavBar";
 
 function assignments() {
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <CourseNavBar />
     </div>
   );
