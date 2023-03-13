@@ -90,9 +90,11 @@ export async function loginUser(email, password) {
     if (role === "instructor") {
       await isAcceptedInstructor(email).then((accepted) => {
         if (!accepted) {
-          throw new Error(`Please wait for Instructor account approval`);
+          throw new Error("Please wait for Instructor account approval");
         }
       });
+    } else if (role !== "student") {
+      throw new Error("No such account exists");
     }
   });
   try {
@@ -118,6 +120,48 @@ export async function loginUser(email, password) {
     return user;
   } catch (error) {
     throw new Error(error.message);
+  }
+}
+
+/**
+ * Authenticates a user with an email address and password and stores an access token in local storage.
+ *
+ * @param {string} email - The email address of the user to authenticate.
+ * @param {string} password - The password of the user to authenticate.
+ * @param {string} role - The role that the user should have in order to be authenticated.
+ * @returns {boolean} - True if the user is authenticated successfully.
+ * @throws {Error} - If there was an error during authentication, or if the authenticated user has an invalid role.
+ */
+export async function loginAdmin(email, password) {
+  const admin = await isAdmin(email);
+  if (admin) {
+    try {
+      // sign in user with the provided credentials
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      ).catch((error) => {
+        switch (error.code) {
+          case "auth/user-not-found": // Handle both together for security
+          case "auth/wrong-password":
+            throw new Error("Incorrect email or password");
+          case "auth/too-many-requests":
+            throw new Error(
+              "Too many attempts. Please reset password or try again later."
+            );
+          default:
+            throw new Error(`Error logging in: ${error.code}`);
+        }
+      });
+      const user = userCredential.user;
+      return user;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  } else {
+    console.log("Not an Admin");
+    throw new Error("Incorrect email or password");
   }
 }
 
@@ -174,6 +218,49 @@ export async function getUserRoleByEmail(email) {
   } catch (error) {
     throw new Error(`Error checking user role: ${error.message}`);
   }
+}
+
+/**
+ * Retrieves the user ID associated with the specified email address.
+ *
+ * @param {string} email - The email address of the user to search for.
+ * @returns {Promise<string|null>} - A Promise that resolves to the user ID if the user is found, or null if the user is not found.
+ * @throws {Error} - If there was an error retrieving data from Firestore.
+ */
+export async function getUserIdByEmail(email) {
+  const usersRef = collection(firestore, "instructors");
+  const querySnapshot = await getDocs(
+    query(usersRef, where("email", "==", email))
+  );
+
+  if (querySnapshot.docs.length > 0) {
+    const userId = querySnapshot.docs[0].id;
+    return userId;
+  } else {
+    return null;
+  }
+}
+
+/**
+ * Checks if the user with the specified email is an admin.
+ * Returns true if email exists in the admin collection, false otherwise.
+ *
+ * @param {string} email - The email of the user to check.
+ * @returns {Promise<boolean>} - A Promise that resolves to a boolean.
+ * @throws {Error} - If there was an error retrieving data from Firestore.
+ */
+export async function isAdmin(email) {
+  const adminsRef = collection(firestore, "admins");
+  const adminQuery = query(adminsRef, where("email", "==", email));
+
+  try {
+    const instSnapshot = await getDocs(adminQuery);
+    if (instSnapshot.docs.length > 0) return true;
+  } catch (error) {
+    throw new Error(`Error checking user role: ${error.message}`);
+  }
+
+  return false;
 }
 
 /**
@@ -245,14 +332,14 @@ export async function getCurrentUser() {
   const instructorRef = collection(firestore, "instructors");
 
   try {
-    const studentDoc = await getDoc(doc(studentRef, user.uid));
-    if (studentDoc.exists()) {
-      return studentDoc.data();
-    }
-
     const instructorDoc = await getDoc(doc(instructorRef, user.uid));
     if (instructorDoc.exists()) {
       return instructorDoc.data();
+    }
+
+    const studentDoc = await getDoc(doc(studentRef, user.uid));
+    if (studentDoc.exists()) {
+      return studentDoc.data();
     }
 
     return false;
@@ -287,12 +374,13 @@ export async function delCurrentUser() {
 export function verifyEmail(email) {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const universityRegex = /@[a-zA-Z0-9.-]+\.(edu)$/;
+  const providerRegex = /@[a-zA-Z0-9.-]+\.(com)$/;
 
   if (!emailRegex.test(email)) {
     return false; // Email does not match standard email format
   }
 
-  if (!universityRegex.test(email)) {
+  if (!universityRegex.test(email) && !providerRegex.test(email)) {
     return false; // Email domain is not a valid university domain
   }
 
@@ -326,4 +414,46 @@ async function isAcceptedInstructor(email) {
   }
 
   return true; // instructor exists and accepted field is true
+}
+
+/**
+ * Updates the user's first and last name in Firestore
+ *
+ * @param {string} firstName - The user's first name
+ * @param {string} lastName - The user's last name
+ * @throws {Error} Throws an error if there is an issue updating the user's profile in the database
+ */
+export async function updateUserProfile(firstName, lastName) {
+  try {
+    const role = await getUserRole();
+    const userRef = doc(firestore, role + "s", getLoggedInUserId());
+    await setDoc(userRef, { firstName, lastName }, { merge: true });
+    console.log("User profile updated successfully");
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+}
+
+/**
+ * Sends a password reset email to the user with the specified email address.
+ *
+ * @param {string} email - The email address of the user to send a password reset email to.
+ * @throws {Error} - If there was an error sending the password reset email.
+ */
+export async function sendPasswordResetEmail(email) {
+  try {
+    await auth.sendPasswordResetEmail(email);
+  } catch (error) {
+    switch (error.code) {
+      case "auth/missing-email":
+        throw new Error("Please enter an email address");
+      case "auth/user-not-found":
+        throw new Error("No account with that email exists");
+      case "auth/invalid-email":
+        throw new Error("Invalid email format");
+      default:
+        throw new Error(`Error sending request: ${error.code}`);
+    }
+  }
 }

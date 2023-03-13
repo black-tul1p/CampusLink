@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { Email, VpnKey } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../Backend/user";
 import ErrorBox from "./Error";
+import { loginAdmin } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 
 export default function Login() {
@@ -20,34 +20,32 @@ export default function Login() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      navigate("/home");
-    }
-  }, [user, navigate]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Returns true if signed in
-    await loginUser(email.trim(), pass)
+    await loginAdmin(email.trim(), pass)
       .then(() => {
-        navigate("/home");
+        navigate("/adminHome");
       })
       .catch((error) => {
         setError(error.message);
       });
   };
 
+  useEffect(() => {
+    if (user) {
+      navigate("/adminHome");
+    }
+  }, [user]);
+
   return (
     <div>
       <Box className="Default-card">
-        <img className="Banner-logo" src={Banner} alt="CampusLink Logo" />
+        <h1>Admin Login</h1>
         <FormControl className="Login-form">
           {error && <ErrorBox text={error} />}
           <div className="Input-fields">
             <TextField
-              required
               id="email-input"
               label="Email Address"
               variant="outlined"
@@ -65,9 +63,8 @@ export default function Login() {
                 setEmail(e.target.value);
               }}
             />
-            <div className="Password-section">
+            <div className="password-section">
               <TextField
-                required
                 id="pass-input"
                 label="Password"
                 type="password"
@@ -86,30 +83,11 @@ export default function Login() {
                   setPass(e.target.value);
                 }}
               />
-              <Button
-                className="Mini-button"
-                onClick={() => {
-                  navigate("/forgot");
-                }}
-              >
-                Forgot Password?
-              </Button>
             </div>
           </div>
           <Button disableElevation variant="contained" onClick={handleSubmit}>
-            Log in
+            Submit
           </Button>
-          <div style={{ color: "white", alignSelf: "center" }}>
-            Don't have an account?
-            <Button
-              className="Mini-button"
-              onClick={() => {
-                navigate("/join");
-              }}
-            >
-              Sign up
-            </Button>
-          </div>
         </FormControl>
       </Box>
     </div>

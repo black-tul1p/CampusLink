@@ -1,0 +1,411 @@
+:root {
+  --dark-blue: rgb(16, 46, 68);
+  --light-blue: rgb(185, 230, 233);
+  --blue: rgb(0, 100, 255);
+  --white: rgba(255, 255, 255);
+
+  --font-fancy: "Times New Roman";
+
+  background-color: var(--dark-blue);
+  font-family: "Times New Roman", Times, serif;
+}
+
+html,
+body {
+  scroll-behavior: smooth;
+}
+
+/********************************** App.js **********************************/
+
+.App {
+  text-align: center;
+}
+
+/********************************** Login Page **********************************/
+
+.Banner-logo {
+  max-width: 50vw;
+}
+
+.Default-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  gap: 3em;
+  color: white;
+}
+
+.Default-card .Login-form {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  gap: 1em;
+}
+
+/********************************** Login Page **********************************/
+
+.Banner-logo {
+  max-width: 50vw;
+}
+
+.Default-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  gap: 3em;
+  color: white;
+}
+
+.Default-card .Login-form {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  gap: 1em;
+}
+
+.Input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.Login-form > Button {
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.Password-section {
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+}
+
+.Mini-button {
+  align-self: flex-end;
+  color: var(--blue);
+  font-size: 1em;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-radius: 1em !important;
+  border-color: white !important;
+}
+
+.MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.MuiInputBase-input {
+  color: var(--white) !important;
+}
+
+.MuiSvgIcon-root {
+  color: var(--white);
+}
+
+.Vertical-line {
+  border: 1px solid white;
+  margin: 0.75em;
+  height: 1em;
+}
+
+.toggleButton {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  background-color: whitesmoke;
+}
+
+/********************************** Registration Page **********************************/
+
+.Default-card .Registration-form {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  gap: 1em;
+}
+
+.Registration-form > Button {
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.Toggle-button {
+  color: white;
+  display: grid;
+  gap: 1em;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1em;
+}
+
+/********************************** Home Page **********************************/
+
+.homepage-student-container {
+  padding: 3em;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Three columns by default */
+  grid-gap: 2em;
+  width: inherit;
+}
+
+.homepage-student {
+  flex-grow: 1;
+  overflow: auto;
+  height: 100vh;
+}
+
+/* style the scrollbar as needed */
+.homepage-student::-webkit-scrollbar {
+  width: 0.75em;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.homepage-student::-webkit-scrollbar-thumb {
+  background-color: rgba(32, 32, 32);
+  border-radius: 10em;
+}
+
+@media (max-width: 1650px) {
+  /* Change to two columns on screens smaller than 768px */
+  .homepage-student-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1225px) {
+  /* Change to two columns on screens smaller than 768px */
+  .homepage-student-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  /* Change to one column on screens smaller than 480px */
+  .homepage-student-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  /* Change to one column on screens smaller than 480px */
+  .homepage-student-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.course-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  transition: transform 0.15s ease-out;
+  cursor: pointer;
+}
+
+.course-container:hover {
+  transform: scale(1.1);
+}
+
+.course-container-top {
+  background-color: #0a2232;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  min-height: 100px;
+  max-height: 100px;
+  border: 20px solid #0a2232;
+}
+
+.course-container-bottom {
+  background-color: aliceblue;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  min-height: 40px;
+  max-height: -moz-fit-content;
+  max-height: fit-content;
+}
+
+.add-course-container {
+  background-color: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  height: 11.25em;
+  transition: transform 0.15s ease-out;
+  cursor: pointer;
+}
+
+.add-course-container:hover {
+  transform: scale(1.1);
+}
+
+.header-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 50px;
+  width: auto;
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 50px;
+  width: auto;
+}
+
+.divider {
+  margin-right: 3em;
+  height: 0.15em;
+  background-color: aliceblue;
+}
+
+p {
+  font-family: "Times New Roman", Times, serif;
+  color: aliceblue;
+  font-size: 2.15em;
+  line-height: 0px;
+}
+
+h3 {
+  font-family: "Times New Roman", Times, serif;
+  color: aliceblue;
+}
+
+/********************************** ClassList Page **********************************/
+
+.logo-header {
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: #0e293d;
+  padding-bottom: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  top: 0;
+}
+
+.logo-full {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
+
+.title {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5em;
+  text-align: center;
+  padding: 20px 0 0 0;
+}
+
+.course-name {
+  color: lightgray;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2.5em;
+  text-align: center;
+}
+
+.classlist {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border-style: hidden;
+}
+
+.classlist tr:nth-child(even) {
+  background-color: #0002;
+}
+
+.classlist th {
+  color: white;
+
+  padding: 12px 10px;
+  text-align: left;
+  background-color: #0006;
+  color: white;
+  border-left: 1px solid #fff1;
+}
+
+.classlist td {
+  padding: 20px 10px;
+  color: white;
+  text-align: left;
+  border-left: 1px solid #fff1;
+}
+
+.profile-pic-column {
+  width: 10%;
+}
+
+.profile-pic {
+  width: 40px;
+  opacity: 0.8;
+  float: right;
+}
+
+.classlist-wrapper {
+  display: block;
+  margin: auto;
+  padding-bottom: 10px;
+  border-radius: 5px;
+  width: 60%;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+.add-button {
+  display: block;
+  margin: 10px auto;
+  width: 30%;
+  padding: 10px;
+  font-size: 1.2em;
+  background-color: #257;
+  color: #eee;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-button:hover {
+  background-color: #368;
+  transition-duration: 0.2s;
+}
+
+#student-count-label {
+  bottom: 0;
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+
+#Approve-box {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: center;
+  padding: 0 1em 1em;
+}
+
+#f-name-input {
+  width: 100%;
+}
+
+#Approve-box > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+#Approve-box Button {
+  padding: 1em;
+  border-radius: 1em;
+  width: 90px;
+}

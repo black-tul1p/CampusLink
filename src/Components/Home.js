@@ -7,22 +7,11 @@ import {
   SnackbarContent,
   Typography,
 } from "@mui/material";
-import { getUserCourses, createCourse, removeCourse } from "../Backend/course";
-import { getLoggedInUserId, getUserRole } from "../Backend/user";
+import { getUserCourses } from "../Backend/course";
+import { getUserRole, isAdmin } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
-import DeleteIcon from '@mui/icons-material/Delete';
-
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import {
-  Dialog,
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
-  DialogTitle
-} from '@mui/material';
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Homepage() {
   const [courses, setCourses] = useState([]);
@@ -31,34 +20,7 @@ function Homepage() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [role, setRole] = useState("");
   const { user } = useContext(AuthContext);
-
-  const [open, setOpen] = React.useState(false);
-  const [newCourseTitle,setNewCourseTitle] = React.useState("");
-  const [newCourseId, setNewCourseId] = React.useState("");
-  const [newCourseDept, setNewCourseDept] = React.useState("");
-  const [newCourseDesc, setNewCourseDesc] = React.useState("");
-  const openCourseDialogue = () => {
-    setOpen(true);
-  };
-  const closeCourseDialogue = () => {
-    setOpen(false);
-  };
-  const submitCourseDialogue = () => {
-    if (!newCourseTitle || !newCourseId || !newCourseDept || !newCourseDesc) {
-      setSnackbarMessage(`Failed to create course`);
-      setOpenSnackbar(true);
-      return;
-    }
-
-    try {
-      createCourse(newCourseTitle, newCourseId, 3, newCourseDept, 150, 0, newCourseDesc, getLoggedInUserId())
-        .then(() => {fetchData();});
-      closeCourseDialogue();
-    } catch (error) {
-      setSnackbarMessage(`Failed to create course`);
-      setOpenSnackbar(true);
-    }
-  }
+  const navigate = useNavigate();
 
   const showAlert = () => {
     alert("Add new Course!");
@@ -68,7 +30,19 @@ function Homepage() {
     setOpenSnackbar(false);
   };
 
-  async function fetchData() {
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const admin = await isAdmin(user.email);
+      if (admin) {
+        navigate("/adminHome");
+      }
+    };
+
+    checkAdmin();
+  }, [user]);
+
+  useEffect(() => {
+    async function fetchData() {
       try {
         // Get user role
         const role = await getUserRole();
@@ -77,39 +51,32 @@ function Homepage() {
         setOpenSnackbar(true);
 
         // Get courses
-        if (role === "instructor") {
-          const courses = await getUserCourses(role);
+        const courses = await getUserCourses(role);
+        if (courses.length === 0) {
+          setCourses([]);
+        } else {
           setCourses(courses);
-          setLoading(false);
         }
-        // else if (role === "student") {
-        //   const courses = await getStudentCourses();
-        //   setCourses(courses);
-        //   setLoading(false);
-        // } else {
-        //   console.error("Could not resolve user role");
-        // }
+        setLoading(false);
       } catch (error) {
         console.error(error);
         setLoading(false);
       }
     }
 
-  useEffect(() => {
     fetchData();
   }, []);
 
   return (
     <div className="homepage-student">
-      
       <div className="header-container">
         <div className="header-titles">
           <p>My Courses</p>
           {role === "instructor" ? (
             <p style={{ fontStyle: "italic" }}>Instructor View</p>
-          ) : (
+          ) : role === "student" ? (
             <p style={{ fontStyle: "italic" }}>Student View</p>
-          )}
+          ) : null}
         </div>
         <div className="divider"></div>
       </div>
@@ -136,19 +103,13 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container" forcourse={course.databaseId}>
-                    <div className="delete-course-container" onClick={(event) => {
-                        const id = event.currentTarget.parentElement.getAttribute('forcourse');
-                        try {
-                          removeCourse(id).then(() => {fetchData();});
-                        } catch (error) {
-                          setSnackbarMessage(`Failed to remove course`);
-                          setOpenSnackbar(true);
-                        }
-                     }}>
-                       <DeleteIcon fontSize="large" />
-                    </div>
-
+                  <div
+                    className="course-container"
+                    onClick={() => {
+                      const courseId = course.databaseId;
+                      navigate("/announcements", { state: { courseId } });
+                    }}
+                  >
                     <div className="course-container-top">
                       <h3>
                         {course.courseTitle} {course.courseId} :
@@ -165,7 +126,13 @@ function Homepage() {
                     course.description && course.courseId && course.courseTitle
                 )
                 .map((course) => (
-                  <div className="course-container">
+                  <div
+                    className="course-container"
+                    onClick={() => {
+                      const courseId = course.databaseId;
+                      navigate("/announcements", { state: { courseId } });
+                    }}
+                  >
                     <div className="course-container-top">
                       <h3>
                         {course.courseTitle} {course.courseId} :
@@ -201,7 +168,7 @@ function Homepage() {
             </Typography>
           )}
           {role === "instructor" && (
-            <div onClick={openCourseDialogue} className="add-course-container">
+            <div onClick={showAlert} className="add-course-container">
               <AddCircleIcon fontSize="large" />
             </div>
           )}
@@ -209,8 +176,9 @@ function Homepage() {
       )}
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={2000}
+        autoHideDuration={1000}
         onClose={handleCloseSnackbar}
+        style={{ marginLeft: "4em" }}
       >
         <SnackbarContent
           style={{
@@ -238,62 +206,6 @@ function Homepage() {
           }
         />
       </Snackbar>
-
-      <Dialog class="create-course-dialogue" open={open} onClose={closeCourseDialogue} sx={{
-        "& .MuiDialog-container": {
-          "& .MuiPaper-root": {
-            width: "100%",
-            maxWidth: "500px",  // Set your width here
-          },
-        },
-      }}>
-        <DialogTitle>Create New Course</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          </DialogContentText>
-          <TextField
-              label="Course Title"
-              sx={{ margin : '5px', width: "50%", 
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              onChange={e => {setNewCourseTitle(e.target.value);}}
-          />
-          <TextField
-              label="Course ID"
-              sx={{ margin : '5px', width: "25%",
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              onChange={e => {setNewCourseId(e.target.value);}}
-          />
-          <TextField
-              label="Department"
-              sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              fullWidth
-              onChange={e => {setNewCourseDept(e.target.value);}}
-          />
-          <TextField
-              label="Description"
-              sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              minRows="2"
-              fullWidth
-              multiline
-              onChange={e => {setNewCourseDesc(e.target.value);}}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeCourseDialogue}>Cancel</Button>
-          <Button onClick={submitCourseDialogue}>Create</Button>
-        </DialogActions>
-      </Dialog>
-
     </div>
   );
 }

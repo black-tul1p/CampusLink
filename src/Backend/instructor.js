@@ -18,3 +18,11 @@ export async function createInstructor(first, last, email, password) {
     console.error("Error adding instructor: ", data);
   }
 }
+
+    try {
+        const docRef = await addDoc(collection(firestore, "instructors"), data);
+        console.log("Instructor added with ID: ", docRef.id);
+    } catch (e) {
+        console.error("Error adding instructor: ", data);
+    }
+}

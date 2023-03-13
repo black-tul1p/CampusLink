@@ -1,19 +1,27 @@
-import "../Classlist.css";
-import {doc, getDoc, updateDoc, arrayRemove, collection, arrayUnion } from "@firebase/firestore";
+import "../../Styles/Classlist.css";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  arrayRemove,
+  collection,
+} from "@firebase/firestore";
 import { firestore } from "../../Backend/firebase";
-import ProfilePic from '../../images/default_profile_picture.png'
+import ProfilePic from "../../images/default_profile_picture.png";
 import { useState, useEffect } from "react";
-import { useLocation } from 'react-router-dom'
-import DeleteIcon from '@mui/icons-material/Delete';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import { useLocation } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CourseNavBar from "../CourseNavBar";
+
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import {
   Dialog,
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
-  DialogTitle
-} from '@mui/material';
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 import { getUserByEmail } from "../../Backend/user";
 import ErrorBox from "../Error";
 
@@ -26,37 +34,51 @@ function Classlist() {
   const [error, setError] = useState("");
   const location = useLocation();
 
-  const updateClassList = (courseID) => {
+  const updateClassList = async (courseID) => {
     if (courseID === undefined) {
       console.log("Course not specified!");
     } else {
       console.log(courseID);
-      const course = doc(firestore, 'courses', courseID)
-      getDoc(course).then((courseDoc) => {
+      const course = doc(firestore, "courses", courseID);
+      try {
+        const courseDoc = await getDoc(course);
         if (courseDoc.exists()) {
           setCourseData(courseDoc.data());
 
           //Add enrolled students to classlist
           const enrolled = courseDoc.data().enrolledStudents;
-          Promise.all(enrolled.map(getDoc)).then(
-            stdnts => {
-              setStudents(stdnts);
-              setMailingList("mailto:" + stdnts.map(s => s.data().email).join(';'));
-            }
-          ); 
+          const stdnts = await Promise.all(enrolled.map(getDoc));
+          setStudents(stdnts);
+          setMailingList(
+            "mailto:" + stdnts.map((s) => s.data().email).join(";")
+          );
         } else {
           console.log("Course not found!");
         }
-      });
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
+  };
+
+  const removeStudent = (event) => {
+    const id = event.currentTarget.parentElement.getAttribute("studentid");
+    console.log(courseDocId);
+    const courseRef = doc(firestore, "courses", courseDocId);
+    const students = collection(firestore, "students");
+    updateDoc(courseRef, {
+      enrolledStudents: arrayRemove(doc(students, id)),
+    }).then(() => {
+      updateClassList(courseDocId);
+    });
+  };
 
   //Initialize data which comes from the database
   useEffect(() => {
     // Get course title and description
     const courseID = location.state?.courseId;
     setCourseDocId(courseID);
-    updateClassList(courseID);    
+    updateClassList(courseID);
   }, [location]);
 
   const handleAdd = (e) => {
@@ -78,60 +100,81 @@ function Classlist() {
   }
 
   return (
-    <div className="classlist-page">
-      <h1 className="course-name" >{courseData.courseTitle} {courseData.courseId}</h1>
-      <h2 className="course-name" >{courseData.description}</h2>
-      <div className="classlist-wrapper">
-        <h1 className="title" >Course Classlist</h1>
-        {error && <ErrorBox text={error} />}
-        <TextField
-              required
-              id="f-name-input"
-              label="Student Email to Add"
-              variant="outlined"
-              placeholder="email@organization.edu"
-              value={addStudent}
-              onChange={(e) => {
-                setAddStudent(e.target.value);
+    <div>
+      <CourseNavBar />
+      <div className="classlist-page">
+        <div className="classlist-wrapper">
+          <h1 className="title">Course Classlist</h1>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              paddingBottom: "1em",
+            }}
+          >
+            <Button
+              className="add-button"
+              onClick={() => {
+                //Append placeholder student
+                /*
+      setStudents([
+        ...students, {
+         firstName: "Firstname",
+         lastName: "Lastname",
+         email: "example@gmail.com"
+        }
+      ]);*/
               }}
-            />
-        <button className="add-button" onClick={handleAdd}>
-          Add Students
-          </button>
-        <a href={mailingList} className="email-button" onClick={() => {
-        }}>Email All</a>
+              variant="contained"
+            >
+              Add Students
+            </Button>
 
-        <table className="classlist">
-          <tbody>
-            <tr>
-              <th className="profile-pic-column"></th>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-
-            {students.map(student => (
+            <Button
+              href={mailingList}
+              className="email-button"
+              variant="contained"
+            >
+              Email All
+            </Button>
+          </div>
+          <table className="classlist">
+            <tbody>
               <tr>
-                <td className="profile-pic-column" studentid={student.id} >
-                  <div className="remove-student-container" onClick={(event) => {
-                    const id = event.currentTarget.parentElement.getAttribute('studentid');
-                    console.log(courseDocId);
-                    const courseRef = doc(firestore, 'courses', courseDocId)
-                    const students = collection(firestore, "students");
-                    updateDoc(courseRef, {enrolledStudents: arrayRemove(doc(students, id))}).then(() => {
-                      updateClassList(courseDocId);  
-                    });
-                  }}>
-                       <DeleteIcon fontSize="large" />
-                    </div>
-                  <img className="profile-pic" src={ProfilePic} alt="profile"></img>
-                </td>
-                <td>{student.data().lastName}, {student.data().firstName}</td>
-                <td>{student.data().email}</td>
+                <th className="profile-pic-column"></th>
+                <th>Name</th>
+                <th>Email</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <p id="student-count-label">Total Students: {students.length}</p>
+
+              {students.map((student) => (
+                <tr>
+                  <td
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                    }}
+                    className="profile-pic-column"
+                    studentid={student.id}
+                  >
+                    <Button
+                      id="remove-student-container"
+                      onClick={removeStudent}
+                    >
+                      <DeleteIcon fontSize="large" />
+                    </Button>
+                    <img id="profile-pic" src={ProfilePic} alt="profile"></img>
+                  </td>
+                  <td>
+                    {student.data().lastName}, {student.data().firstName}
+                  </td>
+                  <td>{student.data().email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p id="student-count-label">Total Students: {students.length}</p>
+        </div>
       </div>
     </div>
   );
@@ -141,7 +184,9 @@ function StudentInfoRow(props) {
   return (
     <tr>
       <td className="profile-pic"></td>
-      <td>{props.lastName}, {props.firstName}</td>
+      <td>
+        {props.lastName}, {props.firstName}
+      </td>
       <td>{props.email}</td>
     </tr>
   );
@@ -151,6 +196,6 @@ StudentInfoRow.defaultProps = {
   firstName: "Firstname",
   lastName: "Lastname",
   email: "example@gmail.com",
-}
+};
 
 export default Classlist;
