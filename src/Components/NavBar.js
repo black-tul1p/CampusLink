@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import logo_mini from "../Assets/campuslink_logo.jpg";
 import {
@@ -22,6 +22,8 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
+import {setIsAdminRole} from "../Contexts/AuthContext";
+import {isAdmin} from "../Backend/user";
 
 // CSS Styles
 const Sidebar = styled.div`

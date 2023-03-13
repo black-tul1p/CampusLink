@@ -1,11 +1,10 @@
 import "../Classlist.css";
-import {doc, getDoc, updateDoc, arrayRemove, collection} from "@firebase/firestore";
+import {doc, getDoc, updateDoc, arrayRemove, collection, arrayUnion } from "@firebase/firestore";
 import { firestore } from "../../Backend/firebase";
 import ProfilePic from '../../images/default_profile_picture.png'
 import { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom'
 import DeleteIcon from '@mui/icons-material/Delete';
-
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {
@@ -15,12 +14,16 @@ import {
   DialogContentText, 
   DialogTitle
 } from '@mui/material';
+import { getUserByEmail } from "../../Backend/user";
+import ErrorBox from "../Error";
 
 function Classlist() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
   const [courseDocId, setCourseDocId] = useState("");
   const [mailingList, setMailingList] = useState("");
+  const [addStudent, setAddStudent] = useState("");
+  const [error, setError] = useState("");
   const location = useLocation();
 
   const updateClassList = (courseID) => {
@@ -56,26 +59,45 @@ function Classlist() {
     updateClassList(courseID);    
   }, [location]);
 
+  const handleAdd = (e) => {
+    getUserByEmail(addStudent)
+    .then((user) => {
+      const userId = user.id;
+      const userRef = doc(firestore, "students", userId);
+      let studentList = students;
+      studentList.push({firstName: userRef.data().firstName,
+      lastName: userRef.data().lastName, 
+      email: userRef.data().email})
+      setStudents(studentList);
+      updateDoc(userRef, {courses: arrayUnion(course)});
+      updateDoc(course, {enrolled: arrayUnion(userId)});
+    })
+    .catch((error) => {
+      setError(error.message)
+    })
+  }
+
   return (
     <div className="classlist-page">
       <h1 className="course-name" >{courseData.courseTitle} {courseData.courseId}</h1>
       <h2 className="course-name" >{courseData.description}</h2>
       <div className="classlist-wrapper">
         <h1 className="title" >Course Classlist</h1>
-
-        <button className="add-button" onClick={() => {
-          //Append placeholder student
-          /*
-          setStudents([
-            ...students, {
-             firstName: "Firstname",
-             lastName: "Lastname",
-             email: "example@gmail.com"
-            }
-          ]);*/
-        }}>Add Students</button>
-
-
+        {error && <ErrorBox text={error} />}
+        <TextField
+              required
+              id="f-name-input"
+              label="Student Email to Add"
+              variant="outlined"
+              placeholder="email@organization.edu"
+              value={addStudent}
+              onChange={(e) => {
+                setAddStudent(e.target.value);
+              }}
+            />
+        <button className="add-button" onClick={handleAdd}>
+          Add Students
+          </button>
         <a href={mailingList} className="email-button" onClick={() => {
         }}>Email All</a>
 
