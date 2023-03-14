@@ -1,0 +1,27 @@
+.assignment-box {
+    margin-left: 3em;
+
+}
+.assignment-form-box {
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 50vw;
+}
+.header-divider {
+    margin-right: 3em;
+    height: 0.15em;
+    background-color: aliceblue;
+  }
+  label {
+    font-family: "Times New Roman", Times, serif;
+    color: aliceblue;
+  }
+  
+  p {
+    font-family: "Times New Roman", Times, serif;
+    color: aliceblue;
+    font-size: 2.15em;
+    line-height: 0px;
+  }

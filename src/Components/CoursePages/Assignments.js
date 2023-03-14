@@ -1,16 +1,30 @@
 import React from "react";
 import CourseNavBar from "../CourseNavBar";
 import { addAssignment } from "../../Backend/assigment";
+import "../../Styles/Assignments.css";
+import "../../Styles/App.css";
 
 function assignments() {
   const handleClick = () => {
-    // Verify that suggestionRef contains valid input
-    addAssignment("Assignment 2", "Write your thoughts about this course.", "");
+    addAssignment("Assignment 20", "Something something etc.", "");
   }
   return (
     <div style={{ width: "100%" }}>
       <CourseNavBar />
-      <button onClick={handleClick}></button>
+      <div className = "assignment-box">
+        <div className ="header-box">
+          <p>Assignments</p>
+          <div className="header-divider"></div>
+        </div>
+        <div className = "assignment-form-box">
+            <label> Assignment Title </label>
+            <input placeholder="Assignment 1"/>    
+            <label> Due Date </label>
+            <input placeholder="YYYY-MM-DD"/>    
+            <label> Assignment Description </label> 
+            <textarea placeholder="Assignment Description goes Here."/>  
+        </div>
+      </div>
     </div>
   );
 }
