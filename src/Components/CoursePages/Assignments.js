@@ -22,7 +22,11 @@ function assignments() {
             <label> Due Date </label>
             <input placeholder="YYYY-MM-DD"/>    
             <label> Assignment Description </label> 
-            <textarea placeholder="Assignment Description goes Here."/>  
+            <textarea rows="4" placeholder="Assignment Description goes Here."/>  
+            <div className="button-box">
+              <button>Submit</button>
+              <button>Cancel</button>
+            </div>
         </div>
       </div>
     </div>

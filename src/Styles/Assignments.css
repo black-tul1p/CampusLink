@@ -8,15 +8,40 @@
     flex-direction: column;
     flex-wrap: wrap;
     width: 50vw;
+    row-gap: 0.5em;
 }
 .header-divider {
     margin-right: 3em;
     height: 0.15em;
     background-color: aliceblue;
   }
-  label {
+.button-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 28.7em;
+}
+button {
+    background-color: teal;
+}
+button:hover {
+    background-color: rgb(22, 31, 52);
+}
+label {
     font-family: "Times New Roman", Times, serif;
     color: aliceblue;
+    font-size: 1.2em;
+  }
+
+  input {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 1em;
+  }
+
+  textarea {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 1em;
+    border-radius: 0.5em;
   }
   
   p {
