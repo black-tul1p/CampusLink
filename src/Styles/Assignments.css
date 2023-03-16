@@ -1,25 +1,42 @@
 .assignment-box {
     margin-left: 3em;
+    margin-right: 3em;
 
 }
 .assignment-form-box {
-    margin-top: 2em;
+    background-color: #1e4258;
+    margin-top: 0.1em;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    width: 50vw;
     row-gap: 0.5em;
+    padding: 1em;
 }
 .header-divider {
-    margin-right: 3em;
+    /* margin-right: 3em; */
+    margin-bottom: 1em;
     height: 0.15em;
     background-color: aliceblue;
   }
+.create-assignment-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: 55.7em;
+    align-items: center;
+    background-color: #071f31;
+    border-radius: 0.2em;
+    overflow: hidden;
+    padding-left: 0.3em;
+    cursor: pointer;
+    
+
+}
 .button-box {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    column-gap: 28.7em;
+    column-gap: 55.7em;
 }
 button {
     background-color: teal;

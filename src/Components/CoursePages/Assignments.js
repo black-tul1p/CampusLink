@@ -4,12 +4,19 @@ import { addAssignment } from "../../Backend/assigment";
 import "../../Styles/Assignments.css";
 import "../../Styles/App.css";
 import { useState} from "react";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
 
 function Assignments() {
+
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
+  const [open, setOpen] = useState(false);
+  const toggle = () => {
+    setOpen(!open);
+  }
   const handleSubmit = () => {
     const due = (date + " " + time);
     addAssignment(title, description, due);
@@ -29,7 +36,14 @@ function Assignments() {
           <p>Assignments</p>
           <div className="header-divider"></div>
         </div>
-        <div className = "assignment-form-box">
+        <div className="create-assignment-bar" onClick={toggle}>
+          <p style={{fontSize:"1.4em"}}>
+            Create Assignment
+          </p>
+          <AddCircleIcon />
+        </div>
+        {open && (
+          <div className = "assignment-form-box">
             <label> Assignment Title </label>
             <input placeholder="Assignment 1"
               value={title}
@@ -60,11 +74,15 @@ function Assignments() {
               }}
             />  
             <div className="button-box">
-              <button onClick={handleSubmit}>Submit</button>
+              <button onClick={handleSubmit}>
+                Submit
+              </button>
               <button onClick={handleCancel}>Cancel</button>
             </div>
-        </div>
-      </div>
+          </div>
+        )}
+      </div>  
+         
     </div>
   );
 }
