@@ -32,6 +32,13 @@
     
 
 }
+.header-titles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-right: 0px;
+}
 .button-box {
     display: flex;
     flex-direction: row;

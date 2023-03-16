@@ -2,10 +2,8 @@ import { firestore } from "./firebase";
 
 import {
   collection,
-  doc,
   addDoc,
   getDocs,
-  updateDoc,
   query,
   where,
   Timestamp,
