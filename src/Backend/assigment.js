@@ -11,8 +11,6 @@ import {
 
 
 export const addAssignment = async (title, description, dueDate) => {
-    // get Date
-    //July 21, 2023 01:15:00
     const d = new Date(dueDate);
     const date = Timestamp.fromDate(d);
     // Check database to see if assignment already exists
@@ -37,3 +35,18 @@ export const addAssignment = async (title, description, dueDate) => {
       console.error("Error adding assignment", error);
     }
   };
+
+  export function verifyInput(title, description, dueDate, time) {
+    const dateRegex = /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/;
+    const timeRegex = /^[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/;
+    const nonEmptyRegex = /^.+$/;
+    if (!dateRegex.test(dueDate) || !timeRegex.test(time) || !nonEmptyRegex.test(title)) {
+      console.log(dueDate + dateRegex.test(dueDate) + "," + timeRegex.test(time) + "," + nonEmptyRegex.test(title));
+      return false;
+    }
+    return true;
+  }
+
+
+
+

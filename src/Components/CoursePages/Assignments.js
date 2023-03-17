@@ -1,11 +1,12 @@
 import CourseNavBar from "../CourseNavBar";
-import { addAssignment } from "../../Backend/assigment";
+import { addAssignment, verifyInput } from "../../Backend/assigment";
 import "../../Styles/Assignments.css";
 import "../../Styles/App.css";
 import { useState, useEffect} from "react";
 import React from "react";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { getUserRole } from "../../Backend/user";
+import ErrorBox from "../Error";
 
 function Assignments() {
 
@@ -15,6 +16,9 @@ function Assignments() {
   const [description, setDescription] = useState("");
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState("");
+  const [error, setError] = useState("");
+  const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+
 
   useEffect(() => {
     async function fetchRole() {
@@ -35,10 +39,20 @@ function Assignments() {
   }
 
   const handleSubmit = () => {
-    const due = (date + " " + time);
-    addAssignment(title, description, due);
-    alert("New Assignment Added!");
-    handleCancel();
+    if (!verifyInput(title, description, date, time)) {
+      console.log("verify: " + verifyInput(title, description, date, time));
+      setError("Incorrect input format.");
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+        return;
+    } else {
+      const due = date + " " + time;
+      addAssignment(title, description, due);
+      alert("New Assignment Added!");
+      handleCancel();
+    }
+    
   }
   const handleCancel = () => {
     setTitle("");
@@ -51,6 +65,7 @@ function Assignments() {
   return (
     <div style={{ width: "100%" }}>
       <CourseNavBar />
+      {error && <ErrorBox text={error} />}
       <div className = "assignment-box">
       {role === "student" ? (
         <div className ="header-box">
