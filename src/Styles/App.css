@@ -258,7 +258,8 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-right: 50px;
+  margin-right: 3em;
+  /* padding-right: 50px; */
   width: auto;
 }
 

@@ -22,6 +22,7 @@ function Assignments() {
         // Get user role
         const role = await getUserRole();
         setRole(role);
+        console.log("role: " + role);
       } catch (error) {
         console.error(error);
       }
