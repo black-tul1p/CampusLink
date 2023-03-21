@@ -7,6 +7,7 @@ import React from "react";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { getUserRole } from "../../Backend/user";
 import ErrorBox from "../Error";
+import { useLocation } from "react-router-dom";
 
 function Assignments() {
 
@@ -17,13 +18,17 @@ function Assignments() {
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState("");
   const [error, setError] = useState("");
-  const [ isAlertVisible, setIsAlertVisible ] = useState(false);
+  const [courseDocId, setCourseDocId] = useState("");
+  const location = useLocation();
 
 
   useEffect(() => {
-    async function fetchRole() {
+    async function fetchData() {
       try {
         // Get user role
+        const courseID = location.state?.courseId;
+        setCourseDocId(courseID);
+        console.log("ID: " + courseID);
         const role = await getUserRole();
         setRole(role);
         console.log("role: " + role);
@@ -31,8 +36,8 @@ function Assignments() {
         console.error(error);
       }
     }
-    fetchRole();
-  }, []);
+    fetchData();
+  }, [location]);
 
   const toggle = () => {
     setOpen(!open);
@@ -48,7 +53,7 @@ function Assignments() {
         return;
     } else {
       const due = date + " " + time;
-      addAssignment(title, description, due);
+      addAssignment(title, description, due, courseDocId);
       alert("New Assignment Added!");
       handleCancel();
     }
@@ -63,7 +68,7 @@ function Assignments() {
   }
 
   return (
-    <div style={{ width: "100%" }}>
+    <div className = "main-box" style={{ width: "100%" }}>
       <CourseNavBar />
       {error && <ErrorBox text={error} />}
       <div className = "assignment-box">

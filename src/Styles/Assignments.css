@@ -1,7 +1,12 @@
+
+.main-box {
+    overflow: auto;
+}
 .assignment-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-shrink: 1;
     margin-left: 3em;
     margin-right: 3em;
     overflow: auto;
