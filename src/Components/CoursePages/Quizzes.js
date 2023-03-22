@@ -2,9 +2,7 @@ import React from "react";
 import CourseNavBar from "../CourseNavBar";
 import Button from '@mui/material/Button';
 import { Dialog, DialogTitle, DialogActions } from "@mui/material";
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
+import { List, ListItem, ListItemText } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -18,13 +16,26 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Menu, MenuItem } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useLocation } from "react-router-dom";
+
+import {createQuiz} from '../../Backend/quiz'
 
 function Quizzes() {
   const [open, setOpen] = React.useState(false);
   const [trueFalseOpen, setTrueFalseOpen] = React.useState(false);
   const [questionMenuAnchor, setQuestionMenuAnchor] = React.useState(null);
+  const [quizQuestions, setQuizQuestions] = React.useState([]);
+  const [newQuestionText, setNewQuestionText] = React.useState("");
+  const [newQuestionPoints, setNewQuestionPoints] = React.useState(0);
+  const [newQuizName, setNewQuizName] = React.useState("");
+  const [newQuizDesc, setNewQuizDesc] = React.useState("");
+  const [newQuizPoints, setNewQuizPoints] = React.useState(0);
+  const [newQuizDeadline, setNewQuizDeadline] = React.useState(new Date());
+
+  const location = useLocation();
 
   const handleClickOpen = () => {
+    setQuizQuestions([]);
     setOpen(true);
   };
 
@@ -32,6 +43,7 @@ function Quizzes() {
     setOpen(false);
   };
 
+  const courseId = location.state?.courseId;
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -73,7 +85,10 @@ function Quizzes() {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Create Quiz
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button autoFocus color="inherit" onClick={() => {
+              createQuiz(courseId, newQuizName, newQuizDesc, newQuizPoints, newQuizDeadline, quizQuestions);
+              handleClose()
+            }}>
               save and close
             </Button>
           </Toolbar>
@@ -87,6 +102,7 @@ function Quizzes() {
                   "& .MuiInputLabel-root": { color: '#000A !important' } }}
             variant="standard"
             style={{width: '100%'}}
+            onChange={e => {setNewQuizName(e.target.value)}}
           />
           <br/>
           <TextField
@@ -99,6 +115,7 @@ function Quizzes() {
                   }}
             variant="standard"
             style={{width: '20em'}}
+            onChange={e => {setNewQuizPoints(e.target.value)}}
           />
           <DateTimePicker
             label="Due Date"
@@ -107,6 +124,7 @@ function Quizzes() {
                   "& .MuiInputBase-input": { color: 'black !important' },
                   "& .MuiInputLabel-root": { color: '#000A !important' },
                 }}
+            onChange={value => {setNewQuizDeadline(value.toDate())}}
           />
           <TextField
             label="Description"
@@ -117,6 +135,7 @@ function Quizzes() {
             style={{width: '100%'}}
             multiline
             minRows="3"
+            onChange={e => {setNewQuizDesc(e.target.value)}}
           />
       </div>
           <AppBar sx={{ position: 'relative', bgcolor: "#20232a"}}>
@@ -160,16 +179,17 @@ function Quizzes() {
           </AppBar>
 
           <List >
-            <ListItem button>
-              <ListItemText primary="Question 1" secondary="Multiple Choice" />
-            </ListItem>
-            <Divider />
-            <ListItem button>
-              <ListItemText
-                primary="Question 2"
-                secondary="True or False"
-              />
-            </ListItem>
+            {quizQuestions.map((question)=><>
+              <ListItem button>
+                <ListItemText
+                  primary={question.text}
+                  secondary={question.type}
+                />
+
+                <ListItemText primary={question.points + " pts"} />
+              </ListItem>
+              <Divider />
+            </>)}
           </List>
       </Dialog>
 
@@ -191,6 +211,7 @@ function Quizzes() {
           fullWidth
           multiline
           minRows="2"
+          onChange={e => {setNewQuestionText(e.target.value)}}
         />
         <TextField
           label="Points"
@@ -198,10 +219,17 @@ function Quizzes() {
                 "& .MuiInputBase-input": { color: 'black !important' },
                 "& .MuiInputLabel-root": { color: '#000A !important' } }}
           variant="standard"
+          onChange={e => {setNewQuestionPoints(e.target.value)}}
         />
         <DialogActions>
           <Button onClick={()=>{
             setTrueFalseOpen(false)
+            setQuizQuestions([
+              ...quizQuestions, {
+              text: newQuestionText,
+              type: "True or False",
+              points: newQuestionPoints
+            }])
           }}>Save</Button>
           <Button onClick={()=>{setTrueFalseOpen(false)}}>Cancel</Button>
         </DialogActions>
