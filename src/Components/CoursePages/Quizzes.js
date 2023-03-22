@@ -18,10 +18,11 @@ import { Menu, MenuItem } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useLocation } from "react-router-dom";
 
-import {createQuiz} from '../../Backend/quiz'
+import {createQuiz, fetchQuizzes} from '../../Backend/quiz'
 
 function Quizzes() {
   const [open, setOpen] = React.useState(false);
+  const [quizzes, setQuizzes] = React.useState([]);
   const [trueFalseOpen, setTrueFalseOpen] = React.useState(false);
   const [questionMenuAnchor, setQuestionMenuAnchor] = React.useState(null);
   const [quizQuestions, setQuizQuestions] = React.useState([]);
@@ -43,12 +44,34 @@ function Quizzes() {
     setOpen(false);
   };
 
+  const updateQuizList = (courseId) => {
+    fetchQuizzes(courseId).then((quizzes) => {
+        setQuizzes(quizzes);
+    })
+  }
+
   const courseId = location.state?.courseId;
+
+  React.useEffect(() => {
+    updateQuizList(courseId);
+  }, [location]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <div style={{ width: "100%" }}>
       <CourseNavBar />
+
+      <h1 className="title" >Quizzes</h1>
+      <List >
+        {quizzes.map((quiz)=><>
+          <ListItem button style={{color: 'white'}}>
+            <ListItemText
+              primary={quiz.name}
+            />
+          </ListItem>
+          <Divider />
+        </>)}
+      </List>
 
       <Button
         className="add-button"
@@ -86,7 +109,9 @@ function Quizzes() {
               Create Quiz
             </Typography>
             <Button autoFocus color="inherit" onClick={() => {
-              createQuiz(courseId, newQuizName, newQuizDesc, newQuizPoints, newQuizDeadline, quizQuestions);
+              createQuiz(courseId, newQuizName, newQuizDesc, newQuizPoints, newQuizDeadline, quizQuestions).then(()=>{
+                updateQuizList(courseId);
+              });
               handleClose()
             }}>
               save and close
@@ -172,10 +197,7 @@ function Quizzes() {
                 <MenuItem onClick={() => {setQuestionMenuAnchor(null)}}>Short Answer</MenuItem>
               </Menu> 
               
-              <Button autoFocus color="inherit" style={{marginLeft: 'auto'}}>
-                Preview
-              </Button>
-            </Toolbar>
+              </Toolbar>
           </AppBar>
 
           <List >
