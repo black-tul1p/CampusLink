@@ -14,12 +14,29 @@
 }
 .assignment-form-box {
     background-color: #1e4258;
-    margin-top: 0.1em;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     row-gap: 0.5em;
     padding: 1em;
+}
+.all-assigments-box {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    background-color: #1e4258;
+    row-gap: 0.3em;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.8em;
+
+}
+.assignment-list-box {
+  display: flex;
+  align-items: center;
+  min-height: 2em;
+  border-bottom: 0.1em solid aliceblue;
+
 }
 .header-divider {
     /* margin-right: 3em; */
@@ -38,10 +55,26 @@
     overflow: hidden;
     padding-left: 0.3em;
     padding-right: 0.3em;
+    margin-top: 0.8em;
     cursor: pointer;
-    
 
 }
+
+.assignments-bar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #071f31;
+  border-radius: 0.2em;
+  overflow: hidden;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  cursor: pointer;
+
+}
+
 .header-titles {
     display: flex;
     flex-direction: row;
