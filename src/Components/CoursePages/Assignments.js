@@ -42,8 +42,6 @@ function Assignments() {
         console.log("role: " + role);
         const assgnts = await getAssigmentsByCourse(courseID);
         setAssignments(assgnts);
-        console.log("assgn: " + assgnts[0].title);
-        console.log("assignment: " + assignments[0].title);
       } catch (error) {
         console.error(error);
       }
