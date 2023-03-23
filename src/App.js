@@ -15,7 +15,22 @@ import { AuthContext } from "./Contexts/AuthContext";
 import { CircularProgress } from "@mui/material";
 import { isAdmin } from "./Backend/user";
 
-function AuthorizedRoute(props) {
+
+import FileUpload from "./Backend/FileUpload";
+import { defaultListboxReducer } from "@mui/base";
+import VidUpload from "./Backend/VidUpload";
+
+ function App() {
+    return (<FileUpload/>)
+    //return(<VidUpload/>)
+ }
+
+
+ export default App;
+
+
+
+/* function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
@@ -81,4 +96,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; */
