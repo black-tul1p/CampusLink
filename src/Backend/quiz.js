@@ -5,17 +5,10 @@ import {
 } from "@firebase/firestore";
 import { firestore } from "./firebase";
 
-export async function createQuiz( courseId, name, description, points, deadline, questions ) {
-    let data = {
-        name: name,
-        description: description,
-        points: points,
-        deadline: deadline,
-        questions: questions
-    };
+export async function createQuiz( courseId, quiz ) {
     try {
         const quizCollection = collection(firestore, "courses", courseId, "quizzes");
-        await addDoc(quizCollection, data);
+        await addDoc(quizCollection, quiz);
     } catch (error) {
         throw new Error("Error adding quiz:", error);
     }
