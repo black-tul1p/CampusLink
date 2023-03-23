@@ -62,10 +62,6 @@ function Homepage() {
     }
   }
 
-  const showAlert = () => {
-    alert("Add new Course!");
-  };
-
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };

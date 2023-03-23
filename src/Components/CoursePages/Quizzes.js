@@ -1,29 +1,18 @@
-import React from "react";
 import CourseNavBar from "../CourseNavBar";
 import Button from '@mui/material/Button';
-import { Dialog, DialogTitle, DialogActions } from "@mui/material";
 import { List, ListItem, ListItemText } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Menu, MenuItem } from "@mui/material";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
+import { getUserRole } from "../../Backend/user";
 import {createQuiz, fetchQuizzes} from '../../Backend/quiz'
 import {QuizCreationDialog} from './QuizCreationDialog'
 
 function Quizzes() {
-  const [open, setOpen] = React.useState(false);
-  const [quizzes, setQuizzes] = React.useState([]);
+  const [open, setOpen] = useState(false);
+  const [quizzes, setQuizzes] = useState([]);
+  const [role, setRole] = useState("");
   
   const location = useLocation();
 
@@ -35,7 +24,10 @@ function Quizzes() {
 
   const courseId = location.state?.courseId;
 
-  React.useEffect(() => {
+  useEffect(() => {
+    getUserRole().then(role => {
+      setRole(role);
+    })
     updateQuizList(courseId);
   }, [location]);
 
@@ -55,23 +47,25 @@ function Quizzes() {
         </>)}
       </List>
 
-      <Button
-        className="add-button"
-        style = {{display: 'block', margin: 'auto'}}
-        onClick={() => {setOpen(true);}}
-        variant="contained"
-      >
-        Create New Quiz      
-      </Button>
 
+      { role === "instructor" &&
+        <Button
+          className="add-button"
+          style = {{display: 'block', margin: 'auto'}}
+          onClick={() => {setOpen(true);}}
+          variant="contained"
+        >
+          Create New Quiz      
+        </Button>
+      }
       <QuizCreationDialog
         open={open}
         onClose={()=>{setOpen(false)}}
         onSave={(quiz)=>{
-            createQuiz(courseId, quiz).then(()=>{
+          createQuiz(courseId, quiz).then(()=>{
             updateQuizList(courseId);
-            setOpen(false);
           });
+          setOpen(false);
         }}
       />
     </div>

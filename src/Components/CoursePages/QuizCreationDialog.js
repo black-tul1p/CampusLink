@@ -14,18 +14,25 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Menu, MenuItem } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 export function QuizCreationDialog(props) {
     const [trueFalseOpen, setTrueFalseOpen]           = useState(false);
-    const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
-    const [quizQuestions, setQuizQuestions]           = useState([]);
-    const [newQuestionText, setNewQuestionText]       = useState("");
-    const [newQuestionPoints, setNewQuestionPoints]   = useState(0);
+    const [questionType, setQuestionType]           = useState(null);
+
     const [newQuizName, setNewQuizName]               = useState("");
     const [newQuizDesc, setNewQuizDesc]               = useState("");
     const [newQuizPoints, setNewQuizPoints]           = useState(0);
     const [newQuizDeadline, setNewQuizDeadline]       = useState(new Date());
+    const [quizQuestions, setQuizQuestions]           = useState([]);
+    const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
 
     const resetFields = () => {
       setNewQuizName("");
@@ -33,12 +40,7 @@ export function QuizCreationDialog(props) {
       setNewQuizDesc("");
       setNewQuizPoints(0)
       setNewQuizDeadline(new Date());
-
-      setQuizQuestions([]);
-      setNewQuestionText("");
-      setNewQuestionPoints(0);
     }
-
     return (<>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog
@@ -53,7 +55,7 @@ export function QuizCreationDialog(props) {
         }}
       >
         {/* Topmost header */}
-        <AppBar sx={{ position: 'relative', bgcolor: "#20232a"}}>
+        <AppBar style={{position: "sticky"}} sx={{ position: 'relative', bgcolor: "#20232a"}}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -112,9 +114,10 @@ export function QuizCreationDialog(props) {
           <DateTimePicker
             label="Due Date"
             style={{backgroundColor: "black !important"}}
-            sx={{ margin : '5px', width: "50%", 
+            sx={{ margin : '5px', width: "20%", 
                   "& .MuiInputBase-input": { color: 'black !important' },
                   "& .MuiInputLabel-root": { color: '#000A !important' },
+                  "& .MuiSvgIcon-root": { color: "unset" }
                 }}
             onChange={value => {setNewQuizDeadline(value.toDate())}}
           />
@@ -133,7 +136,7 @@ export function QuizCreationDialog(props) {
 
         {/* Questions Header */}
         <div style = {{padding: '1% 5%'}}></div>
-          <AppBar sx={{ position: 'relative', bgcolor: "#20232a"}}>
+          <AppBar style={{position: "sticky"}} sx={{ position: 'relative', bgcolor: "#20232a"}}>
             <Toolbar>
               <Typography sx={{ ml: 2, flex: 0 }} variant="h6" component="div">
                 Questions
@@ -161,10 +164,16 @@ export function QuizCreationDialog(props) {
               >
                 <MenuItem onClick={() => {
                   setQuestionMenuAnchor(null);
-                  setTrueFalseOpen(true);
+                  setQuestionType("True or False");
                 }}>True or False</MenuItem>
-                <MenuItem onClick={() => {setQuestionMenuAnchor(null)}}>Multiple Choice</MenuItem>
-                <MenuItem onClick={() => {setQuestionMenuAnchor(null)}}>Short Answer</MenuItem>
+                <MenuItem onClick={() => {
+                  setQuestionMenuAnchor(null)
+                  setQuestionType("Multiple Choice");
+                }}>Multiple Choice</MenuItem>
+                <MenuItem onClick={() => {
+                  setQuestionMenuAnchor(null)
+                  setQuestionType("Short Answer");
+                }}>Short Answer</MenuItem>
               </Menu> 
               
               </Toolbar>
@@ -173,7 +182,17 @@ export function QuizCreationDialog(props) {
           {/* Questions List */}
           <List >
             {quizQuestions.map((question)=><>
-              <ListItem button>
+              <ListItem>
+                <IconButton
+                  sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
+                  style={{margin: "0 10px 0 0"}}
+                  onClick={()=>{
+                    setQuizQuestions(quizQuestions.filter(quizQuestion => quizQuestion !== question))
+                  }}
+                >
+                  <RemoveCircleIcon/> 
+                </IconButton>
+
                 <ListItemText
                   primary={question.text}
                   secondary={question.type}
@@ -184,50 +203,176 @@ export function QuizCreationDialog(props) {
               <Divider />
             </>)}
           </List>
-      </Dialog>
 
-      <Dialog open={trueFalseOpen} sx={{
+      <QuestionCreationDialog
+        open={Boolean(questionType)}
+        onCancel={()=>{setQuestionType(null);}}
+        onSave={(question)=>{
+          console.log(question);
+          setQuizQuestions([...quizQuestions, question])
+          setQuestionType(null)
+        }}
+        type={questionType}
+        title={"New " + questionType + " Question"}
+      />
+
+      </Dialog>
+      </LocalizationProvider>
+    </>)
+}
+
+function QuestionCreationDialog(props) {
+  const [newQuestionText, setNewQuestionText]       = useState("");
+  const [newQuestionPoints, setNewQuestionPoints]   = useState(0);
+  const [gradeManually, setGradeManually]           = useState(false);
+  const [answers, setAnswers]                       = useState([]);
+  const [choices, setChoices]                       = useState([
+    {text: "", correct: false},
+    {text: "", correct: false},
+    {text: "", correct: false},
+    {text: "", correct: false}
+  ]);
+
+  const resetFields = () => {
+    setNewQuestionText("");
+    setNewQuestionPoints(0);
+    setGradeManually(false);
+    setAnswers([]);
+    setChoices([
+      {text: "", correct: false},
+      {text: "", correct: false},
+      {text: "", correct: false},
+      {text: "", correct: false}
+    ]);
+  }
+
+  useEffect(()=>{
+    if (props.open) resetFields();
+  }, [props.open])
+
+  const content = () => {
+    switch (props.type) {
+      case "True or False": return (
+        !gradeManually && <>
+          <DialogTitle>Answer</DialogTitle>
+          <ToggleButtonGroup
+            color="primary"
+            value={answers[0]}
+            exclusive
+            onChange={(event, string) => {setAnswers([string]);}}
+            aria-label="Platform"
+          >
+            <ToggleButton disableRipple value="true">True</ToggleButton>
+            <ToggleButton disableRipple value="false">False</ToggleButton>
+          </ToggleButtonGroup>
+        </>
+      );
+      case "Multiple Choice": return (<>
+          <DialogTitle>Answers</DialogTitle>
+          {choices.map((choice, index) => <>
+            <div style={{display: "flex"}}>
+              {!gradeManually &&
+              <Checkbox
+                style={{alignSelf: "flex-end"}}
+                icon={<CheckCircleOutlineIcon/>}
+                checkedIcon={<CheckCircleIcon/>}
+                sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
+                onChange={(event) => {
+                  let updated_choices = choices;
+                  updated_choices[index].correct = event.target.checked;
+                  setChoices(updated_choices);
+                }}
+              />}
+              <TextField
+                sx={{ margin : '5px', width: "50%", 
+                      "& .MuiInputBase-input": { color: 'black !important' },
+                      "& .MuiInputLabel-root": { color: '#000A !important' } }}
+                variant="standard"
+                label="Answer Choice"
+                onChange={(event) => {
+                  let updated_choices = choices;
+                  updated_choices[index].text = event.target.value;
+                  setChoices(updated_choices);
+                }}
+              />
+            </div>
+          </>)}
+      </>);
+    }
+  }
+
+  return (
+    <Dialog open={props.open} sx={{
         "& .MuiDialog-container": {
           "& .MuiPaper-root": {
             width: "100%",
             maxWidth: "750px",
+            padding: "10px"
           },
         },
       }}>
-        <DialogTitle>New True or False Question</DialogTitle>
+        <DialogTitle>{props.title}</DialogTitle>
         <TextField
           label="Question Text"
           sx={{ margin : '5px', width: "50%", 
                 "& .MuiInputBase-input": { color: 'black !important' },
                 "& .MuiInputLabel-root": { color: '#000A !important' } }}
           variant="standard"
-          fullWidth
+          style={{width: '90%'}}
           multiline
           minRows="2"
           onChange={e => {setNewQuestionText(e.target.value)}}
         />
-        <TextField
-          label="Points"
-          sx={{ margin : '5px', width: "50%", 
-                "& .MuiInputBase-input": { color: 'black !important' },
-                "& .MuiInputLabel-root": { color: '#000A !important' } }}
-          variant="standard"
-          onChange={e => {setNewQuestionPoints(e.target.value)}}
-        />
+
+        <div style={{display: "flex"}}>
+          <TextField
+            label="Points"
+            sx={{ margin : '5px', width: "50%", 
+                  "& .MuiInputBase-input": { color: 'black !important' },
+                  "& .MuiInputLabel-root": { color: '#000A !important' } }}
+            variant="standard"
+            onChange={e => {setNewQuestionPoints(e.target.value)}}
+          />
+
+          <FormControlLabel
+            style={{alignSelf: "flex-end", marginLeft: '10%'}}
+            control={
+              <Checkbox
+                sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
+                onChange={(event)=>{
+                  setGradeManually(event.target.checked);
+                }}/>
+            }
+            label="Grade Manually"
+
+          />
+        </div>
+
+        {content()}
+        
         <DialogActions>
           <Button onClick={()=>{
-            setTrueFalseOpen(false)
-            setQuizQuestions([
-              ...quizQuestions, {
+            let updatedAnswers = answers;
+            if (props.type === "Multiple Choice") {
+              updatedAnswers = choices.filter(choice => {return choice.correct})
+                                      .map(choice => {return choice.text});
+            }
+
+            props.onSave({
               text: newQuestionText,
-              type: "True or False",
-              points: newQuestionPoints
-            }])
+              type: props.type,
+              points: newQuestionPoints,
+              answers: gradeManually ? null : updatedAnswers,
+              manual: gradeManually,
+              choices: props.type === "Multiple Choice" ? 
+                choices.map(choice => {return choice.text}) 
+              :
+                null
+            });
           }}>Save</Button>
-          <Button onClick={()=>{setTrueFalseOpen(false)}}>Cancel</Button>
+          <Button onClick={() => {props.onCancel()}}>Cancel</Button>
         </DialogActions>
 
-      </Dialog>
-      </LocalizationProvider>
-    </>)
+    </Dialog>
+  );
 }
