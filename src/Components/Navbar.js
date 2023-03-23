@@ -101,7 +101,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
+  const { handleLogout } = useContext(AuthContext);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -109,6 +109,7 @@ export default function Navbar() {
 
   const handleClick = (event) => {
     handleClose(event);
+    handleLogout();
     logoutUser();
     navigate("/");
   };
@@ -126,18 +127,6 @@ export default function Navbar() {
       setOpen(false);
     }
   }
-
-
-  useEffect(() => {
-    const checkRole = async () => {
-      const role = await isAdmin(user.email);
-      // console.log(isAdmin ? "Admin Account Detected" : "Nope");
-      setIsAdminRole(role);
-    };
-
-    checkRole();
-  }, []);
-
 
   return (
     <Sidebar>
