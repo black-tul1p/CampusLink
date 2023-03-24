@@ -120,3 +120,8 @@ label {
     font-size: 1.8em;
     line-height: 0px;
   }
+  input[type=file] {
+    opacity: 1;
+    position: relative;
+    z-index: unset;
+  }

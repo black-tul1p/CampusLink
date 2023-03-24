@@ -208,7 +208,10 @@ function Assignments() {
                   onChange={(e) => {
                     setDescription(e.target.value);
                   }}
-                />  
+                />
+                <form action="">
+                  <input type="file"/>
+                </form>
                 <div className="button-box">
                   <button onClick={handleSubmit}>
                     Submit
