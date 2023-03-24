@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import { Dialog, DialogTitle, DialogActions } from "@mui/material";
+import { Dialog, DialogTitle, DialogActions, TableContainer } from "@mui/material";
 import { List, ListItem, ListItemText } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
@@ -22,6 +22,13 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
 
 export function QuizCreationDialog(props) {
     const [trueFalseOpen, setTrueFalseOpen]           = useState(false);
@@ -180,30 +187,53 @@ export function QuizCreationDialog(props) {
           </AppBar>
 
           {/* Questions List */}
-          <List >
-            {quizQuestions.map((question)=><>
-              <ListItem>
-                <IconButton
-                  sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
-                  style={{margin: "0 10px 0 0"}}
-                  onClick={()=>{
-                    setQuizQuestions(quizQuestions.filter(quizQuestion => quizQuestion !== question))
-                  }}
-                >
-                  <RemoveCircleIcon/> 
-                </IconButton>
 
-                <ListItemText
-                  primary={question.text}
-                  secondary={question.type}
-                />
+          <div style = {{padding: '1% 5%'}}>
+          <TableContainer>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <colgroup>
+              <col width="33%" />
+              <col width="33%" />
+              <col width="33%" />
+            </colgroup>
+            <TableHead>
+              <TableRow>
+                <TableCell>Question</TableCell>
+                <TableCell>Accepted Answers</TableCell>
+                <TableCell>Points</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
 
-                <ListItemText primary={question.points + " pts"} />
-              </ListItem>
-              <Divider />
-            </>)}
-          </List>
-
+              {quizQuestions.map((question)=><>
+                <TableRow>
+                  <TableCell>
+                    <div style={{display: "flex", flexDirection: "row"}}>
+                      <IconButton
+                      sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
+                      style={{margin: "auto 10px auto 0"}}
+                      onClick={()=>{
+                        setQuizQuestions(quizQuestions.filter(quizQuestion => quizQuestion !== question))
+                      }}
+                      >
+                        <RemoveCircleIcon/> 
+                      </IconButton>
+                      <ListItemText primary={question.text} secondary={question.type}/>
+                    </div>
+                  </TableCell>
+                  <TableCell>{
+                    question.manual ? 
+                      "Graded Manually" : 
+                      question.answers.map(answr => {return '"' + answr + '"'}).join(", ")
+                  }</TableCell>
+                  <TableCell>{question.points + " pts"}</TableCell>
+                </TableRow>
+              </>)}
+            </TableBody>
+            </Table>
+          </TableContainer>
+          </div>
+          
       <QuestionCreationDialog
         open={Boolean(questionType)}
         onCancel={()=>{setQuestionType(null);}}
@@ -298,6 +328,20 @@ function QuestionCreationDialog(props) {
             </div>
           </>)}
       </>);
+      case "Short Answer": return (
+        !gradeManually && <>
+          <TextField
+            sx={{ margin : '5px', width: "50%", 
+                  "& .MuiInputBase-input": { color: 'black !important' },
+                  "& .MuiInputLabel-root": { color: '#000A !important' } }}
+            variant="standard"
+            label="Accepted Answer"
+            onChange={(event) => {
+              setAnswers([event.target.value]);
+            }}
+          />
+        </>
+      );
     }
   }
 
