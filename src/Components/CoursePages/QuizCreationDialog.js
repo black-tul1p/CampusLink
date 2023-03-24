@@ -31,8 +31,8 @@ import Paper from '@mui/material/Paper';
 
 
 export function QuizCreationDialog(props) {
-    const [trueFalseOpen, setTrueFalseOpen]           = useState(false);
-    const [questionType, setQuestionType]           = useState(null);
+    const [questionType, setQuestionType]             = useState(null);
+    const [editingIndex, setEditingIndex]             = useState(null);
 
     const [newQuizName, setNewQuizName]               = useState("");
     const [newQuizDesc, setNewQuizDesc]               = useState("");
@@ -40,6 +40,7 @@ export function QuizCreationDialog(props) {
     const [newQuizDeadline, setNewQuizDeadline]       = useState(new Date());
     const [quizQuestions, setQuizQuestions]           = useState([]);
     const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
+    const [defaultQuestion, setDefaultQuestion]       = useState({});
 
     const resetFields = () => {
       setNewQuizName("");
@@ -48,6 +49,11 @@ export function QuizCreationDialog(props) {
       setNewQuizPoints(0)
       setNewQuizDeadline(new Date());
     }
+
+    const defaultTrueFalse      = {text: "", points: 0, manual: false, answers: ["true"], choices: null};
+    const defaultMultipleChoice = {text: "", points: 0, manual: false, answers: [],       choices: ["", "", "", ""]};
+    const defaultShortAnswer    = {text: "", points: 0, manual: false, answers: [""],     choices: null};
+
     return (<>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Dialog
@@ -171,14 +177,17 @@ export function QuizCreationDialog(props) {
               >
                 <MenuItem onClick={() => {
                   setQuestionMenuAnchor(null);
+                  setDefaultQuestion(defaultTrueFalse);
                   setQuestionType("True or False");
                 }}>True or False</MenuItem>
                 <MenuItem onClick={() => {
-                  setQuestionMenuAnchor(null)
+                  setQuestionMenuAnchor(null);
+                  setDefaultQuestion(defaultMultipleChoice);
                   setQuestionType("Multiple Choice");
                 }}>Multiple Choice</MenuItem>
                 <MenuItem onClick={() => {
-                  setQuestionMenuAnchor(null)
+                  setQuestionMenuAnchor(null);
+                  setDefaultQuestion(defaultShortAnswer);
                   setQuestionType("Short Answer");
                 }}>Short Answer</MenuItem>
               </Menu> 
@@ -201,11 +210,12 @@ export function QuizCreationDialog(props) {
                 <TableCell>Question</TableCell>
                 <TableCell>Accepted Answers</TableCell>
                 <TableCell>Points</TableCell>
+                <TableCell/>
               </TableRow>
             </TableHead>
             <TableBody>
 
-              {quizQuestions.map((question)=><>
+              {quizQuestions.map((question, index)=><>
                 <TableRow>
                   <TableCell>
                     <div style={{display: "flex", flexDirection: "row"}}>
@@ -227,6 +237,12 @@ export function QuizCreationDialog(props) {
                       question.answers.map(answr => {return '"' + answr + '"'}).join(", ")
                   }</TableCell>
                   <TableCell>{question.points + " pts"}</TableCell>
+                  <TableCell>
+                    <Button onClick={()=>{
+                      setDefaultQuestion(question);
+                      setEditingIndex(index);
+                    }}>Edit</Button>
+                  </TableCell>
                 </TableRow>
               </>)}
             </TableBody>
@@ -235,15 +251,29 @@ export function QuizCreationDialog(props) {
           </div>
           
       <QuestionCreationDialog
+        default={defaultQuestion}
         open={Boolean(questionType)}
         onCancel={()=>{setQuestionType(null);}}
         onSave={(question)=>{
-          console.log(question);
           setQuizQuestions([...quizQuestions, question])
           setQuestionType(null)
         }}
         type={questionType}
         title={"New " + questionType + " Question"}
+      />
+
+      <QuestionCreationDialog
+        default={defaultQuestion}
+        open={editingIndex !== null}
+        onCancel={()=>{setEditingIndex(null);}}
+        onSave={(question)=>{
+          let updatedQuestions = quizQuestions;
+          updatedQuestions[editingIndex] = question;
+          setQuizQuestions(updatedQuestions);
+          setEditingIndex(null);
+        }}
+        type={defaultQuestion.type}
+        title={"Editing " + defaultQuestion.type + " Question"}
       />
 
       </Dialog>
@@ -264,16 +294,16 @@ function QuestionCreationDialog(props) {
   ]);
 
   const resetFields = () => {
-    setNewQuestionText("");
-    setNewQuestionPoints(0);
-    setGradeManually(false);
-    setAnswers([]);
-    setChoices([
-      {text: "", correct: false},
-      {text: "", correct: false},
-      {text: "", correct: false},
-      {text: "", correct: false}
-    ]);
+    setNewQuestionText(props.default.text);
+    setNewQuestionPoints(props.default.points);
+    setGradeManually(props.default.manual);
+    setAnswers(props.default.answers);
+
+    if (props.default.choices !== null) {
+      setChoices(props.default.choices.map(choice => {
+        return {text: choice, text: answers.includes(choice)}
+      }));
+    }
   }
 
   useEffect(()=>{
@@ -292,7 +322,7 @@ function QuestionCreationDialog(props) {
             onChange={(event, string) => {setAnswers([string]);}}
             aria-label="Platform"
           >
-            <ToggleButton disableRipple value="true">True</ToggleButton>
+            <ToggleButton disableRipple value="true" >True</ToggleButton>
             <ToggleButton disableRipple value="false">False</ToggleButton>
           </ToggleButtonGroup>
         </>
@@ -312,6 +342,7 @@ function QuestionCreationDialog(props) {
                   updated_choices[index].correct = event.target.checked;
                   setChoices(updated_choices);
                 }}
+                defaultChecked={props.default.answers.includes(props.default.choices[index])}
               />}
               <TextField
                 sx={{ margin : '5px', width: "50%", 
@@ -324,6 +355,7 @@ function QuestionCreationDialog(props) {
                   updated_choices[index].text = event.target.value;
                   setChoices(updated_choices);
                 }}
+                defaultValue={props.default.choices[index]}
               />
             </div>
           </>)}
@@ -366,6 +398,7 @@ function QuestionCreationDialog(props) {
           multiline
           minRows="2"
           onChange={e => {setNewQuestionText(e.target.value)}}
+          defaultValue={props.default.text}
         />
 
         <div style={{display: "flex"}}>
@@ -376,6 +409,7 @@ function QuestionCreationDialog(props) {
                   "& .MuiInputLabel-root": { color: '#000A !important' } }}
             variant="standard"
             onChange={e => {setNewQuestionPoints(e.target.value)}}
+            defaultValue={props.default.points}
           />
 
           <FormControlLabel
@@ -385,7 +419,9 @@ function QuestionCreationDialog(props) {
                 sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
                 onChange={(event)=>{
                   setGradeManually(event.target.checked);
-                }}/>
+                }}
+                defaultChecked={props.default.manual}
+              />
             }
             label="Grade Manually"
 
