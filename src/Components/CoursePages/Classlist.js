@@ -5,6 +5,7 @@ import {
   updateDoc,
   arrayRemove,
   collection,
+  arrayUnion
 } from "@firebase/firestore";
 import { firestore } from "../../Backend/firebase";
 import ProfilePic from "../../images/default_profile_picture.png";
@@ -22,7 +23,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { getUserByEmail } from "../../Backend/user";
+import { getUserIdByEmail } from "../../Backend/user";
 import ErrorBox from "../Error";
 
 function Classlist() {
@@ -31,6 +32,7 @@ function Classlist() {
   const [courseDocId, setCourseDocId] = useState("");
   const [mailingList, setMailingList] = useState("");
   const [addStudent, setAddStudent] = useState("");
+  const [course, setCourse] = useState("");
   const [error, setError] = useState("");
   const location = useLocation();
 
@@ -82,7 +84,7 @@ function Classlist() {
   }, [location]);
 
   const handleAdd = (e) => {
-    getUserByEmail(addStudent)
+    /*getUserByEmail(addStudent)
     .then((user) => {
       const userId = user.id;
       const userRef = doc(firestore, "students", userId);
@@ -96,8 +98,17 @@ function Classlist() {
     })
     .catch((error) => {
       setError(error.message)
-    })
-  }
+    }) */
+    const add = async () => {
+      const user = await getUserIdByEmail(addStudent);
+      console.log("Student", user);
+      const userRef = doc(firestore, "students", user);
+      await updateDoc(userRef, {courses: arrayUnion(course)});
+      await updateDoc(courseDocId, {enrolledStudents: arrayUnion(user)});
+    };
+
+    add();
+  };
 
   return (
     <div>
@@ -112,19 +123,20 @@ function Classlist() {
               paddingBottom: "1em",
             }}
           >
+            {error && <ErrorBox text={error} />}
+            <TextField
+              required
+              id="f-name-input"
+              label="Student Email to Add"
+              variant="outlined"
+              value={addStudent}
+              onChange={(e) => {
+                setAddStudent(e.target.value);
+              }}
+            />
             <Button
               className="add-button"
-              onClick={() => {
-                //Append placeholder student
-                /*
-      setStudents([
-        ...students, {
-         firstName: "Firstname",
-         lastName: "Lastname",
-         email: "example@gmail.com"
-        }
-      ]);*/
-              }}
+              onClick={handleAdd}
               variant="contained"
             >
               Add Students
