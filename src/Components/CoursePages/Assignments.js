@@ -209,9 +209,8 @@ function Assignments() {
                     setDescription(e.target.value);
                   }}
                 />
-                <form action="">
-                  <input type="file"/>
-                </form>
+                <label> Upload PDFs/Images </label> 
+                <input type="file"/>
                 <div className="button-box">
                   <button onClick={handleSubmit}>
                     Submit

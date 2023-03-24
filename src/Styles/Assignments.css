@@ -17,8 +17,10 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    row-gap: 0.5em;
-    padding: 1em;
+    row-gap: 0.35em;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.5em;
 }
 .all-assigments-box {
     display: flex;
@@ -40,7 +42,7 @@
 }
 .header-divider {
     /* margin-right: 3em; */
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
     height: 0.15em;
     background-color: aliceblue;
   }
@@ -92,6 +94,11 @@
 }
 button {
     background-color: teal;
+    text-align: center;
+    text-align: center;
+    font-size: small;
+    height: 2.5em;
+    overflow: hidden;
 }
 button:hover {
     background-color: rgb(22, 31, 52);
