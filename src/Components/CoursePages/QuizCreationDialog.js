@@ -1,7 +1,6 @@
 import Button from '@mui/material/Button';
 import { Dialog, DialogTitle, DialogActions, TableContainer } from "@mui/material";
 import { List, ListItem, ListItemText } from '@mui/material';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -27,8 +26,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-
+import dayjs from 'dayjs';
 
 export function QuizCreationDialog(props) {
     const [questionType, setQuestionType]             = useState(null);
@@ -43,16 +41,20 @@ export function QuizCreationDialog(props) {
     const [defaultQuestion, setDefaultQuestion]       = useState({});
 
     const resetFields = () => {
-      setNewQuizName("");
-      setNewQuizName("");
-      setNewQuizDesc("");
-      setNewQuizPoints(0)
-      setNewQuizDeadline(new Date());
+      setNewQuizName(props.default.name);
+      setNewQuizDesc(props.default.description);
+      setNewQuizPoints(props.default.points);
+      setNewQuizDeadline(props.default.deadline);
+      setQuizQuestions(props.default.questions);
     }
 
     const defaultTrueFalse      = {text: "", points: 0, manual: false, answers: ["true"], choices: null};
     const defaultMultipleChoice = {text: "", points: 0, manual: false, answers: [],       choices: ["", "", "", ""]};
     const defaultShortAnswer    = {text: "", points: 0, manual: false, answers: [""],     choices: null};
+
+    useEffect(()=> {
+      if (props.open) resetFields();
+    }, [props.open])
 
     return (<>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -74,7 +76,6 @@ export function QuizCreationDialog(props) {
               edge="start"
               color="inherit"
               onClick={()=>{
-                resetFields();
                 props.onClose();
               }}
               aria-label="close"
@@ -82,7 +83,7 @@ export function QuizCreationDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Create Quiz
+              {props.title}
             </Typography>
             <Button autoFocus color="inherit" onClick={()=>{
               const quiz = {
@@ -92,7 +93,6 @@ export function QuizCreationDialog(props) {
                 deadline:     newQuizDeadline,
                 questions:    quizQuestions,
               };
-              resetFields();
               props.onSave(quiz);
             }}>
               save and close
@@ -110,6 +110,7 @@ export function QuizCreationDialog(props) {
             variant="standard"
             style={{width: '100%'}}
             onChange={e => {setNewQuizName(e.target.value)}}
+            defaultValue={props.open ? props.default.name : ""}
           />
           <br/>
           <TextField
@@ -123,6 +124,7 @@ export function QuizCreationDialog(props) {
             variant="standard"
             style={{width: '20em'}}
             onChange={e => {setNewQuizPoints(e.target.value)}}
+            defaultValue={props.open ? props.default.points : 0}
           />
           <DateTimePicker
             label="Due Date"
@@ -133,6 +135,7 @@ export function QuizCreationDialog(props) {
                   "& .MuiSvgIcon-root": { color: "unset" }
                 }}
             onChange={value => {setNewQuizDeadline(value.toDate())}}
+            defaultValue={props.open ? dayjs(props.default.deadline) : dayjs()}
           />
           <TextField
             label="Description"
@@ -144,6 +147,7 @@ export function QuizCreationDialog(props) {
             multiline
             minRows="3"
             onChange={e => {setNewQuizDesc(e.target.value)}}
+            defaultValue={props.open ? props.default.description : ""}
           />
       </div>
 
@@ -199,7 +203,7 @@ export function QuizCreationDialog(props) {
 
           <div style = {{padding: '1% 5%'}}>
           <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{ minWidth: 650 }} >
             <colgroup>
               <col width="33%" />
               <col width="33%" />
