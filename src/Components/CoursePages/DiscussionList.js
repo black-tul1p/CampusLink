@@ -14,7 +14,14 @@ function DiscussionList({
   cancelEditing,
 }) {
   return (
-    <ul style={{ listStyle: "none", padding: 0 }}>
+    <ul
+      style={{
+        listStyle: "none",
+        padding: 0,
+        overflow: "auto",
+        height: "65vh",
+      }}
+    >
       {discussions.map((discussion) => (
         <li
           key={discussion.id}
@@ -33,7 +40,9 @@ function DiscussionList({
             <h2>{discussion.title}</h2>
             <div>
               <span>
-                {new Date(discussion.created_at.toMillis()).toLocaleDateString()}
+                {new Date(
+                  discussion.created_at.toMillis()
+                ).toLocaleDateString()}
               </span>
               <span> by {discussion.creator_name}</span>
               {currentUser && currentUser.uid === discussion.creator_id && (
@@ -54,7 +63,10 @@ function DiscussionList({
               editingDiscussion.id === selectedDiscussion.id ? (
                 <>
                   <div>
-                    <label htmlFor="edit-title-input" style={{ display: "block" }}>
+                    <label
+                      htmlFor="edit-title-input"
+                      style={{ display: "block" }}
+                    >
                       Title:
                     </label>
                     <input
@@ -70,7 +82,10 @@ function DiscussionList({
                     />
                   </div>
                   <div>
-                    <label htmlFor="edit-description-input" style={{ display: "block" }}>
+                    <label
+                      htmlFor="edit-description-input"
+                      style={{ display: "block" }}
+                    >
                       Description:
                     </label>
                     <textarea
