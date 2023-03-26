@@ -35,7 +35,8 @@ function Quizzes() {
     name: "",
     description: "",
     points: 0,
-    deadline: new Date(),
+    deadline: null,
+    timeLimit: null,
     questions: []
   }
 

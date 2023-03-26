@@ -26,6 +26,9 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import FormGroup from '@mui/material/FormGroup';
+import { FormControl } from '@mui/material';
+import { FormLabel } from '@mui/material';
 import dayjs from 'dayjs';
 
 export function QuizCreationDialog(props) {
@@ -36,6 +39,10 @@ export function QuizCreationDialog(props) {
     const [newQuizDesc, setNewQuizDesc]               = useState("");
     const [newQuizPoints, setNewQuizPoints]           = useState(0);
     const [newQuizDeadline, setNewQuizDeadline]       = useState(new Date());
+    const [noDeadline, setNoDeadline]                 = useState(false);
+    const [timeLimitHours, setTimeLimitHours]         = useState(0);
+    const [timeLimitMinutes, setTimeLimitMinutes]     = useState(0);
+    const [noTimeLimit, setNoTimeLimit]               = useState(false);
     const [quizQuestions, setQuizQuestions]           = useState([]);
     const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
     const [defaultQuestion, setDefaultQuestion]       = useState({});
@@ -44,8 +51,12 @@ export function QuizCreationDialog(props) {
       setNewQuizName(props.default.name);
       setNewQuizDesc(props.default.description);
       setNewQuizPoints(props.default.points);
-      setNewQuizDeadline(props.default.deadline);
+      setNewQuizDeadline(props.default.deadline ?? new Date());
       setQuizQuestions(props.default.questions);
+      setTimeLimitHours(Math.floor((props.default.timeLimit ?? 0) / 60));
+      setTimeLimitMinutes((props.default.timeLimit ?? 0) % 60);
+      setNoTimeLimit(!Boolean(props.default.timeLimit));
+      setNoDeadline(!Boolean(props.default.deadline));
     }
 
     const defaultTrueFalse      = {text: "", points: 0, manual: false, answers: ["true"], choices: null};
@@ -90,8 +101,9 @@ export function QuizCreationDialog(props) {
                 name:         newQuizName,
                 description:  newQuizDesc,
                 points:       newQuizPoints,
-                deadline:     newQuizDeadline,
+                deadline:     noDeadline ? null : newQuizDeadline,
                 questions:    quizQuestions,
+                timeLimit:    noTimeLimit ? null : Number(timeLimitHours) * 60 + Number(timeLimitMinutes),
               };
               props.onSave(quiz);
             }}>
@@ -122,21 +134,71 @@ export function QuizCreationDialog(props) {
                     endAdornment: <InputAdornment position="end">points</InputAdornment>,
                     }}
             variant="standard"
-            style={{width: '20em'}}
+            style={{width: '20em', paddingRight: '5em'}}
             onChange={e => {setNewQuizPoints(e.target.value)}}
             defaultValue={props.open ? props.default.points : 0}
           />
-          <DateTimePicker
-            label="Due Date"
-            style={{backgroundColor: "black !important"}}
-            sx={{ margin : '5px', width: "20%", 
-                  "& .MuiInputBase-input": { color: 'black !important' },
-                  "& .MuiInputLabel-root": { color: '#000A !important' },
-                  "& .MuiSvgIcon-root": { color: "unset" }
-                }}
-            onChange={value => {setNewQuizDeadline(value.toDate())}}
-            defaultValue={props.open ? dayjs(props.default.deadline) : dayjs()}
-          />
+
+
+          <FormControl style={{paddingRight: '5em'}}>
+            <DateTimePicker
+              label="Due Date"
+              style={{backgroundColor: "black !important"}}
+              sx={{ margin : '5px', width: "20em", 
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' },
+                    "& .MuiSvgIcon-root": { color: "unset" }
+                  }}
+              onChange={value => {setNewQuizDeadline(value.toDate())}}
+              defaultValue={(props.open && props.default.deadline) ? dayjs(props.default.deadline) : dayjs()}
+              slotProps={{ textField: { variant: 'standard', } }}
+              disabled={noDeadline}
+            />
+            <FormControlLabel
+              label="No Deadline"
+              control={<Checkbox
+                sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
+                onChange={event => {setNoDeadline(event.target.checked)}}
+                defaultChecked={props.open ? !Boolean(props.default.deadline) : true}
+              />}
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormGroup row>
+              <TextField
+                label="Hours"
+                sx={{ margin : '5px', width: "50%", 
+                      "& .MuiInputBase-input": { color: 'black !important' },
+                      "& .MuiInputLabel-root": { color: '#000A !important' } }}
+                variant="standard"
+                style={{width: '10em'}}
+                onChange={e => {setTimeLimitHours(e.target.value)}}
+                defaultValue={(props.open && props.default.timeLimit) ? Math.floor(props.default.timeLimit/60) : 0}
+                disabled={noTimeLimit}
+              />
+              <TextField
+                label="Minutes"
+                sx={{ margin : '5px', width: "50%", 
+                      "& .MuiInputBase-input": { color: 'black !important' },
+                      "& .MuiInputLabel-root": { color: '#000A !important' } }}
+                variant="standard"
+                style={{width: '10em'}}
+                onChange={e => {setTimeLimitMinutes(e.target.value)}}
+                defaultValue={(props.open && props.default.timeLimit) ? props.default.timeLimit % 60 : 0}
+                disabled={noTimeLimit}
+              />
+            </FormGroup>
+            <FormControlLabel
+              label="Unlimited Time"
+              control={<Checkbox
+                sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
+                onChange={event => {setNoTimeLimit(event.target.checked)}}
+                defaultChecked={props.open ? !Boolean(props.default.timeLimit) : true}
+              />}
+            />
+          </FormControl>
+
           <TextField
             label="Description"
             sx={{ margin : '5px', width: "50%", 
