@@ -23,7 +23,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import Modal from "./Modal";
+import NewDiscussionModal from "./Modal";
 import DiscussionList from "./DiscussionList";
 import "./Discussions.css";
 
@@ -194,45 +194,60 @@ function Discussions({ courseId }) {
   return (
     <div style={{ width: "100%" }}>
       <CourseNavBar />
-      <FormControl fullWidth>
-        <InputLabel>Select Course</InputLabel>
-        <Select value={selectedCourse?.id || ""} onChange={handleCourseChange}>
-          {courses.map((course) => (
-            <MenuItem key={course.id} value={course.id}>
-              {course.title} {course.courseId}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      {currentUser && (
-        <IconButton onClick={() => setShowModal(true)}>
-          <AddCircleIcon />
-        </IconButton>
-      )}
-      {showModal && (
-        <Modal
-          showModal={showModal}
-          closeModal={() => setShowModal(false)}
-          handleAddDiscussion={handleAddDiscussion}
-          newDiscussionTitle={newDiscussionTitle}
-          setNewDiscussionTitle={setNewDiscussionTitle}
-          newDiscussionDescription={newDiscussionDescription}
-          setNewDiscussionDescription={setNewDiscussionDescription}
-          discussionPrivacy={discussionPrivacy}
-          setDiscussionPrivacy={setDiscussionPrivacy}
+      <div
+        style={{
+          padding: "2em 2em 0",
+          height: "85vh",
+          overflow: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "2em",
+        }}
+      >
+        <FormControl fullWidth>
+          <InputLabel>Select Course</InputLabel>
+          <Select
+            label="Select Course"
+            value={selectedCourse?.id || ""}
+            onChange={handleCourseChange}
+          >
+            {courses.map((course) => (
+              <MenuItem key={course.id} value={course.id}>
+                {course.title} {course.courseId}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        {currentUser && (
+          <IconButton onClick={() => setShowModal(true)}>
+            <AddCircleIcon />
+          </IconButton>
+        )}
+        {showModal && (
+          <NewDiscussionModal
+            showModal={showModal}
+            closeModal={() => setShowModal(false)}
+            handleAddDiscussion={handleAddDiscussion}
+            newDiscussionTitle={newDiscussionTitle}
+            setNewDiscussionTitle={setNewDiscussionTitle}
+            newDiscussionDescription={newDiscussionDescription}
+            setNewDiscussionDescription={setNewDiscussionDescription}
+            discussionPrivacy={discussionPrivacy}
+            setDiscussionPrivacy={setDiscussionPrivacy}
+          />
+        )}
+        <DiscussionList
+          discussions={discussions}
+          selectedDiscussion={selectedDiscussion}
+          setSelectedDiscussion={setSelectedDiscussion}
+          currentUser={currentUser}
+          handleEditDiscussion={handleEditDiscussion}
+          editingDiscussion={editingDiscussion}
+          setEditingDiscussion={setEditingDiscussion}
+          updateDiscussion={updateDiscussion}
+          cancelEditing={cancelEditing}
         />
-      )}
-      <DiscussionList
-        discussions={discussions}
-        selectedDiscussion={selectedDiscussion}
-        setSelectedDiscussion={setSelectedDiscussion}
-        currentUser={currentUser}
-        handleEditDiscussion={handleEditDiscussion}
-        editingDiscussion={editingDiscussion}
-        setEditingDiscussion={setEditingDiscussion}
-        updateDiscussion={updateDiscussion}
-        cancelEditing={cancelEditing}
-      />
+      </div>
     </div>
   );
 }
