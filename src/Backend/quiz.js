@@ -21,7 +21,9 @@ export async function fetchQuizzes (courseId) {
     const quizzes = await getDocs(collection(firestore, "courses", courseId, "quizzes"));
     return quizzes.docs.map(doc => {
         let quiz = {...doc.data(), quizId: doc.id};
-        quiz.deadline = quiz.deadline.toDate(); //Convert firestore timestamp to JS Date
+        
+        //Convert firestore timestamp to JS Date
+        if (quiz.deadline != null) quiz.deadline = quiz.deadline.toDate(); 
         return quiz;
     });
 }

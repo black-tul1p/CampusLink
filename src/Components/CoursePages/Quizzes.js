@@ -96,7 +96,7 @@ function Quizzes() {
                   {quiz.name}
                 </TableCell>
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                  {quiz.deadline.toLocaleString('en-US')}
+                  {quiz.deadline !== null ? quiz.deadline.toLocaleString('en-US') : "No Deadline"}
                 </TableCell>
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1", textAlign: "right"}}>
                   {quiz.points + " pts"}
