@@ -78,6 +78,9 @@ function NewDiscussionModal({
                 value={discussionPrivacy}
                 onChange={(e) => setDiscussionPrivacy(e.target.value)}
               >
+                <MenuItem style={{ justifyContent: "center" }} value="open">
+                  Open
+                </MenuItem>
                 <MenuItem style={{ justifyContent: "center" }} value="private">
                   Private
                 </MenuItem>
