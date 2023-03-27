@@ -1,0 +1,22 @@
+.discussion-item {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.discussion-item.expanded {
+  max-height: 500px;
+}
+
+.discussion-item .discussion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.discussion-item.expanded .discussion-content {
+  max-height: 400px;
+}

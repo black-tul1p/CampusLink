@@ -72,7 +72,7 @@ export default function Landing(props) {
   return (
     <Container>
       <Navbar />
-      {content}
+      <div style={{ width: "100%" }}>{content}</div>
     </Container>
   );
 }
