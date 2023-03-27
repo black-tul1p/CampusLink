@@ -38,7 +38,7 @@ function Announcements() {
     } catch (error) {}
   }, []);
 
-  console.log(cDetails.courseID);
+  // console.log(cDetails.courseID);
 
   return (
     <div style={{ width: "100%" }}>

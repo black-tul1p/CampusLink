@@ -1,66 +1,82 @@
 import React from "react";
-import { IconButton } from "@mui/material";
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import { auth } from "../../Backend/firebase";
 
-function DiscussionList({
-  discussions,
-  selectedDiscussion,
-  setSelectedDiscussion,
-  currentUser,
-  handleEditDiscussion,
-  editingDiscussion,
-  setEditingDiscussion,
-  updateDiscussion,
-  cancelEditing,
-}) {
+function DiscussionList(props) {
   return (
-    <ul
-      style={{
-        listStyle: "none",
+    <List
+      sx={{
         padding: 0,
         overflow: "auto",
-        height: "65vh",
+        color: "whitesmoke",
+        display: "flex",
+        flexDirection: "column",
+        gap: "1em",
       }}
     >
-      {discussions.map((discussion) => (
-        <li
+      {props.discussions.map((discussion) => (
+        <ListItem
           key={discussion.id}
-          onClick={() => setSelectedDiscussion(discussion)}
+          onClick={() => props.setSelectedDiscussion(discussion)}
           className={`discussion-item ${
-            selectedDiscussion === discussion ? "expanded" : ""
+            props.selectedDiscussion === discussion ? "expanded" : ""
           }`}
+          style={{
+            border: "rgb(255, 255, 255, 0.5) thin solid",
+            borderRadius: "0.5em",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5em",
+            alignItems: "flex-start",
+          }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h2>{discussion.title}</h2>
-            <div>
-              <span>
-                {new Date(
-                  discussion.created_at.toMillis()
-                ).toLocaleDateString()}
-              </span>
-              <span> by {discussion.creator_name}</span>
-              {currentUser && currentUser.uid === discussion.creator_id && (
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditDiscussion(discussion);
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
-              )}
-            </div>
-          </div>
-          {selectedDiscussion === discussion && (
+          <ListItemText
+            primary={
+              <Typography variant="h6" component="div">
+                {discussion.title}
+              </Typography>
+            }
+            secondary={
+              <>
+                <Typography component="span" variant="body2" color="gray">
+                  {new Date(
+                    discussion.created_at.toMillis()
+                  ).toLocaleDateString()}
+                </Typography>
+                <Typography component="span" variant="body2" color="gray">
+                  {" by "}
+                  {discussion.creator_name}
+                </Typography>
+              </>
+            }
+          />
+          {auth.currentUser.uid === discussion.creator_id && (
+            <ListItemSecondaryAction>
+              <IconButton
+                edge="end"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  props.handleEditDiscussion(discussion);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          )}
+          {props.selectedDiscussion === discussion && (
             <div className="discussion-content">
-              {editingDiscussion &&
-              editingDiscussion.id === selectedDiscussion.id ? (
+              {props.editingDiscussion &&
+              props.editingDiscussion.id === props.selectedDiscussion.id ? (
                 <>
                   <div>
                     <label
@@ -69,13 +85,13 @@ function DiscussionList({
                     >
                       Title:
                     </label>
-                    <input
+                    <TextField
                       id="edit-title-input"
                       type="text"
-                      value={editingDiscussion.title}
+                      value={props.editingDiscussion.title}
                       onChange={(e) =>
-                        setEditingDiscussion({
-                          ...editingDiscussion,
+                        props.setEditingDiscussion({
+                          ...props.editingDiscussion,
                           title: e.target.value,
                         })
                       }
@@ -88,43 +104,47 @@ function DiscussionList({
                     >
                       Description:
                     </label>
-                    <textarea
+                    <TextField
                       id="edit-description-input"
-                      value={editingDiscussion.description}
+                      value={props.editingDiscussion.description}
                       onChange={(e) =>
-                        setEditingDiscussion({
-                          ...editingDiscussion,
+                        props.setEditingDiscussion({
+                          ...props.editingDiscussion,
                           description: e.target.value,
                         })
                       }
+                      multiline
+                      rows={4}
                     />
                   </div>
-                  <button type="button" onClick={updateDiscussion}>
+                  <Button onClick={props.updateDiscussion} variant="contained">
                     Save
-                  </button>
-                  <button type="button" onClick={cancelEditing}>
+                  </Button>
+                  <Button onClick={props.cancelEditing} variant="outlined">
                     Cancel
-                  </button>
+                  </Button>
                 </>
               ) : (
-                <>
-                  <p>{selectedDiscussion.description}</p>
-                  {selectedDiscussion?.attachment_url && (
+                <div>
+                  <Typography variant="body1">
+                    {props.selectedDiscussion.description}
+                  </Typography>
+                  {props.selectedDiscussion?.attachment_url && (
                     <a
-                      href={selectedDiscussion.attachment_url}
+                      href={props.selectedDiscussion.attachment_url}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       View Attachment
                     </a>
                   )}
-                </>
+                </div>
               )}
             </div>
           )}
-        </li>
+        </ListItem>
       ))}
-    </ul>
+    </List>
   );
 }
 

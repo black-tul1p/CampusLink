@@ -20,6 +20,7 @@ export const getAllCourses = async () => {
     const course = [];
     snapshot.forEach((doc) => {
       course.push({
+        courseRef: doc.id,
         courseTitle: doc.data().courseTitle,
         courseId: doc.data().courseId,
         credit: doc.data().credit,
