@@ -11,7 +11,7 @@ import { getUserCourses } from "../Backend/course";
 import { getUserRole, isAdmin } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Homepage() {
   const [courses, setCourses] = useState([]);
