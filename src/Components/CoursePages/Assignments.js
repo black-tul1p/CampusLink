@@ -26,6 +26,7 @@ function Assignments() {
   const [error, setError] = useState("");
   const [courseDocId, setCourseDocId] = useState("");
   const [assignments, setAssignments] = useState([]);
+  const [submissionLimit, setSubmissionLimit] = useState(1);
   const location = useLocation();
 
 
@@ -56,6 +57,7 @@ function Assignments() {
       setDate("");
       setTime("");
       setDescription("");
+      setSubmissionLimit(1);
       setOpen1(false);
     }
   }
@@ -68,8 +70,8 @@ function Assignments() {
   }
 
   const handleSubmit = () => {
-    if (!verifyInput(title, description, date, time)) {
-      console.log("verify: " + verifyInput(title, description, date, time));
+    if (!verifyInput(title, description, date, time, submissionLimit)) {
+      console.log("verify: " + verifyInput(title, description, date, time, submissionLimit));
       setError("Incorrect input format.");
       setTimeout(() => {
         setError("");
@@ -88,6 +90,7 @@ function Assignments() {
     setDate("");
     setTime("");
     setDescription("");
+    setSubmissionLimit(1);
     setOpen(false);
   }
 
@@ -209,6 +212,12 @@ function Assignments() {
                     setDescription(e.target.value);
                   }}
                 />
+                <label> Number of Submissions </label>
+                <input placeholder="1"
+                  value={submissionLimit}
+                  onChange={(e) => {
+                    setSubmissionLimit(e.target.value)
+                  }}/>
                 <label> Upload PDFs/Images </label> 
                 <input type="file"/>
                 <div className="button-box">

@@ -11,7 +11,7 @@ import {
 } from "@firebase/firestore";
 
 
-export const addAssignment = async (title, description, dueDate, courseDocId) => {
+export const addAssignment = async (title, description, dueDate, submissionLimit, courseDocId) => {
     const d = new Date(dueDate);
     const date = Timestamp.fromDate(d);
   
@@ -19,6 +19,7 @@ export const addAssignment = async (title, description, dueDate, courseDocId) =>
       dueDate: date,
       title: title,
       description: description,
+      submissionLimit: submissionLimit,
       courseDocId: courseDocId,
     };
   
