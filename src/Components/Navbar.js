@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import logo_mini from "../Assets/campuslink_logo.jpg";
 import {
@@ -22,6 +22,7 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
+import { isAdmin } from "../Backend/user";
 
 // CSS Styles
 const Sidebar = styled.div`
@@ -98,9 +99,10 @@ const SidebarIcon = styled.div`
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isAdminRole, setIsAdminRole] = useState(false);
   const anchorRef = useRef(null);
   const navigate = useNavigate();
-  const { handleLogout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -108,9 +110,13 @@ export default function Navbar() {
 
   const handleClick = (event) => {
     handleClose(event);
-    handleLogout();
     logoutUser();
     navigate("/");
+  };
+
+  const navigateToProfile = (event) => {
+    //handleClose(event);
+    navigate("/profile");
   };
 
   const handleClose = (event) => {
@@ -127,6 +133,16 @@ export default function Navbar() {
     }
   }
 
+  useEffect(() => {
+    const checkRole = async () => {
+      const role = await isAdmin(user.email);
+      // console.log(isAdmin ? "Admin Account Detected" : "Nope");
+      setIsAdminRole(role);
+    };
+
+    checkRole();
+  }, []);
+
   return (
     <Sidebar>
       <Tooltip
@@ -135,7 +151,8 @@ export default function Navbar() {
       >
         <SidebarItem
           onClick={() => {
-            navigate("/home");
+            if (!isAdminRole) navigate("/home");
+            else navigate("/adminHome");
           }}
         >
           <img src={logo_mini} style={{ width: "2.5em" }} alt="" />
@@ -157,18 +174,22 @@ export default function Navbar() {
             </SidebarIcon>
           </SidebarButton>
         </Tooltip>
-        <Tooltip
+        {/* <Tooltip
           title={
             <Typography style={{ fontSize: "1.5em" }}>Notifications</Typography>
           }
           placement="right"
         >
-          <SidebarButton>
+          <SidebarButton
+            onClick={() => {
+              navigate("/announcements");
+            }}
+          >
             <SidebarIcon>
               <Notifications style={{ color: "#fff" }} />
             </SidebarIcon>
           </SidebarButton>
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip
           title={
             <Typography style={{ fontSize: "1.5em" }}>Settings</Typography>
@@ -231,14 +252,16 @@ export default function Navbar() {
                       id="menu-list-grow"
                       onKeyDown={handleListKeyDown}
                     >
-                      <MenuItem onClick={handleClose}>
-                        <Settings
-                          fontSize="small"
-                          sx={{ mr: 1 }}
-                          style={{ color: "rgb(16,46,68" }}
-                        />
-                        Account Settings
-                      </MenuItem>
+                      {!isAdminRole && (
+                        <MenuItem onClick={navigateToProfile}>
+                          <Settings
+                            fontSize="small"
+                            sx={{ mr: 1 }}
+                            style={{ color: "rgb(16,46,68" }}
+                          />
+                          Account Settings
+                        </MenuItem>
+                      )}
                       <MenuItem onClick={handleClick}>
                         <ExitToApp
                           fontSize="small"
