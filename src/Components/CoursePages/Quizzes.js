@@ -1,29 +1,25 @@
-import React from "react";
 import CourseNavBar from "../CourseNavBar";
 import Button from '@mui/material/Button';
-import { Dialog, DialogTitle, DialogActions } from "@mui/material";
-import { List, ListItem, ListItemText } from '@mui/material';
-import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Menu, MenuItem } from "@mui/material";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableRow from '@mui/material/TableRow';
+import Table from '@mui/material/Table';
+import TableContainer from '@mui/material/TableContainer';
+import { IconButton } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 
-import {createQuiz, fetchQuizzes} from '../../Backend/quiz'
+
+import { getUserRole } from "../../Backend/user";
+import {createQuiz, fetchQuizzes, deleteQuiz, updateQuiz} from '../../Backend/quiz'
 import {QuizCreationDialog} from './QuizCreationDialog'
 
 function Quizzes() {
-  const [open, setOpen] = React.useState(false);
-  const [quizzes, setQuizzes] = React.useState([]);
+  const [open, setOpen]         = useState(false);
+  const [quizzes, setQuizzes]   = useState([]);
+  const [role, setRole]         = useState("");
   
   const location = useLocation();
 
@@ -35,7 +31,21 @@ function Quizzes() {
 
   const courseId = location.state?.courseId;
 
-  React.useEffect(() => {
+  const defaultNewQuiz = {
+    name: "",
+    description: "",
+    points: 0,
+    deadline: null,
+    timeLimit: null,
+    questions: []
+  }
+
+  const [editingQuiz, setEditingQuiz] = useState(null);
+
+  useEffect(() => {
+    getUserRole().then(role => {
+      setRole(role);
+    })
     updateQuizList(courseId);
   }, [location]);
 
@@ -44,34 +54,99 @@ function Quizzes() {
       <CourseNavBar />
 
       <h1 className="title" >Quizzes</h1>
-      <List >
-        {quizzes.map((quiz)=><>
-          <ListItem button style={{color: 'white'}}>
-            <ListItemText
-              primary={quiz.name}
-            />
-          </ListItem>
-          <Divider />
-        </>)}
-      </List>
 
-      <Button
-        className="add-button"
-        style = {{display: 'block', margin: 'auto'}}
-        onClick={() => {setOpen(true);}}
-        variant="contained"
-      >
-        Create New Quiz      
-      </Button>
+      { role === "instructor" &&
+        <Button
+          className="add-button"
+          style = {{display: 'block', margin: 'auto'}}
+          onClick={() => {setOpen(true);}}
+          variant="contained"
+        >
+          Create New Quiz      
+        </Button>
+      }
 
+      <div style={{
+        display: "block",
+        margin: "auto",
+        padding: "20px 0",
+        width: "80%",
+      }}>
+
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
+          <colgroup>
+            <col width="25%" />
+            <col width="25%" />
+            <col width="25%" />
+            <col width="25%" />
+          </colgroup>
+          <TableHead style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}>
+            <TableRow style={{borderBottom: "1px solid #fff1"}}>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Quiz</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Due</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em", textAlign: "right"}}>Points</TableCell>
+              <TableCell/>
+            </TableRow>
+          </TableHead>
+          <TableBody style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+            {quizzes.map((quiz)=><>
+              <TableRow>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                  {quiz.name}
+                </TableCell>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                  {quiz.deadline !== null ? quiz.deadline.toLocaleString('en-US') : "No Deadline"}
+                </TableCell>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1", textAlign: "right"}}>
+                  {quiz.points + " pts"}
+                </TableCell>
+                <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
+                  <Button variant="outlined" onClick={()=>{
+                    setEditingQuiz(quiz);
+                  }}>Edit</Button>
+                  <IconButton
+                    sx={{"& .MuiSvgIcon-root": { color: "#FFF4" }}}
+                    style={{margin: "auto 0 auto 10px"}}
+                    onClick={()=>{
+                      deleteQuiz(courseId, quiz.quizId).then(()=>{
+                        updateQuizList(courseId);
+                      });
+                    }}
+                  >
+                    <DeleteIcon/> 
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            </>)}
+          </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      
       <QuizCreationDialog
+        title="Create Quiz"
         open={open}
+        default={defaultNewQuiz}
         onClose={()=>{setOpen(false)}}
         onSave={(quiz)=>{
-            createQuiz(courseId, quiz).then(()=>{
+          createQuiz(courseId, quiz).then(()=>{
             updateQuizList(courseId);
-            setOpen(false);
           });
+          setOpen(false);
+        }}
+      />
+
+      <QuizCreationDialog
+        title="Edit Quiz"
+        open={editingQuiz !== null}
+        default={editingQuiz}
+        onClose={()=>{setEditingQuiz(null)}}
+        onSave={(quiz)=>{
+          updateQuiz(courseId, editingQuiz.quizId, quiz).then(()=>{
+            updateQuizList(courseId);
+          });
+          setEditingQuiz(null);
         }}
       />
     </div>
