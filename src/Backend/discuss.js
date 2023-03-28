@@ -27,6 +27,7 @@ export const getAllDiscussions = async () => {
         creatorId: doc.data().creator_id,
         creatorName: doc.data().creator_name,
         replies: doc.data().replies,
+        topic: doc.data().topic,
       });
     });
     return discussions;
@@ -61,6 +62,7 @@ export const createDiscussion = async (discussion, courseID) => {
       creatorID: auth.currentUser.uid,
       creatorName: auth.currentUser.displayName,
       replies: [],
+      topic: discussion.topic,
     };
 
     const docRef = await addDoc(collection(firestore, "discussions"), newBoard);
