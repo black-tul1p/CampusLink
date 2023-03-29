@@ -65,6 +65,8 @@ export const createDiscussion = async (discussion, courseID) => {
       topic: discussion.topic,
     };
 
+    console.log(newBoard);
+
     const docRef = await addDoc(collection(firestore, "discussions"), newBoard);
 
     const courseRef = doc(firestore, "courses", courseID);

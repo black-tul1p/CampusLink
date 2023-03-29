@@ -11,7 +11,7 @@ import {
   SnackbarContent,
 } from "@mui/material";
 import styled from "@emotion/styled";
-import { getAllCourses } from "../../Backend/course";
+import { getAllCourses, getCourseDetailsById } from "../../Backend/course";
 import NewDiscussionModal from "./Modal";
 import DiscussionList from "./DiscussionList";
 import "../../Styles/Discussions.css";
@@ -69,7 +69,7 @@ const DiscussionHeader = styled(Box)({
   gap: "2em",
 });
 
-function Discussions({ courseId }) {
+function Discussions() {
   const [role, setRole] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [newDiscussionTitle, setNewDiscussionTitle] = useState("");
@@ -78,7 +78,6 @@ function Discussions({ courseId }) {
   const [selectedDiscussion, setSelectedDiscussion] = useState(null);
   const [currentCourseId, setCurrentCourseId] = useState(null);
   const [currentCourseTitle, setCurrentCourseTitle] = useState(null);
-  const [courses, setCourses] = useState([]);
   const [editingDiscussion, setEditingDiscussion] = useState(null);
   const [discussionPrivacy, setDiscussionPrivacy] = useState("open");
   const [error, setError] = useState("");
@@ -146,15 +145,19 @@ function Discussions({ courseId }) {
   };
 
   useEffect(() => {
-    if (courseId && courses.length > 0) {
-      const currentCourse = courses.find(
-        (course) => course.courseId === courseId
-      );
-      if (currentCourse) {
-        setCurrentCourseTitle(currentCourse.courseTitle);
+    const fetchCourseTitle = async () => {
+      if (currentCourseId) {
+        const currentCourse = await getCourseDetailsById(currentCourseId);
+        if (currentCourse) {
+          setCurrentCourseTitle(
+            `${currentCourse.courseTitle} ${currentCourse.courseId}`
+          );
+        }
       }
-    }
-  }, [courseId, courses]);
+    };
+
+    fetchCourseTitle();
+  });
 
   const handleDiscussionUpdate = async () => {
     if (!editingDiscussion) return;
@@ -166,15 +169,6 @@ function Discussions({ courseId }) {
     setEditingDiscussion(null);
     fetchData();
   };
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      const coursesData = await getAllCourses();
-      setCourses(coursesData);
-    };
-
-    fetchCourses();
-  }, []);
 
   const fetchData = async () => {
     if (!currentCourseId) return;
@@ -188,21 +182,20 @@ function Discussions({ courseId }) {
   }, [currentCourseId]);
 
   const handleAddDiscussion = async () => {
-    alert(
-      "Title: " + newDiscussionTitle + " | " + "Desc: " + newDiscussionDesc
-    );
-
     if (newDiscussionTitle.trim() === "" || newDiscussionDesc.trim() === "") {
       alert("Please fill in all the fields.");
       return;
     }
 
     const board = {
+      courseTitle: currentCourseTitle,
       title: newDiscussionTitle,
       description: newDiscussionDesc,
       privacy: discussionPrivacy,
-      courseTitle: currentCourseTitle,
+      topic: "test",
     };
+
+    console.log(board);
 
     if (currentCourseId) {
       const message = await createDiscussion(board, currentCourseId);

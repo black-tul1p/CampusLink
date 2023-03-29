@@ -50,12 +50,12 @@ function DiscussionList(props) {
               <>
                 <Typography component="span" variant="body2" color="gray">
                   {new Date(
-                    discussion.created_at.toMillis()
+                    discussion.createdAt.toMillis()
                   ).toLocaleDateString()}
                 </Typography>
                 <Typography component="span" variant="body2" color="gray">
                   {" by "}
-                  {discussion.creator_name}
+                  {discussion.creatorName}
                 </Typography>
               </>
             }
