@@ -46,26 +46,28 @@ function Quizzes() {
   const clickView = (quiz) => {
     try {
       const studentDocId = getLoggedInUserId();
+      console.log("docId: " + studentDocId);
       getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
         setStudentAnswers(attempt.answers);
         setStudentPoints(attempt.points);
       })
+      const QuizDetails = {
+        name: quizName,
+        description: quizDesc,
+        points: quizPoints,
+        deadline: quizDeadline,
+        questions: quizQuestions,
+        answers: quizAnswers,
+        studentAnswers: studentAnswers,
+        studentPoints: studentPoints
+    
+      }
+      setQuizDetails(QuizDetails);
+      setClicked(true);
     } catch (error) {
       console.log("error in getting quiz attempt.");
     }
-    const QuizDetails = {
-      name: quizName,
-      description: quizDesc,
-      points: quizPoints,
-      deadline: quizDeadline,
-      questions: quizQuestions,
-      answers: quizAnswers,
-      studentAnswers: studentAnswers,
-      studentPoints: studentPoints
-  
-    }
-    setQuizDetails(QuizDetails);
-    setClicked(true);
+    
     
   }
 
@@ -234,7 +236,6 @@ function Quizzes() {
                   <Button variant="outlined" 
                   onClick={()=>{
                     setQuizName(quiz.name);
-                    
                     setQuizDesc(quiz.description);
                     setQuizDeadline(quiz.deadline);
                     setQuizQuestions(quiz.questions);
