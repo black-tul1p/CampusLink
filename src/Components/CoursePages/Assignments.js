@@ -79,7 +79,7 @@ function Assignments() {
         return;
     } else {
       const due = date + " " + time;
-      addAssignment(title, description, due, courseDocId);
+      addAssignment(title, description, due, submissionLimit, courseDocId);
       alert("New Assignment Added!");
       handleCancel();
     }
@@ -216,7 +216,7 @@ function Assignments() {
                 <input placeholder="1"
                   value={submissionLimit}
                   onChange={(e) => {
-                    setSubmissionLimit(e.target.value)
+                    setSubmissionLimit(Number(e.target.value))
                   }}/>
                 <label> Upload PDFs/Images </label> 
                 <input type="file"/>

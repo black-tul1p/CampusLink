@@ -94,12 +94,12 @@ export const addAssignment = async (title, description, dueDate, submissionLimit
     }
   };
 
-  export function verifyInput(title, description, dueDate, time) {
+  export function verifyInput(title, description, dueDate, time, submissionLimit) {
     const dateRegex = /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/;
     const timeRegex = /^[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/;
     const nonEmptyRegex = /^.+$/;
-    if (!dateRegex.test(dueDate) || !timeRegex.test(time) || !nonEmptyRegex.test(title)) {
-      console.log(dueDate + dateRegex.test(dueDate) + "," + timeRegex.test(time) + "," + nonEmptyRegex.test(title));
+    if (!dateRegex.test(dueDate) || !timeRegex.test(time) || !nonEmptyRegex.test(title) || !submissionLimit.isInteger()) {
+      console.log(dueDate + dateRegex.test(dueDate) + "," + timeRegex.test(time) + "," + nonEmptyRegex.test(title) + "," + submissionLimit.isInteger());
       return false;
     }
     return true;
