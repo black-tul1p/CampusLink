@@ -30,7 +30,6 @@ function Quizzes() {
   const [quizDesc, setQuizDesc] = useState("");
   const [quizDeadline, setQuizDeadline] = useState(null);
   const [quizQuestions, setQuizQuestions] = useState([]);
-  const [quizAnswers, setQuizAnswers] = useState([]);
   const [quizPoints, setQuizPoints] = useState("");
   const [quizDetails, setQuizDetails] = useState(null);
   
@@ -50,20 +49,20 @@ function Quizzes() {
       getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
         setStudentAnswers(attempt.answers);
         setStudentPoints(attempt.points);
+        const QuizDetails = {
+          name: quizName,
+          description: quizDesc,
+          points: quizPoints,
+          deadline: quizDeadline,
+          questions: quizQuestions,
+          studentAnswers: studentAnswers,
+          studentPoints: studentPoints
+      
+        }
+        setQuizDetails(QuizDetails);
+        setClicked(true);
       })
-      const QuizDetails = {
-        name: quizName,
-        description: quizDesc,
-        points: quizPoints,
-        deadline: quizDeadline,
-        questions: quizQuestions,
-        answers: quizAnswers,
-        studentAnswers: studentAnswers,
-        studentPoints: studentPoints
-    
-      }
-      setQuizDetails(QuizDetails);
-      setClicked(true);
+      
     } catch (error) {
       console.log("error in getting quiz attempt.");
     }
@@ -239,7 +238,6 @@ function Quizzes() {
                     setQuizDesc(quiz.description);
                     setQuizDeadline(quiz.deadline);
                     setQuizQuestions(quiz.questions);
-                    setQuizAnswers(quiz.answers);
                     setQuizPoints(quiz.points);
                     clickView(quiz);
                   }}>VIEW</Button>

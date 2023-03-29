@@ -22,7 +22,6 @@ function ViewPastQuiz(props) {
     const [quizDesc, setQuizDesc] = useState("");
     const [quizDeadline, setQuizDeadline] = useState(null);
     const [quizQuestions, setQuizQuestions] = useState([]);
-    const [quizAnswers, setQuizAnswers] = useState([]);
     const [quizPoints, setQuizPoints] = useState("");
 
     const setFields = () => {
@@ -32,7 +31,6 @@ function ViewPastQuiz(props) {
         setQuizDesc(props.quizDetails.description);
         setQuizDeadline(props.quizDetails.deadline);
         setQuizQuestions(props.quizDetails.questions);
-        setQuizAnswers(props.quizDetails.answers);
         setQuizPoints(props.quizDetails.points);
       }
     useEffect(()=> {
@@ -53,23 +51,36 @@ function ViewPastQuiz(props) {
         }}
         >
             <AppBar style={{position: "sticky"}} sx={{ position: 'relative', bgcolor: "#20232a"}}>
-            <Toolbar>
-                
-                <Typography sx={{ ml: 2, flex: 1 }} variant="h4" component="div">
-                    {quizName}
-                </Typography>
-                <IconButton
-                edge="start"
-                color="inherit"
-                onClick={()=>{
-                    props.onClose();
-                }}
-                aria-label="close"
-                >
-                <CloseIcon />
-                </IconButton>
-            </Toolbar>
+                <Toolbar>
+                    
+                    <Typography sx={{ ml: 2, flex: 1 }} variant="h4" component="div">
+                        {quizName}
+                    </Typography>
+                    <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={()=>{
+                        props.onClose();
+                    }}
+                    aria-label="close"
+                    >
+                    <CloseIcon />
+                    </IconButton>
+                </Toolbar>
             </AppBar>
+            <div>
+                <div className='question-header'>
+                    <label style={{color: 'black'}}>Questions</label>
+                    <label style={{color: 'black'}}>Points</label>
+                </div>
+                {quizQuestions.map((question, index)=> {
+                    <div className='question-header'>
+                        <label style={{color: 'black'}}>{question.text}</label>
+                        <label style={{color: 'black'}}>{studentPoints}</label>
+                    </div>
+                }
+                )}
+            </div>
         </Dialog>
     </div>
   )
