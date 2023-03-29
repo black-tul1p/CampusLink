@@ -135,7 +135,10 @@ export function QuizCreationDialog(props) {
                     }}
             variant="standard"
             style={{width: '20em', paddingRight: '5em'}}
-            onChange={e => {setNewQuizPoints(e.target.value)}}
+            onChange={e => {
+              if (!e.target.value.match(/^[0-9]*$/)) e.target.value = newQuizPoints;
+              setNewQuizPoints(e.target.value);
+            }}
             defaultValue={props.open ? props.default.points : 0}
           />
 
@@ -173,7 +176,10 @@ export function QuizCreationDialog(props) {
                       "& .MuiInputLabel-root": { color: '#000A !important' } }}
                 variant="standard"
                 style={{width: '10em'}}
-                onChange={e => {setTimeLimitHours(e.target.value)}}
+                onChange={e => {
+                  if (!e.target.value.match(/^[0-9]*$/)) e.target.value = timeLimitHours;
+                  setTimeLimitHours(e.target.value)
+                }}
                 defaultValue={(props.open && props.default.timeLimit) ? Math.floor(props.default.timeLimit/60) : 0}
                 disabled={noTimeLimit}
               />
@@ -184,7 +190,11 @@ export function QuizCreationDialog(props) {
                       "& .MuiInputLabel-root": { color: '#000A !important' } }}
                 variant="standard"
                 style={{width: '10em'}}
-                onChange={e => {setTimeLimitMinutes(e.target.value)}}
+                onChange={e => {
+                  if (!e.target.value.match(/^[0-9]*$/)) e.target.value = timeLimitMinutes;
+                  if (e.target.value > 59) e.target.value = timeLimitMinutes;
+                  setTimeLimitMinutes(e.target.value);
+                }}
                 defaultValue={(props.open && props.default.timeLimit) ? props.default.timeLimit % 60 : 0}
                 disabled={noTimeLimit}
               />
@@ -474,7 +484,10 @@ function QuestionCreationDialog(props) {
                   "& .MuiInputBase-input": { color: 'black !important' },
                   "& .MuiInputLabel-root": { color: '#000A !important' } }}
             variant="standard"
-            onChange={e => {setNewQuestionPoints(e.target.value)}}
+            onChange={e => {
+              if (!e.target.value.match(/^[0-9]*$/)) e.target.value = newQuestionPoints;
+              setNewQuestionPoints(e.target.value);
+            }}
             defaultValue={props.default.points}
           />
 
