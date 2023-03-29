@@ -53,7 +53,6 @@ const outlinedInputStyle = css`
   }
 `;
 
-
 const DiscussionContainer = styled(Box)({
   padding: "2em 2em 0",
   height: "85vh",
@@ -91,7 +90,6 @@ function Discussions({ courseId }) {
   const [selectedFilterTopic, setSelectedFilterTopic] = useState("");
   const [showTopicModal, setShowTopicModal] = useState(false);
   const [newTopicName, setNewTopicName] = useState("");
-
 
   const defaultTopics = [
     { id: 1, name: "General" },
@@ -190,6 +188,10 @@ function Discussions({ courseId }) {
   }, [currentCourseId]);
 
   const handleAddDiscussion = async () => {
+    alert(
+      "Title: " + newDiscussionTitle + " | " + "Desc: " + newDiscussionDesc
+    );
+
     if (newDiscussionTitle.trim() === "" || newDiscussionDesc.trim() === "") {
       alert("Please fill in all the fields.");
       return;
@@ -260,7 +262,6 @@ function Discussions({ courseId }) {
       </Dialog>
     );
   };
-  
 
   return (
     <div>
