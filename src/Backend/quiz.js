@@ -4,7 +4,8 @@ import {
   getDocs,
   doc,
   deleteDoc,
-  updateDoc
+  updateDoc,
+  getDoc
 } from "@firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -44,3 +45,24 @@ export async function updateQuiz(courseId, quizId, data) {
         throw new Error("Error updating quiz:", error);
     }
 }
+
+export async function getQuizAttempt(courseId, studentDocId, quizId) {
+    try {
+        const snapshot = await getDoc(doc(firestore, "courses", courseId, "quizAttempts", studentDocId, "takenQuizzes", quizId));
+        const attempt = snapshot.data();
+        return attempt;
+    } catch (error) {
+        throw new Error("Error getting quiz attempt:", error);
+    }
+}
+
+export async function getQuiz(courseId, quizId) {
+    try {
+        const snapshot = await getDoc(doc(firestore, "courses", courseId, "quizzes", quizId));
+        const quiz = snapshot.data();
+        return quiz;
+    } catch (error) {
+        throw new Error("Error getting quiz:", error);
+    }
+}
+

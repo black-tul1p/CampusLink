@@ -13,15 +13,29 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 import { getUserRole } from "../../Backend/user";
-import {createQuiz, fetchQuizzes, deleteQuiz, updateQuiz} from '../../Backend/quiz'
-import {QuizCreationDialog} from './QuizCreationDialog'
+import {createQuiz, fetchQuizzes, deleteQuiz, updateQuiz, getQuizAttempt} from '../../Backend/quiz';
+import {QuizCreationDialog} from './QuizCreationDialog';
+import ViewPastQuiz from "./ViewPastQuiz";
+import { getLoggedInUserId } from "../../Backend/user";
 
 function Quizzes() {
   const [open, setOpen]         = useState(false);
   const [quizzes, setQuizzes]   = useState([]);
   const [role, setRole]         = useState("");
+  const [clicked, setClicked] = useState(false);
+  const [quizTitle, setQuizTitle] = useState("");
+  const [studentAnswers, setStudentAnswers] = useState([]);
+  const [studentPoints, setStudentPoints] = useState("");
+  const [quizName, setQuizName] = useState("");
+  const [quizDesc, setQuizDesc] = useState("");
+  const [quizDeadline, setQuizDeadline] = useState(null);
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [quizAnswers, setQuizAnswers] = useState([]);
+  const [quizPoints, setQuizPoints] = useState("");
+  const [quizDetails, setQuizDetails] = useState(null);
   
   const location = useLocation();
+  const courseId = location.state?.courseId;
 
   const updateQuizList = (courseId) => {
     fetchQuizzes(courseId).then((quizzes) => {
@@ -29,7 +43,33 @@ function Quizzes() {
     })
   }
 
-  const courseId = location.state?.courseId;
+  const clickView = (quiz) => {
+    try {
+      const studentDocId = getLoggedInUserId();
+      getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
+        setStudentAnswers(attempt.answers);
+        setStudentPoints(attempt.points);
+      })
+    } catch (error) {
+      console.log("error in getting quiz attempt.");
+    }
+    const QuizDetails = {
+      name: quizName,
+      description: quizDesc,
+      points: quizPoints,
+      deadline: quizDeadline,
+      questions: quizQuestions,
+      answers: quizAnswers,
+      studentAnswers: studentAnswers,
+      studentPoints: studentPoints
+  
+    }
+    setQuizDetails(QuizDetails);
+    setClicked(true);
+    
+  }
+
+
 
   const defaultNewQuiz = {
     name: "",
@@ -39,6 +79,8 @@ function Quizzes() {
     timeLimit: null,
     questions: []
   }
+
+
 
   const [editingQuiz, setEditingQuiz] = useState(null);
 
@@ -66,6 +108,7 @@ function Quizzes() {
         </Button>
       }
 
+      { role === "instructor" &&
       <div style={{
         display: "block",
         margin: "auto",
@@ -123,7 +166,7 @@ function Quizzes() {
           </Table>
         </TableContainer>
       </div>
-      
+      }
       <QuizCreationDialog
         title="Create Quiz"
         open={open}
@@ -148,6 +191,68 @@ function Quizzes() {
           });
           setEditingQuiz(null);
         }}
+      />
+    { role === "student" &&
+      <div style={{
+        display: "block",
+        margin: "auto",
+        padding: "20px 0",
+        width: "80%",
+      }}>
+
+        <TableContainer>
+          <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
+          <colgroup>
+            <col width="25%" />
+            <col width="25%" />
+            <col width="25%" />
+            <col width="25%" />
+          </colgroup>
+          <TableHead style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}>
+            <TableRow style={{borderBottom: "1px solid #fff1"}}>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Quiz</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Due</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em", textAlign: "right"}}>Points</TableCell>
+              <TableCell/>
+            </TableRow>
+          </TableHead>
+          <TableBody style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
+            {quizzes.map((quiz)=><>
+              <TableRow>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                  {quiz.name}
+                </TableCell>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                  {quiz.deadline !== null ? quiz.deadline.toLocaleString('en-US') : "No Deadline"}
+                </TableCell>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1", textAlign: "right"}}>
+                  {quiz.points + " pts"}
+                </TableCell>
+                <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
+                  <Button variant="outlined" 
+                  onClick={()=>{
+                    setQuizName(quiz.name);
+                    
+                    setQuizDesc(quiz.description);
+                    setQuizDeadline(quiz.deadline);
+                    setQuizQuestions(quiz.questions);
+                    setQuizAnswers(quiz.answers);
+                    setQuizPoints(quiz.points);
+                    clickView(quiz);
+                  }}>VIEW</Button>
+                </TableCell>
+              </TableRow>
+            </>)}
+          </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+      }
+      <ViewPastQuiz
+        title={quizTitle}
+        quizDetails = {quizDetails} 
+        open={clicked}
+        onClose={()=>{setClicked(false)}}
       />
     </div>
   );
