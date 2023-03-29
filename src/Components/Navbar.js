@@ -102,6 +102,7 @@ export default function Navbar() {
   const [isAdminRole, setIsAdminRole] = useState(false);
   const anchorRef = useRef(null);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
