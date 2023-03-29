@@ -102,20 +102,22 @@ function Quizzes() {
                   {quiz.points + " pts"}
                 </TableCell>
                 <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
-                  <Button variant="outlined" onClick={()=>{
-                    setEditingQuiz(quiz);
-                  }}>Edit</Button>
-                  <IconButton
-                    sx={{"& .MuiSvgIcon-root": { color: "#FFF4" }}}
-                    style={{margin: "auto 0 auto 10px"}}
-                    onClick={()=>{
-                      deleteQuiz(courseId, quiz.quizId).then(()=>{
-                        updateQuizList(courseId);
-                      });
-                    }}
-                  >
-                    <DeleteIcon/> 
-                  </IconButton>
+                  {role === "instructor" && <>
+                    <Button variant="outlined" onClick={()=>{
+                      setEditingQuiz(quiz);
+                    }}>Edit</Button>
+                    <IconButton
+                      sx={{"& .MuiSvgIcon-root": { color: "#FFF4" }}}
+                      style={{margin: "auto 0 auto 10px"}}
+                      onClick={()=>{
+                        deleteQuiz(courseId, quiz.quizId).then(()=>{
+                          updateQuizList(courseId);
+                        });
+                      }}
+                    >
+                      <DeleteIcon/> 
+                    </IconButton>
+                  </>}
                 </TableCell>
               </TableRow>
             </>)}
