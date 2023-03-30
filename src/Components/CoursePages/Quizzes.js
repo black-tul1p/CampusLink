@@ -122,7 +122,7 @@ function Quizzes() {
           Create New Quiz      
         </Button>
       }
-      { role === "student" &&
+      { role === "student" && quizzes !== null && quizzes.length > 0 &&
         <div style={{textAlign: 'center'}}>
           <h2 style={{color:'white'}}>Attempted Quizzes</h2>
         </div>
@@ -214,7 +214,7 @@ function Quizzes() {
           setEditingQuiz(null);
         }}
       />
-    { role === "student" &&
+    { role === "student" && quizzes !== null && quizzes.length > 0 &&
       <div style={{
         display: "block",
         margin: "auto",
