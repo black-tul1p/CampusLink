@@ -122,3 +122,75 @@ export const updateDiscussion = async (discussion) => {
     throw new Error("Failed to update discussion");
   }
 };
+
+export const createTopic = async (topicName, courseId) => {
+  try {
+    const newTopic = {
+      name: topicName,
+      courseId: courseId,
+      discussions: [],
+    };
+
+    const docRef = await addDoc(collection(firestore, "topics"), newTopic);
+
+    return { id: docRef.id, ...newTopic };
+  } catch (error) {
+    throw new Error("Error creating topic: ", error);
+  }
+};
+
+export const getCourseTopics = async (courseId) => {
+  try {
+    const topicsRef = collection(firestore, "topics");
+    const q = query(topicsRef, where("courseId", "==", courseId));
+
+    const querySnapshot = await getDocs(q);
+    const topicsData = [];
+    querySnapshot.forEach((doc) =>
+      topicsData.push({ id: doc.id, ...doc.data() })
+    );
+
+    return topicsData;
+  } catch (error) {
+    throw new Error("Error fetching topics for course", error);
+  }
+};
+
+export const updateTopicName = async (topicId, newName) => {
+  try {
+    const topicRef = doc(firestore, "topics", topicId);
+
+    await updateDoc(topicRef, {
+      name: newName
+    });
+
+    return "Topic name successfully updated!";
+  } catch (error) {
+    throw new Error("Failed to update topic name");
+  }
+};
+
+export const getEnrolledStudents = async (courseId) => {
+  try {
+    const courseRef = doc(firestore, "courses", courseId);
+    const courseSnapshot = await getDoc(courseRef);
+
+    if (courseSnapshot.exists()) {
+      const enrolledStudents = courseSnapshot.data().enrolledStudents;
+      const studentsData = [];
+
+      for (const studentPath of enrolledStudents) {
+        const studentRef = doc(firestore, studentPath);
+        const studentSnapshot = await getDoc(studentRef);
+        studentsData.push({ id: studentSnapshot.id, ...studentSnapshot.data() });
+      }
+
+      return studentsData;
+    } else {
+      throw new Error("Course does not exist.");
+    }
+  } catch (error) {
+    console.error("Error fetching enrolled students: ", error);
+    throw error;
+  }
+};

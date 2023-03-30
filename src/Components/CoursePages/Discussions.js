@@ -9,20 +9,27 @@ import {
   Typography,
   Snackbar,
   SnackbarContent,
+  IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import styled from "@emotion/styled";
 import { getAllCourses, getCourseDetailsById } from "../../Backend/course";
 import NewDiscussionModal from "./Modal";
 import DiscussionList from "./DiscussionList";
 import "../../Styles/Discussions.css";
+import "../../Styles/App.css";
 import {
   createDiscussion,
   getCourseDiscussions,
   updateDiscussion,
+  createTopic,
+  getCourseTopics,
+  updateTopicName,
+  getEnrolledStudents,
 } from "../../Backend/discuss";
 import { getUserRole } from "../../Backend/user";
 import { CheckCircle, WarningAmber } from "@mui/icons-material";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, OutlinedInput } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -38,6 +45,8 @@ const StyledAddButton = styled(Button)({
   width: "12em",
   height: "4em",
 });
+
+
 
 const outlinedInputStyle = css`
   & .MuiOutlinedInput-root {
@@ -84,31 +93,51 @@ function Discussions() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const location = useLocation();
-  const [selectedTopic, setSelectedTopic] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState(1);
   const [topics, setTopics] = useState([]);
   const [selectedFilterTopic, setSelectedFilterTopic] = useState("");
   const [showTopicModal, setShowTopicModal] = useState(false);
   const [newTopicName, setNewTopicName] = useState("");
+  const [filteredDiscussions, setFilteredDiscussions] = useState([]);
+  const [editingTopic, setEditingTopic] = useState(null);
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [enrolledStudents, setEnrolledStudents] = useState([]);
 
-  const defaultTopics = [
-    { id: 1, name: "General" },
-    { id: 2, name: "Groups" },
-  ];
+  const fetchTopics = async () => {
+    if (!currentCourseId) return;
 
-  const handleAddNewTopic = () => {
+    const courseTopics = await getCourseTopics(currentCourseId);
+    setTopics([...courseTopics]);
+    setSelectedTopic(courseTopics[0]?.id || 1);
+    setSelectedFilterTopic(courseTopics[0]?.id || "");
+  };
+
+  const handleNewTopicNameChange = (event) => {
+    setNewTopicName(event.target.value);
+  };
+
+  const handleEditTopic = (topicId) => {
+    setEditingTopic(topicId);
+  
+    const selectedTopicObj = topics.find((topic) => topic.id === topicId);
+    setNewTopicName(selectedTopicObj.name);
+  };
+
+  const handleAddNewTopic = async () => {
     if (newTopicName.trim() === "") {
       alert("Please enter a topic name.");
       return;
     }
-
+  
+    const newTopic = await createTopic(newTopicName, currentCourseId);
+    setSnackbarMessage("Topic successfully created!");
+    setOpenSnackbar(true);
+  
     setTopics((prevTopics) => [
       ...prevTopics,
-      {
-        id: prevTopics.length + 1,
-        name: newTopicName,
-      },
+      { id: newTopic.id, name: newTopic.name },
     ]);
-
+  
     setNewTopicName("");
     setShowTopicModal(false);
   };
@@ -116,6 +145,34 @@ function Discussions() {
   const handleTopicModalClose = () => {
     setShowTopicModal(false);
     setNewTopicName("");
+  };
+
+  const handleTopicUpdate = async () => {
+    if (newTopicName.trim() === "") {
+      alert("Please enter a topic name.");
+      return;
+    }
+  
+    const updatedTopic = await updateTopicName(editingTopic, newTopicName);
+    setSnackbarMessage("Topic successfully updated!");
+    setOpenSnackbar(true);
+  
+    const updatedTopics = topics.map((topic) =>
+    topic.id === updatedTopic.id ? { ...topic, name: updatedTopic.name } : topic);
+    setTopics(updatedTopics);
+  
+    setNewTopicName("");
+    setEditingTopic(null);
+  };
+
+  const handleStudentCheckboxChange = (event) => {
+    if (event.target.checked) {
+      setSelectedStudents([...selectedStudents, event.target.value]);
+    } else {
+      setSelectedStudents(
+        selectedStudents.filter((student) => student !== event.target.value)
+      );
+    }
   };
 
   useEffect(() => {
@@ -133,16 +190,41 @@ function Discussions() {
   }, []);
 
   useEffect(() => {
-    setTopics(defaultTopics);
-  }, []);
+    fetchTopics();
+  }, [currentCourseId]);
+
+  useEffect(() => {
+    const fetchEnrolledStudents = async () => {
+      if (!currentCourseId) return;
+  
+      const courseEnrolledStudents = await getEnrolledStudents(currentCourseId);
+      setEnrolledStudents(courseEnrolledStudents);
+    };
+  
+    fetchEnrolledStudents();
+  }, [currentCourseId]);
 
   const handleTopicChange = (event) => {
     setSelectedTopic(event.target.value);
-  };
-
-  const handleFilterTopicChange = (event) => {
     setSelectedFilterTopic(event.target.value);
   };
+
+  const filterDiscussionsByTopic = () => {
+    if (!selectedTopic || !discussions) {
+      setFilteredDiscussions([]);
+      return;
+    }
+  
+    const filtered = discussions.filter(
+      (discussion) =>
+        discussion.topic === selectedTopic && discussion.courseId === currentCourseId
+    );
+    setFilteredDiscussions(filtered);
+  };
+
+  useEffect(() => {
+    filterDiscussionsByTopic();
+  }, [selectedFilterTopic, discussions]);
 
   useEffect(() => {
     const fetchCourseTitle = async () => {
@@ -157,7 +239,7 @@ function Discussions() {
     };
 
     fetchCourseTitle();
-  });
+  }, [currentCourseId]);
 
   const handleDiscussionUpdate = async () => {
     if (!editingDiscussion) return;
@@ -172,14 +254,14 @@ function Discussions() {
 
   const fetchData = async () => {
     if (!currentCourseId) return;
-
-    const discussData = await getCourseDiscussions(currentCourseId);
-    setDiscussions(discussData);
+  
+    const courseDiscussions = await getCourseDiscussions(currentCourseId);
+    setDiscussions(courseDiscussions);
   };
 
   useEffect(() => {
     fetchData();
-  }, [currentCourseId]);
+  }, [currentCourseId, selectedFilterTopic]);
 
   const handleAddDiscussion = async () => {
     if (newDiscussionTitle.trim() === "" || newDiscussionDesc.trim() === "") {
@@ -187,18 +269,26 @@ function Discussions() {
       return;
     }
 
+    const selectedTopicObj = topics.find((topic) => topic.id === selectedTopic);
+    if (!selectedTopicObj) {
+      alert("No topic selected");
+      return;
+    }
+
+    const selectedTopicId = selectedTopicObj.id;
+
     const board = {
       courseTitle: currentCourseTitle,
       title: newDiscussionTitle,
       description: newDiscussionDesc,
       privacy: discussionPrivacy,
-      topic: "test",
+      topic: selectedTopicId,
     };
 
     console.log(board);
 
     if (currentCourseId) {
-      const message = await createDiscussion(board, currentCourseId);
+      const message = await createDiscussion(board, currentCourseId, selectedStudents);
       setSnackbarMessage(message);
       setOpenSnackbar(true);
 
@@ -220,40 +310,6 @@ function Discussions() {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
-  };
-
-  const NewTopicModal = ({
-    showTopicModal,
-    handleModalClose,
-    newTopicName,
-    setNewTopicName,
-    handleAddNewTopic,
-  }) => {
-    return (
-      <Dialog open={showTopicModal} onClose={handleModalClose}>
-        <DialogTitle>New Topic</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Enter the name of the new topic you want to create.
-          </DialogContentText>
-          <TextField
-            label="New Topic Name"
-            value={newTopicName}
-            onChange={(e) => setNewTopicName(e.target.value)}
-            fullWidth
-            variant="outlined"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleModalClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleAddNewTopic} color="primary">
-            Add Topic
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
   };
 
   return (
@@ -284,7 +340,7 @@ function Discussions() {
                 onClick={() => setShowModal(true)}
                 variant="contained"
               >
-                New Board
+                New Post
                 <AddCircleIcon />
               </StyledAddButton>
               <StyledAddButton
@@ -294,17 +350,23 @@ function Discussions() {
                 New Topic
                 <AddCircleIcon />
               </StyledAddButton>
+              {selectedTopic && (
+                <IconButton onClick={() => handleEditTopic(selectedTopic)}>
+                 <EditIcon />
+                </IconButton>
+              )}
             </>
           )}
         </DiscussionHeader>
         <DiscussionList
-          discussions={discussions}
+          discussions={filteredDiscussions}
           selectedDiscussion={selectedDiscussion}
           setSelectedDiscussion={setSelectedDiscussion}
           filterByTopic={selectedFilterTopic}
           editingDiscussion={editingDiscussion}
           setEditingDiscussion={setEditingDiscussion}
           handleDiscussionUpdate={handleDiscussionUpdate}
+          handleEditTopic={handleEditTopic}
         />
       </DiscussionContainer>
       <NewDiscussionModal
@@ -318,13 +380,42 @@ function Discussions() {
         setDiscussionPrivacy={setDiscussionPrivacy}
         handleAddDiscussion={handleAddDiscussion}
       />
-      <NewTopicModal
-        showTopicModal={showTopicModal}
-        handleModalClose={handleTopicModalClose}
-        newTopicName={newTopicName}
-        setNewTopicName={setNewTopicName}
-        handleAddNewTopic={handleAddNewTopic}
-      />
+      <Dialog
+        open={showTopicModal || editingTopic !== null}
+        onClose={handleTopicModalClose}
+        sx={{ "& .MuiPaper-root": { backgroundColor: "rgb(16, 46, 68)" } }}
+      >
+        <DialogTitle sx={{ color: "#fff" }}>
+          {editingTopic ? "Edit Topic" : "New Topic"}
+        </DialogTitle>
+        <DialogContent>
+          <FormControl fullWidth variant="outlined" css={outlinedInputStyle}>
+            <InputLabel htmlFor="new-topic-name">New Topic Name</InputLabel>
+            <OutlinedInput
+              id="new-topic-name"
+              value={newTopicName}
+              onChange={handleNewTopicNameChange}
+              label="New Topic Name"
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <StyledAddButton onClick={handleTopicModalClose} color="primary">
+            Cancel
+          </StyledAddButton>
+          <StyledAddButton
+            onClick={editingTopic ? handleTopicUpdate : handleAddNewTopic}
+            color="primary"
+          >
+            {editingTopic ? "Save Changes" : "Add Topic"}
+          </StyledAddButton>
+          {editingTopic && (
+            <StyledAddButton onClick={() => setEditingTopic(null)} color="secondary">
+              Cancel Edit
+            </StyledAddButton>
+         )}
+        </DialogActions>
+      </Dialog>
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
