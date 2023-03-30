@@ -26,7 +26,7 @@ function ViewPastQuiz(props) {
 
     const setFields = () => {
         setStudentAnswers(props.quizDetails.studentAnswers);
-        setStudentPoints(props.studentPoints);
+        setStudentPoints(props.quizDetails.studentPoints);
         setQuizName(props.quizDetails.name);
         setQuizDesc(props.quizDetails.description);
         setQuizDeadline(props.quizDetails.deadline);
@@ -73,13 +73,12 @@ function ViewPastQuiz(props) {
                     <label style={{color: 'black'}}>Questions</label>
                     <label style={{color: 'black'}}>Points</label>
                 </div>
-                {quizQuestions.map((question, index)=> {
+                {quizQuestions.map((question, index) => (
                     <div className='question-header'>
-                        <label style={{color: 'black'}}>{question.text}</label>
-                        <label style={{color: 'black'}}>{studentPoints}</label>
+                    <label style={{color: 'black'}}>{question.text}</label>
+                    <label style={{color: 'black'}}>{studentAnswers[index].points} / {question.points}</label>
                     </div>
-                }
-                )}
+                ))}
             </div>
         </Dialog>
     </div>

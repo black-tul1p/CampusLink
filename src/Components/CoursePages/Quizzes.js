@@ -33,6 +33,7 @@ function Quizzes() {
   const [quizPoints, setQuizPoints] = useState("");
   const [quizDetails, setQuizDetails] = useState(null);
   
+
   const location = useLocation();
   const courseId = location.state?.courseId;
 
@@ -45,19 +46,17 @@ function Quizzes() {
   const clickView = (quiz) => {
     try {
       const studentDocId = getLoggedInUserId();
-      console.log("docId: " + studentDocId);
       getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
         setStudentAnswers(attempt.answers);
-        setStudentPoints(attempt.points);
+        setStudentAnswers(attempt.points);
         const QuizDetails = {
-          name: quizName,
-          description: quizDesc,
-          points: quizPoints,
-          deadline: quizDeadline,
-          questions: quizQuestions,
-          studentAnswers: studentAnswers,
-          studentPoints: studentPoints
-      
+          name: quiz.name,
+          description: quiz.description,
+          points: quiz.points,
+          deadline: quiz.deadline,
+          questions: quiz.questions,
+          studentAnswers: attempt.answers,
+          studentPoints: attempt.points      
         }
         setQuizDetails(QuizDetails);
         setClicked(true);
