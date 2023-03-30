@@ -99,7 +99,11 @@ function Assignments() {
   }
 
   const displayContent = (e) => {
-    console.log(e.currentTarget.parentElement.getAttribute("title"));
+    const tDTitle = e.currentTarget.parentElement.getAttribute("assignmenttitle");
+    const tDDueDate = e.currentTarget.parentElement.getAttribute("assignmentduedate");
+    const tDDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
+    const tDSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
+    console.log(tDTitle + " " + tDDueDate + " " + tDDescript + " " + tDSubLim);
   }
 
   return (
@@ -168,7 +172,11 @@ function Assignments() {
                       )*/
                       .map((assignment) => (
                         <div className = 'assignment-list-box' 
-                          assignmentId={assignment.id}>
+                          assignmenttitle={assignment.title}
+                          assignmentdescript={assignment.description}
+                          assignmentduedate={assignment.dueDate}
+                          assignmentsublim={assignment.submissionLimit}
+                          >
                           <Button
                             className="Mini-button"
                             onClick={displayContent}
