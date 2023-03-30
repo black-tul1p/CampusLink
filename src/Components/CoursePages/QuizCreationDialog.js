@@ -86,6 +86,7 @@ export function QuizCreationDialog(props) {
             <IconButton
               edge="start"
               color="inherit"
+              style={{height: "auto"}}
               onClick={()=>{
                 props.onClose();
               }}

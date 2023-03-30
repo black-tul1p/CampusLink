@@ -153,7 +153,7 @@ function Quizzes() {
                     }}>Edit</Button>
                     <IconButton
                       sx={{"& .MuiSvgIcon-root": { color: "#FFF4" }}}
-                      style={{margin: "auto 0 auto 10px"}}
+                      style={{margin: "auto 0 auto 10px", height: "auto"}}
                       onClick={()=>{
                         deleteQuiz(courseId, quiz.quizId).then(()=>{
                           updateQuizList(courseId);
