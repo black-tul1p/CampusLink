@@ -30,10 +30,11 @@ function Quizzes() {
   const [quizDesc, setQuizDesc] = useState("");
   const [quizDeadline, setQuizDeadline] = useState(null);
   const [quizQuestions, setQuizQuestions] = useState([]);
-  const [quizAnswers, setQuizAnswers] = useState([]);
   const [quizPoints, setQuizPoints] = useState("");
   const [quizDetails, setQuizDetails] = useState(null);
+  const [currentTimestamp, setCurrentTimestamp] = useState(null);
   
+
   const location = useLocation();
   const courseId = location.state?.courseId;
 
@@ -46,24 +47,32 @@ function Quizzes() {
   const clickView = (quiz) => {
     try {
       const studentDocId = getLoggedInUserId();
-      console.log("docId: " + studentDocId);
       getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
         setStudentAnswers(attempt.answers);
-        setStudentPoints(attempt.points);
+        setStudentAnswers(attempt.points);
+        const QuizDetails = {
+          name: quiz.name,
+          description: quiz.description,
+          points: quiz.points,
+          deadline: quiz.deadline,
+          questions: quiz.questions,
+          studentAnswers: attempt.answers,
+          studentPoints: attempt.points      
+        }
+        setQuizDetails(QuizDetails);
+        if(quiz.deadline !== null) {
+          const date = quiz.deadline.getDate();
+          const currentDate = new Date();
+          if (date < currentDate) {
+            console.log("view deadline: " + QuizDetails.deadline);
+            setClicked(true);
+          }
+          else {
+            console.log("no view deadline: " + QuizDetails.deadline);
+          }
+        }
       })
-      const QuizDetails = {
-        name: quizName,
-        description: quizDesc,
-        points: quizPoints,
-        deadline: quizDeadline,
-        questions: quizQuestions,
-        answers: quizAnswers,
-        studentAnswers: studentAnswers,
-        studentPoints: studentPoints
-    
-      }
-      setQuizDetails(QuizDetails);
-      setClicked(true);
+      
     } catch (error) {
       console.log("error in getting quiz attempt.");
     }
@@ -239,7 +248,6 @@ function Quizzes() {
                     setQuizDesc(quiz.description);
                     setQuizDeadline(quiz.deadline);
                     setQuizQuestions(quiz.questions);
-                    setQuizAnswers(quiz.answers);
                     setQuizPoints(quiz.points);
                     clickView(quiz);
                   }}>VIEW</Button>

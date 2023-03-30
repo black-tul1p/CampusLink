@@ -59,7 +59,6 @@ export const addAssignment = async (title, description, dueDate, courseDocId) =>
     const snapshot = await getDoc(doc(ref, assignmentDocId));
   
     const assignment = snapshot.data();
-    console.log("assignment: " + assignment.title);
     return assignment;
   }
 
@@ -78,10 +77,8 @@ export const addAssignment = async (title, description, dueDate, courseDocId) =>
           await Promise.all(
             coursesData.map(async (assignment) => {
               const assignDocId = assignment.path.split("/")[1].trim();
-              console.log("docId: " + assignDocId);
               const res = await getAssignmentById(assignDocId);
               if (res) assignments.push(res);
-              console.log("title: " + assignments.at(0));
             })
           );
   

@@ -12,7 +12,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import InputAdornment from '@mui/material/InputAdornment';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-
+import { grey } from '@mui/material/colors';
+import "../../Styles/ViewPastQuiz.css";
+import { numberLiteralTypeAnnotation } from '@babel/types';
 
 
 function ViewPastQuiz(props) {
@@ -22,18 +24,18 @@ function ViewPastQuiz(props) {
     const [quizDesc, setQuizDesc] = useState("");
     const [quizDeadline, setQuizDeadline] = useState(null);
     const [quizQuestions, setQuizQuestions] = useState([]);
-    const [quizAnswers, setQuizAnswers] = useState([]);
     const [quizPoints, setQuizPoints] = useState("");
-
+    const [otherChoice, setOtherChoice] = useState("");
+    const [multiChoice, setMultiChoice] = useState([]);
     const setFields = () => {
         setStudentAnswers(props.quizDetails.studentAnswers);
-        setStudentPoints(props.studentPoints);
+        setStudentPoints(props.quizDetails.studentPoints);
         setQuizName(props.quizDetails.name);
         setQuizDesc(props.quizDetails.description);
         setQuizDeadline(props.quizDetails.deadline);
         setQuizQuestions(props.quizDetails.questions);
-        setQuizAnswers(props.quizDetails.answers);
         setQuizPoints(props.quizDetails.points);
+        setMultiChoice(props.quizDetails.questions.choices);
       }
     useEffect(()=> {
     if (props.open) setFields();
@@ -53,23 +55,77 @@ function ViewPastQuiz(props) {
         }}
         >
             <AppBar style={{position: "sticky"}} sx={{ position: 'relative', bgcolor: "#20232a"}}>
-            <Toolbar>
-                
-                <Typography sx={{ ml: 2, flex: 1 }} variant="h4" component="div">
-                    {quizName}
-                </Typography>
-                <IconButton
-                edge="start"
-                color="inherit"
-                onClick={()=>{
-                    props.onClose();
-                }}
-                aria-label="close"
-                >
-                <CloseIcon />
-                </IconButton>
-            </Toolbar>
+                <Toolbar>
+                    
+                    <Typography sx={{ ml: 2, flex: 1 }} variant="h4" component="div">
+                        {quizName}
+                    </Typography>
+                    <IconButton
+                    edge="start"
+                    color="inherit"
+                    onClick={()=>{
+                        props.onClose();
+                    }}
+                    aria-label="close"
+                    >
+                    <CloseIcon />
+                    </IconButton>
+                </Toolbar>
             </AppBar>
+            <div className='main-box'>
+                <p style={{color: 'black'}}>Total Points Earned: {studentPoints}/{quizPoints} points</p>
+                <div className='main-header'>
+                    <p style={{color: 'black'}}>Questions</p>
+                    <p style={{color: 'black'}}>Points</p>
+                </div>
+                {quizQuestions.map((question, index) => (
+                <>
+                    <div className='question-header'>
+                        <label style={{color: 'black'}}>Q{index+1}:{question.text}</label>
+                        <label style={{color: 'black'}}>{studentAnswers[index].points} / {question.points}</label>
+                    </div>
+                    <div className='answer-box'>
+                        {question.type === 'True or False' ? (
+                            <div className='TFBox'>
+                                <>
+                                    <div className='choice-box'>
+                                        {studentAnswers[index].answer === "true" ? (
+                                            <RadioButtonCheckedIcon sx={{ color: grey[900] }}/>
+                                        ):(<RadioButtonUncheckedIcon sx={{ color: grey[900] }} />)}
+                                        <label style={{color: 'black'}}>True</label>
+                                    </div>
+                                    <div className='choice-box'>
+                                        {studentAnswers[index].answer === "false" ? (
+                                            <RadioButtonCheckedIcon sx={{ color: grey[900] }}/>
+                                        ):(<RadioButtonUncheckedIcon sx={{ color: grey[900] }}/>)}
+                                        <label style={{color: 'black'}}>False</label>
+                                    </div>
+                                </> 
+                            </div>
+                        ): question.type === 'Multiple Choice' ? (
+                            <div className='TFBox'>
+                                {question.choices.map((choice) => (
+                                    <div className='choice-box'>
+                                    {studentAnswers[index].answer === choice ? (
+                                        <RadioButtonCheckedIcon sx={{ color: grey[900] }}/>
+                                    ):(<RadioButtonUncheckedIcon sx={{ color: grey[900] }}/>)}
+                                        <label style={{color: 'black'}}>{choice}</label>
+                                    </div>
+                                ))}
+                            </div>
+                        ): question.type === 'Short Answer' ? (
+                            <div className='TFBox'>
+                                <div className='choice-box'>
+                                    <label style={{color: 'black'}}>Answer:</label>
+                                    <label style={{color: 'black'}}>{studentAnswers[index].answer}</label>
+                                </div>
+                            </div>
+                        ): null}
+                    </div>
+
+                </>
+                ))}
+            </div>
         </Dialog>
     </div>
   )

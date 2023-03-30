@@ -55,6 +55,18 @@ export async function getQuizAttempt(courseId, studentDocId, quizId) {
         throw new Error("Error getting quiz attempt:", error);
     }
 }
+export async function getQuizAttempts(courseId, studentDocId) {
+    try {
+        const takeQuizzes = await getDocs(collection(firestore, "courses", courseId, "quizAttempts", studentDocId, "takenQuizzes"));
+        return takeQuizzes.docs.map(doc => {
+            let attempts = {...doc.data(), quizId: doc.id};
+            console.log("attempt points: " + attempts.points)
+            return attempts;
+        });
+    } catch (error) {
+        throw new Error("Error getting quiz attempt:", error);
+    }
+}
 
 export async function getQuiz(courseId, quizId) {
     try {
