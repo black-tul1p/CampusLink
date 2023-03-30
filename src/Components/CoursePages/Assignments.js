@@ -12,6 +12,8 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getUserRole } from "../../Backend/user";
 import ErrorBox from "../Error";
 import { useLocation } from "react-router-dom";
+import assignmentContent from "./AssignmentContent"
+import { Button } from "@mui/material";
 
 
 function Assignments() {
@@ -96,6 +98,10 @@ function Assignments() {
     console.log("File Changed");
   }
 
+  const displayContent = (e) => {
+    console.log(e.currentTarget.parentElement.getAttribute("title"));
+  }
+
   return (
     <div className = "main-box" style={{ width: "100%" }}>
       <CourseNavBar />
@@ -156,14 +162,19 @@ function Assignments() {
               <div className="all-assigments-box">
                 {assignments.length > 0 ? (
                     assignments
-                      .filter(
+                      /*.filter(
                         (assignment) =>
                           assignment.title
-                      )
+                      )*/
                       .map((assignment) => (
-                        <div className = 'assignment-list-box'>
-                          <NavigateNextIcon/>
-                          <label>{assignment.title}</label>
+                        <div className = 'assignment-list-box' 
+                          assignmentId={assignment.id}>
+                          <Button
+                            className="Mini-button"
+                            onClick={displayContent}
+                          >
+                            {assignment.title}
+                          </Button>
                         </div>
                       ))
                 ):
