@@ -28,6 +28,7 @@ function ViewPastQuiz(props) {
     const [otherChoice, setOtherChoice] = useState("");
     const [multiChoice, setMultiChoice] = useState([]);
     const [attemptedOn, setAttemptedOn] = useState(null);
+    const [isGraded, setIsGraded] = useState(false);
     const setFields = () => {
         setStudentAnswers(props.quizDetails.studentAnswers);
         setStudentPoints(props.quizDetails.studentPoints);
@@ -38,6 +39,7 @@ function ViewPastQuiz(props) {
         setQuizPoints(props.quizDetails.points);
         setMultiChoice(props.quizDetails.questions.choices);
         setAttemptedOn(props.quizDetails.attemptedOn);
+        setIsGraded(props.quizDetails.isGraded)
       }
     useEffect(()=> {
     if (props.open) setFields();
@@ -76,7 +78,13 @@ function ViewPastQuiz(props) {
             </AppBar>
             <div className='main-quiz-box'>
                 
-                <p style={{color: 'red'}}>{"Score:  " + studentPoints+"/"+quizPoints+" pts"}</p>
+                
+                {isGraded ? (
+                    <p style={{color: 'red'}}>{"Score:  " + studentPoints+"/"+quizPoints+" pts"}</p>
+                ) : (
+                    <p style={{color: 'red'}}>{"Ungraded"}</p>
+                )
+                }
                 {attemptedOn !== null && <label style={{color: 'black'}}>{"Attempted On: " + attemptedOn.toDate()}</label>
                 }
                 <div className='main-header'>
@@ -87,7 +95,12 @@ function ViewPastQuiz(props) {
                 <>
                     <div className='question-header'>
                         <label style={{color: 'black'}}>Q{index+1}:{question.text}</label>
-                        <label style={{color: 'black'}}>{studentAnswers[index].points} / {question.points}</label>
+                        { studentAnswers[index].points !== null ? (
+                            <label style={{color: 'black'}}>{studentAnswers[index].points} / {question.points}</label>
+                        ):(
+                            <label style={{color: 'black'}}> - / {question.points}</label>
+                        )  
+                        }
                     </div>
                     <div className='answer-box'>
                         {question.type === 'True or False' ? (

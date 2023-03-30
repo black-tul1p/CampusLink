@@ -59,18 +59,15 @@ function Quizzes() {
             questions: quiz.questions,
             studentAnswers: attempt.answers,
             studentPoints: attempt.points,
-            attemptedOn: attempt.attemptedOn
+            attemptedOn: attempt.attemptedOn,
+            isGraded: attempt.isGraded
           }
           setQuizDetails(QuizDetails);
           if(quiz.deadline !== null) {
             const date = quiz.deadline.getDate();
             const currentDate = new Date();
             if (date < currentDate) {
-              console.log("view deadline: " + QuizDetails.deadline);
               setClicked(true);
-            }
-            else {
-              console.log("no view deadline: " + QuizDetails.deadline);
             }
           }
         })
