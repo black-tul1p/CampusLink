@@ -32,6 +32,7 @@ function Quizzes() {
   const [quizQuestions, setQuizQuestions] = useState([]);
   const [quizPoints, setQuizPoints] = useState("");
   const [quizDetails, setQuizDetails] = useState(null);
+  const [currentTimestamp, setCurrentTimestamp] = useState(null);
   
 
   const location = useLocation();
@@ -59,7 +60,17 @@ function Quizzes() {
           studentPoints: attempt.points      
         }
         setQuizDetails(QuizDetails);
-        setClicked(true);
+        if(quiz.deadline !== null) {
+          const date = quiz.deadline.getDate();
+          const currentDate = new Date();
+          if (date < currentDate) {
+            console.log("view deadline: " + QuizDetails.deadline);
+            setClicked(true);
+          }
+          else {
+            console.log("no view deadline: " + QuizDetails.deadline);
+          }
+        }
       })
       
     } catch (error) {
