@@ -46,32 +46,36 @@ function Quizzes() {
 
   const clickView = (quiz) => {
     try {
-      const studentDocId = getLoggedInUserId();
-      getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
-        setStudentAnswers(attempt.answers);
-        setStudentAnswers(attempt.points);
-        const QuizDetails = {
-          name: quiz.name,
-          description: quiz.description,
-          points: quiz.points,
-          deadline: quiz.deadline,
-          questions: quiz.questions,
-          studentAnswers: attempt.answers,
-          studentPoints: attempt.points      
-        }
-        setQuizDetails(QuizDetails);
-        if(quiz.deadline !== null) {
-          const date = quiz.deadline.getDate();
-          const currentDate = new Date();
-          if (date < currentDate) {
-            console.log("view deadline: " + QuizDetails.deadline);
-            setClicked(true);
+      if (quiz.attempted) {
+        const studentDocId = getLoggedInUserId();
+        getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
+          setStudentAnswers(attempt.answers);
+          setStudentAnswers(attempt.points);
+          const QuizDetails = {
+            name: quiz.name,
+            description: quiz.description,
+            points: quiz.points,
+            deadline: quiz.deadline,
+            questions: quiz.questions,
+            studentAnswers: attempt.answers,
+            studentPoints: attempt.points,
+            attemptedOn: attempt.attemptedOn
           }
-          else {
-            console.log("no view deadline: " + QuizDetails.deadline);
+          setQuizDetails(QuizDetails);
+          if(quiz.deadline !== null) {
+            const date = quiz.deadline.getDate();
+            const currentDate = new Date();
+            if (date < currentDate) {
+              console.log("view deadline: " + QuizDetails.deadline);
+              setClicked(true);
+            }
+            else {
+              console.log("no view deadline: " + QuizDetails.deadline);
+            }
           }
-        }
-      })
+        })
+      }
+      
       
     } catch (error) {
       console.log("error in getting quiz attempt.");
@@ -117,6 +121,11 @@ function Quizzes() {
         >
           Create New Quiz      
         </Button>
+      }
+      { role === "student" &&
+        <div style={{textAlign: 'center'}}>
+          <h2 style={{color:'white'}}>Attempted Quizzes</h2>
+        </div>
       }
 
       { role === "instructor" &&
@@ -216,30 +225,30 @@ function Quizzes() {
         <TableContainer>
           <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
           <colgroup>
-            <col width="25%" />
-            <col width="25%" />
-            <col width="25%" />
-            <col width="25%" />
+            <col width="30%" />
+            <col width="30%" />
+            <col width="20%" />
+            <col width="20%" />
           </colgroup>
           <TableHead style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}>
             <TableRow style={{borderBottom: "1px solid #fff1"}}>
               <TableCell style={{color: "white", fontSize: "1em"}}>Quiz</TableCell>
               <TableCell style={{color: "white", fontSize: "1em"}}>Due</TableCell>
-              <TableCell style={{color: "white", fontSize: "1em", textAlign: "right"}}>Points</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Points Earned</TableCell>
               <TableCell/>
             </TableRow>
           </TableHead>
           <TableBody style={{backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
             {quizzes.map((quiz)=><>
-              <TableRow>
+              {quiz.attempted && <TableRow>
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                   {quiz.name}
                 </TableCell>
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                   {quiz.deadline !== null ? quiz.deadline.toLocaleString('en-US') : "No Deadline"}
                 </TableCell>
-                <TableCell style={{color: "white", borderBottom: "1px solid #fff1", textAlign: "right"}}>
-                  {quiz.points + " pts"}
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                  {quiz.finalScore+" / "+quiz.points + " pts"}
                 </TableCell>
                 <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
                   <Button variant="outlined" 
@@ -253,6 +262,7 @@ function Quizzes() {
                   }}>VIEW</Button>
                 </TableCell>
               </TableRow>
+              }
             </>)}
           </TableBody>
           </Table>

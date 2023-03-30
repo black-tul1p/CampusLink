@@ -1,4 +1,4 @@
-.main-box {
+.main-quiz-box {
     margin: 2em;
 }
 .main-header {
@@ -11,6 +11,7 @@
     padding-top: 0.1em;
     padding-bottom: 0.1em;
     margin-bottom: 1em;
+    margin-top: 0.5em;
 }
 .question-header {
     display:flex;

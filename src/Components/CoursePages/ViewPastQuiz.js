@@ -27,6 +27,7 @@ function ViewPastQuiz(props) {
     const [quizPoints, setQuizPoints] = useState("");
     const [otherChoice, setOtherChoice] = useState("");
     const [multiChoice, setMultiChoice] = useState([]);
+    const [attemptedOn, setAttemptedOn] = useState(null);
     const setFields = () => {
         setStudentAnswers(props.quizDetails.studentAnswers);
         setStudentPoints(props.quizDetails.studentPoints);
@@ -36,6 +37,7 @@ function ViewPastQuiz(props) {
         setQuizQuestions(props.quizDetails.questions);
         setQuizPoints(props.quizDetails.points);
         setMultiChoice(props.quizDetails.questions.choices);
+        setAttemptedOn(props.quizDetails.attemptedOn);
       }
     useEffect(()=> {
     if (props.open) setFields();
@@ -72,8 +74,11 @@ function ViewPastQuiz(props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <div className='main-box'>
-                <p style={{color: 'black'}}>Total Points Earned: {studentPoints}/{quizPoints} points</p>
+            <div className='main-quiz-box'>
+                
+                <p style={{color: 'red'}}>{"Score:  " + studentPoints+"/"+quizPoints+" pts"}</p>
+                {attemptedOn !== null && <label style={{color: 'black'}}>{"Attempted On: " + attemptedOn.toDate()}</label>
+                }
                 <div className='main-header'>
                     <p style={{color: 'black'}}>Questions</p>
                     <p style={{color: 'black'}}>Points</p>
