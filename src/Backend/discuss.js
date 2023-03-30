@@ -194,3 +194,15 @@ export const getEnrolledStudents = async (courseId) => {
     throw error;
   }
 };
+
+export const updateDiscussionPrivacy = async (discussionId, newValue) => {
+  try {
+    const discussionRef = doc(firestore, "discussions", discussionId);
+    await updateDoc(discussionRef, {
+      privacy: newValue,
+    });
+    return "Discussion privacy successfully updated!";
+  } catch (error) {
+    throw new Error("Failed to update discussion privacy:", error);
+  }
+};
