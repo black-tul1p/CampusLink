@@ -1,0 +1,45 @@
+.main-box {
+    margin: 2em;
+}
+.main-header {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: rgb(226, 223, 223);
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+    margin-bottom: 1em;
+}
+.question-header {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: rgb(226, 223, 223);
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+}
+
+label {
+    font-size: 1.3em;
+}
+
+.TFBox {
+    display:flex;
+    flex-direction: column;
+    row-gap: 0.3em;
+    padding: 0.2em;
+    background-color: rgb(202, 230, 245);
+    margin-bottom: 1em;
+}
+
+.choice-box {
+    display:flex;
+    flex-direction: row;
+    column-gap: 0.3em;
+    background-color: rgb(202, 230, 245);
+}
+

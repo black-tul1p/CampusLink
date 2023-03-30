@@ -12,7 +12,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import InputAdornment from '@mui/material/InputAdornment';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-
+import { grey } from '@mui/material/colors';
+import "../../Styles/ViewPastQuiz.css";
+import { numberLiteralTypeAnnotation } from '@babel/types';
 
 
 function ViewPastQuiz(props) {
@@ -23,7 +25,8 @@ function ViewPastQuiz(props) {
     const [quizDeadline, setQuizDeadline] = useState(null);
     const [quizQuestions, setQuizQuestions] = useState([]);
     const [quizPoints, setQuizPoints] = useState("");
-
+    const [otherChoice, setOtherChoice] = useState("");
+    const [multiChoice, setMultiChoice] = useState([]);
     const setFields = () => {
         setStudentAnswers(props.quizDetails.studentAnswers);
         setStudentPoints(props.quizDetails.studentPoints);
@@ -32,6 +35,7 @@ function ViewPastQuiz(props) {
         setQuizDeadline(props.quizDetails.deadline);
         setQuizQuestions(props.quizDetails.questions);
         setQuizPoints(props.quizDetails.points);
+        setMultiChoice(props.quizDetails.questions.choices);
       }
     useEffect(()=> {
     if (props.open) setFields();
@@ -68,16 +72,58 @@ function ViewPastQuiz(props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <div>
-                <div className='question-header'>
-                    <label style={{color: 'black'}}>Questions</label>
-                    <label style={{color: 'black'}}>Points</label>
+            <div className='main-box'>
+                <p style={{color: 'black'}}>Total Points Earned: {studentPoints}/{quizPoints} points</p>
+                <div className='main-header'>
+                    <p style={{color: 'black'}}>Questions</p>
+                    <p style={{color: 'black'}}>Points</p>
                 </div>
                 {quizQuestions.map((question, index) => (
+                <>
                     <div className='question-header'>
-                    <label style={{color: 'black'}}>{question.text}</label>
-                    <label style={{color: 'black'}}>{studentAnswers[index].points} / {question.points}</label>
+                        <label style={{color: 'black'}}>Q{index+1}:{question.text}</label>
+                        <label style={{color: 'black'}}>{studentAnswers[index].points} / {question.points}</label>
                     </div>
+                    <div className='answer-box'>
+                        {question.type === 'True or False' ? (
+                            <div className='TFBox'>
+                                <>
+                                    <div className='choice-box'>
+                                        {studentAnswers[index].answer === "true" ? (
+                                            <RadioButtonCheckedIcon sx={{ color: grey[900] }}/>
+                                        ):(<RadioButtonUncheckedIcon sx={{ color: grey[900] }} />)}
+                                        <label style={{color: 'black'}}>True</label>
+                                    </div>
+                                    <div className='choice-box'>
+                                        {studentAnswers[index].answer === "false" ? (
+                                            <RadioButtonCheckedIcon sx={{ color: grey[900] }}/>
+                                        ):(<RadioButtonUncheckedIcon sx={{ color: grey[900] }}/>)}
+                                        <label style={{color: 'black'}}>False</label>
+                                    </div>
+                                </> 
+                            </div>
+                        ): question.type === 'Multiple Choice' ? (
+                            <div className='TFBox'>
+                                {question.choices.map((choice) => (
+                                    <div className='choice-box'>
+                                    {studentAnswers[index].answer === choice ? (
+                                        <RadioButtonCheckedIcon sx={{ color: grey[900] }}/>
+                                    ):(<RadioButtonUncheckedIcon sx={{ color: grey[900] }}/>)}
+                                        <label style={{color: 'black'}}>{choice}</label>
+                                    </div>
+                                ))}
+                            </div>
+                        ): question.type === 'Short Answer' ? (
+                            <div className='TFBox'>
+                                <div className='choice-box'>
+                                    <label style={{color: 'black'}}>Answer:</label>
+                                    <label style={{color: 'black'}}>{studentAnswers[index].answer}</label>
+                                </div>
+                            </div>
+                        ): null}
+                    </div>
+
+                </>
                 ))}
             </div>
         </Dialog>
