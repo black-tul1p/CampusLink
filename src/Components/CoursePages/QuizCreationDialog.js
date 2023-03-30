@@ -159,6 +159,7 @@ export function QuizCreationDialog(props) {
             />
             <FormControlLabel
               label="No Deadline"
+              style={{color: "#333"}}
               control={<Checkbox
                 sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
                 onChange={event => {setNoDeadline(event.target.checked)}}
@@ -201,6 +202,7 @@ export function QuizCreationDialog(props) {
             </FormGroup>
             <FormControlLabel
               label="Unlimited Time"
+              style={{color: "#333"}}
               control={<Checkbox
                 sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
                 onChange={event => {setNoTimeLimit(event.target.checked)}}
@@ -492,7 +494,7 @@ function QuestionCreationDialog(props) {
           />
 
           <FormControlLabel
-            style={{alignSelf: "flex-end", marginLeft: '10%'}}
+            style={{alignSelf: "flex-end", marginLeft: '10%', color: "#333"}}
             control={
               <Checkbox
                 sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
@@ -503,7 +505,6 @@ function QuestionCreationDialog(props) {
               />
             }
             label="Grade Manually"
-
           />
         </div>
 
