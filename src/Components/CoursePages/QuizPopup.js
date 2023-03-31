@@ -13,10 +13,13 @@ import {
   AppBar,
   Toolbar,
   IconButton,
+  Snackbar,
+  SnackbarContent,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { setQuizAttempt } from "../../Backend/quiz";
 import { useNavigate } from "react-router-dom";
+import { CheckCircle } from "@mui/icons-material";
 
 const QuizPopupContainer = styled(Container)`
   display: flex;
@@ -59,6 +62,8 @@ const QuizPopup = (props) => {
   // const quiz = props.quiz;
   const [quiz, setQuiz] = useState({ ...props.quiz });
   const [attempt, setAttempt] = useState({ ...props.answers });
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [remTime, setRemTime] = useState();
   const taken = attempt ? attempt.attempted : false;
@@ -78,6 +83,10 @@ const QuizPopup = (props) => {
   //   }
   //   setQuiz(updatedQuiz);
   // };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   const handleAnswerUpdate = (index, answer) => {
     console.log("BEFORE:", attempt);
@@ -100,11 +109,14 @@ const QuizPopup = (props) => {
     };
 
     attemptQuiz();
-    console.log("Submitted!");
+    // console.log("Submitted!");
+    setSnackbarMessage("Quiz submitted");
+    setOpenSnackbar(true);
     // console.log("====================================");
     // console.log(quiz);
     // console.log("====================================");
     setSubmitted(true);
+    props.onClose();
   };
 
   const handleTimer = () => {
@@ -142,7 +154,7 @@ const QuizPopup = (props) => {
             color="inherit"
             onClick={() => {
               props.onClose();
-              if (submitted) navigate("quizzes");
+              // if (submitted) navigate("quizzes");
             }}
             aria-label="close"
           >
@@ -158,7 +170,7 @@ const QuizPopup = (props) => {
             </Question>
             {question.type === "Multiple Choice" ? (
               <AnswerContainer
-                value={attempt[index]?.answer}
+                value={attempt?.answers[index]?.answer}
                 onChange={(event) =>
                   handleAnswerUpdate(index, event.target.value)
                 }
@@ -175,7 +187,7 @@ const QuizPopup = (props) => {
               </AnswerContainer>
             ) : question.type === "True or False" ? (
               <AnswerContainer
-                value={attempt[index]?.answer}
+                value={attempt?.answers[index]?.answer}
                 onChange={(event) =>
                   handleAnswerUpdate(index, event.target.value)
                 }
@@ -195,7 +207,7 @@ const QuizPopup = (props) => {
               </AnswerContainer>
             ) : question.type === "Checkbox" ? (
               <AnswerContainer
-                value={attempt[index]?.answer}
+                value={attempt?.answers[index]?.answer}
                 onChange={(event) =>
                   handleAnswerUpdate(index, event.target.value)
                 }
@@ -217,7 +229,11 @@ const QuizPopup = (props) => {
                 multiline
                 rows={4}
                 size="small"
-                value={attempt[index]?.answer ? attempt[index].answer : ""}
+                value={
+                  attempt?.answers[index]?.answer
+                    ? attempt.answers[index].answer
+                    : ""
+                }
                 onChange={(event) =>
                   handleAnswerUpdate(index, event.target.value)
                 }
@@ -235,6 +251,37 @@ const QuizPopup = (props) => {
             Submit
           </SubmitButton>
         )}
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={5000}
+          onClose={handleCloseSnackbar}
+        >
+          <SnackbarContent
+            style={{
+              backgroundColor: "green",
+              display: "flex",
+              alignItems: "center",
+            }}
+            message={
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <CheckCircle />
+                <span
+                  style={{
+                    marginLeft: "1em",
+                    alignSelf: "center",
+                  }}
+                >
+                  {snackbarMessage}
+                </span>
+              </div>
+            }
+          />
+        </Snackbar>
       </QuizPopupContainer>
     </Dialog>
   );
