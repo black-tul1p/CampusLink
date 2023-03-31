@@ -57,7 +57,7 @@ function AssignmentContent() {
     const title = location.state?.assignmentTitle;
     const dueDate = location.state?.assignmentDueDate;
     const description = location.state?.assignmentDescript;
-    const submissionLimit = location.state?.assignmentSumLim;
+    const submissionLimit = location.state?.assignmentSubLim;
     console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit);
     
     return(
