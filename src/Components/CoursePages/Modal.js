@@ -59,30 +59,32 @@ function NewDiscussionModal(props) {
               onChange={(e) => props.setNewDiscussionDesc(e.target.value)}
             />
           </div>
-          <div>
-            <FormControl fullWidth>
-              <InputLabel id="privacy-select-label">Privacy</InputLabel>
-              <Select
-                label="Privacy"
-                labelId="privacy-select-label"
-                value={props.discussionPrivacy}
-                onChange={(e) => props.setDiscussionPrivacy(e.target.value)}
-              >
-                <MenuItem style={{ justifyContent: "center" }} value="open">
-                  Open
-                </MenuItem>
-                <MenuItem style={{ justifyContent: "center" }} value="private">
-                  Private
-                </MenuItem>
-                <MenuItem
-                  style={{ justifyContent: "center" }}
-                  value="restricted"
+          {props.role === "instructor" && (
+            <div>
+              <FormControl fullWidth>
+                <InputLabel id="privacy-select-label">Privacy</InputLabel>
+                <Select
+                  label="Privacy"
+                  labelId="privacy-select-label"
+                  value={props.discussionPrivacy}
+                  onChange={(e) => props.setDiscussionPrivacy(e.target.value)}
                 >
-                  Restricted
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </div>
+                  <MenuItem style={{ justifyContent: "center" }} value="open">
+                    Open
+                  </MenuItem>
+                  <MenuItem style={{ justifyContent: "center" }} value="private">
+                    Private
+                  </MenuItem>
+                  <MenuItem
+                    style={{ justifyContent: "center" }}
+                    value="restricted"
+                  >
+                    Restricted
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </div>
+          )}
           <Button
             variant="contained"
             color="primary"
