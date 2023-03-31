@@ -156,13 +156,15 @@ function Classlist() {
             </Button>
           </div>
           <table className="classlist">
-            <tbody>
+            <thead>
               <tr>
                 <th className="profile-pic-column"></th>
                 <th>Name</th>
                 <th>Email</th>
               </tr>
+            </thead>
 
+            <tbody>
               {students.map((student) => (
                 <tr>
                   <td

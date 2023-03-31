@@ -1,12 +1,11 @@
 import { collection, doc, getDocs, updateDoc } from "@firebase/firestore";
 import { useState, useEffect, useContext } from "react";
 import { firestore } from "../Backend/firebase";
-import { Person } from "@mui/icons-material";
 import "../Styles/Classlist.css";
 import { Box, Button, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { PropTypes } from "prop-types";
 import ErrorBox from "./Error";
-import { getUserByEmail, getUserIdByEmail, isAdmin } from "../Backend/user";
+import { getUserIdByEmail, isAdmin } from "../Backend/user";
 import "../Styles/App.css";
 import { AuthContext } from "../Contexts/AuthContext";
 import { useNavigate } from "react-router-dom";

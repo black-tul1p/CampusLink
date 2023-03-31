@@ -11,7 +11,7 @@ import { Box } from "@mui/system";
 import ErrorBox from "./Error";
 import { CheckCircle, Email } from "@mui/icons-material";
 import { useContext, useEffect, useState } from "react";
-import { sendPasswordResetEmail, verifyEmail } from "../Backend/user";
+import { sendPasswordResetEmail } from "../Backend/user";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthContext";
 
