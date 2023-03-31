@@ -14,10 +14,14 @@ import {
   FormControl,
   FormGroup,
 } from "@mui/material";
+import { useState, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
+import ReplyIcon from '@mui/icons-material/Reply';
 import { auth } from "../../Backend/firebase";
+import { createReply } from "../../Backend/discuss";
 
 function DiscussionList(props) {
+  const [reply, setReply] = useState("");
   const handlePrivacyChange = async (discussion, e) => {
     e.stopPropagation();
     const newValue = e.target.value;
@@ -39,6 +43,16 @@ function DiscussionList(props) {
       props.setDiscussions(updatedDiscussions);
     }
   };
+
+  const sendReply = async (discussionId) => {
+    try {
+      await createReply(discussionId, reply);
+      console.log("Reply added successfully");
+    } catch (error) {
+      console.error("Error adding reply:", error);
+    }
+    console.log("reply:" + reply);
+  }
   
   return (
     <List
@@ -124,7 +138,7 @@ function DiscussionList(props) {
                       htmlFor="edit-title-input"
                       style={{ display: "block" }}
                     >
-                      Title:
+                      Title: 
                     </label>
                     <TextField
                       id="edit-title-input"
@@ -170,6 +184,38 @@ function DiscussionList(props) {
                   <Typography variant="body1">
                     {props.selectedDiscussion.description}
                   </Typography>
+                  <div
+                    style={{
+                      display: "flex"
+                      }}
+                  >
+                  <form style={{ display: "flex", flexDirection: "column", gap: "2em" }}>
+                    <div>
+                      <TextField
+                        label="type here"
+                        fullWidth
+                        value={reply}
+                        onChange={(e) => setReply(e.target.value)}
+                      />
+                    </div>
+                  </form>
+                    <button
+                      onClick={() => sendReply(discussion.id)}
+                      style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems:"center",
+                      borderRadius: "0.2em",
+                      height: "2em",
+                      width: "5em",
+                      columnGap: "0.3em",
+                      marginTop: "0.5em"
+                      }}
+                    >
+                      Reply
+                      <ReplyIcon />
+                    </button>
+                  </div>
                   {props.selectedDiscussion?.attachment_url && (
                     <a
                       href={props.selectedDiscussion.attachment_url}

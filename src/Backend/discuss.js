@@ -88,7 +88,7 @@ export const createReply = async (discussionId, reply) => {
     if (discussionSnapshot.exists()) {
       const replies = discussionSnapshot.data().replies;
       const newReply = {
-        ...reply,
+        reply,
         created_at: new Date(),
         creator_id: auth.currentUser.uid,
         creator_name: auth.currentUser.displayName,

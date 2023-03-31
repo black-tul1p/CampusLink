@@ -5,6 +5,7 @@ import {
   updateDoc,
   arrayRemove,
   collection,
+  arrayUnion
 } from "@firebase/firestore";
 import { firestore } from "../../Backend/firebase";
 import ProfilePic from "../../images/default_profile_picture.png";
@@ -14,12 +15,25 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CourseNavBar from "../CourseNavBar";
 
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { getUserIdByEmail } from "../../Backend/user";
+import ErrorBox from "../Error";
 
 function Classlist() {
   const [students, setStudents] = useState([]);
   const [courseData, setCourseData] = useState([]);
   const [courseDocId, setCourseDocId] = useState("");
   const [mailingList, setMailingList] = useState("");
+  const [addStudent, setAddStudent] = useState("");
+  const [course, setCourse] = useState("");
+  const [error, setError] = useState("");
   const location = useLocation();
 
   const updateClassList = async (courseID) => {
@@ -28,6 +42,7 @@ function Classlist() {
     } else {
       console.log(courseID);
       const course = doc(firestore, "courses", courseID);
+      setCourse(course);
       try {
         const courseDoc = await getDoc(course);
         if (courseDoc.exists()) {
@@ -69,6 +84,44 @@ function Classlist() {
     updateClassList(courseID);
   }, [location]);
 
+  const handleAdd = (e) => {
+    /*getUserByEmail(addStudent)
+    .then((user) => {
+      const userId = user.id;
+      const userRef = doc(firestore, "students", userId);
+      let studentList = students;
+      studentList.push({firstName: userRef.data().firstName,
+      lastName: userRef.data().lastName, 
+      email: userRef.data().email})
+      setStudents(studentList);
+      updateDoc(userRef, {courses: arrayUnion(course)});
+      updateDoc(course, {enrolled: arrayUnion(userId)});
+    })
+    .catch((error) => {
+      setError(error.message)
+    }) */
+    const add = async () => {
+      try {
+      if (mailingList.includes(addStudent)) {
+        throw new Error(`Student is already added`);
+      }
+      } catch (error) {
+        setError(error.message);
+      }
+      try {
+      const user = await getUserIdByEmail(addStudent);
+      console.log("Student", user);
+      const userRef = doc(firestore, "students", user);
+      await updateDoc(userRef, {courses: arrayUnion(course)});
+      await updateDoc(course, {enrolledStudents: arrayUnion(userRef)});
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    add();
+  };
+
   return (
     <div>
       <CourseNavBar />
@@ -82,19 +135,20 @@ function Classlist() {
               paddingBottom: "1em",
             }}
           >
-            <Button
-              className="add-button"
-              onClick={() => {
-                //Append placeholder student
-                /*
-      setStudents([
-        ...students, {
-         firstName: "Firstname",
-         lastName: "Lastname",
-         email: "example@gmail.com"
-        }
-      ]);*/
+            {error && <ErrorBox text={error} />}
+            <TextField
+              required
+              id="f-name-input"
+              label="Student Email to Add"
+              variant="outlined"
+              value={addStudent}
+              onChange={(e) => {
+                setAddStudent(e.target.value);
               }}
+            />
+            <Button
+              className="email-button"
+              onClick={handleAdd}
               variant="contained"
             >
               Add Students

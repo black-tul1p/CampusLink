@@ -13,6 +13,8 @@ import { getUserRole } from "../../Backend/user";
 import ErrorBox from "../Error";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
+import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "firebase/storage";
+import { storage } from "../../Backend/firebase";
 
 
 function Assignments() {
@@ -28,6 +30,7 @@ function Assignments() {
   const [courseDocId, setCourseDocId] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [submissionLimit, setSubmissionLimit] = useState("");
+  const [fileUpload, setFileUpload] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -70,6 +73,35 @@ function Assignments() {
       handleCancel();
     }
   }
+  const UploadFile = () => {
+    const fileLocation =    "STAT40200/" + "Assignments/" + title + "/pdfs";
+    const fileListRef = ref(storage, fileLocation + '/');
+    if (fileUpload == null) {
+			console.log("no pdfs added.")
+			return;
+		}
+
+		var fileCheck = "" + fileUpload.type;
+
+		if (!fileCheck.includes("pdf")) {
+			setError("Only pdfs allowed.");
+      setTimeout(() => {
+        setError("");
+      }, 1500);
+        return;
+			return;
+		}
+ 
+
+		const fileRef = ref(storage, fileLocation + '/' + fileUpload.name);
+		
+		uploadBytes(fileRef, fileUpload).then(() => {
+			console.log("File Uploaded!");
+      setFileUpload(null);
+			//console.log(fileUpload)
+		})
+  }
+  
 
   const handleSubmit = () => {
     if (!verifyInput(title, description, date, time, submissionLimit)) {
@@ -82,6 +114,7 @@ function Assignments() {
     } else {
       const due = date + " " + time;
       addAssignment(title, description, due, submissionLimit, courseDocId);
+      UploadFile();
       alert("New Assignment Added!");
       handleCancel();
     }
@@ -240,7 +273,10 @@ function Assignments() {
                     setSubmissionLimit(e.target.value)
                   }}/>
                 <label> Upload PDFs/Images </label> 
-                <input type="file"/>
+                <input type="file"
+                onChange={(event) => {setFileUpload(event.target.files[0]);}}
+                multiple
+                />
                 <div className="button-box">
                   <button onClick={handleSubmit}>
                     Submit
