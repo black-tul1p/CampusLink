@@ -1,19 +1,21 @@
-import React, { useState } from "react";
-import { getAssignmentById } from "../../Backend/assigment";
+import { useState } from "react";
 import CourseNavBar from "../CourseNavBar";
 import ErrorBox from "../Error";
 
-function AssignmentContent(assignment) {
+function AssignmentContent() {
     const [title, setTitle] = useState("");
     const [dueDate, setDueDate] = useState("");
     const [description, setDescription] = useState("");
     const [submissionLimit, setSubmissionLimit] = useState("");
     const [error, setError] = useState("");
 
-    setTitle(assignment.title);
-    setDueDate(assignment.dueDate);
-    setDescription(assignment.description);
-    setSubmissionLimit(assignment.submissionLimit);
+    const loadData = (assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim) => {
+        setTitle(assignmentTitle);
+        setDueDate(assignmentDueDate);
+        setDescription(assignmentDescript);
+        setSubmissionLimit(assignmentSubLim);
+        console.log(title + " " + dueDate + " " + description + " " + submissionLimit);
+    }
 
     return(
         <div className = "main-box" style={{ width: "100%" }}>

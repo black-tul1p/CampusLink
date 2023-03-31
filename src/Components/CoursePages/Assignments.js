@@ -14,6 +14,7 @@ import ErrorBox from "../Error";
 import { useLocation } from "react-router-dom";
 import assignmentContent from "./AssignmentContent"
 import { Button } from "@mui/material";
+import loadData from "./AssignmentContent";
 
 
 function Assignments() {
@@ -104,6 +105,7 @@ function Assignments() {
     const tDDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
     const tDSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
     console.log(tDTitle + " " + tDDueDate + " " + tDDescript + " " + tDSubLim);
+    loadData(tDTitle, tDDueDate, tDDescript, tDSubLim);
   }
 
   return (
