@@ -1,6 +1,6 @@
 import React from "react";
 import Home from "./Home";
-import Navbar from "./Navbar";
+import Navbar from "./NavBar";
 import FAQ from "./FAQ";
 import SettingsPage from "./Settings";
 import styled from "@emotion/styled";

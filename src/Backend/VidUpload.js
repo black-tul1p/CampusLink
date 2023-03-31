@@ -5,7 +5,7 @@ import {storage } from "./firebase";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage"
 import {v4} from 'uuid'
 import ReactPlayer from "react-player"
-
+import { getUserRole } from "./user";
 import "./TempFile.css";
 import "../Styles/App.css"
 import { Button } from "@mui/material";
@@ -20,26 +20,50 @@ function VidUpload() {
 
     //https://www.youtube.com/watch?v=wy21xalf6_Y
 
-    const handleUrl = () => {
+    function timeout(delay) {
+        return new Promise( res => setTimeout(res, delay) );
+    }
+
+    const handleUrl = async () => {
+        //if buffer != null ?
         setNewVid(buffer);
+        await timeout(250);
         if (newVid == null) {
             alert("No video selected")
             return;
         }
-        alert("Test text " + newVid)
+        alert("" + newVid + "uploaded!")
     }
+
+    const [userRole, setUserRole] = useState("student");
+    
+	function modifyFiles() {
+		getUserRole().then((newRole) => {
+			setUserRole(newRole);
+		});
+		//console.log(userRole)
+		return userRole;
+	}
+
+	function ModifyFileDisplay() {
+		modifyFiles();
+		//console.log(userRole)
+		if (userRole != "student") {
+            return  <label>
+            Video Url:
+            <input type="text" value={newVal} onChange={e => {buffer = e.target.value}} ></input>
+            <button onClick={handleUrl}>Submit</button>
+        </label>
+		}
+
+	} 
+
+
 
     return(
         <div>
-            <h1>test</h1>
-          
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/7lw-2TLwn44" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            <ReactPlayer url={sourceVid} />
-            <label>
-                Video Url:
-                <input type="text" value={newVal} onChange={e => {buffer = e.target.value}} ></input>
-                <button onClick={handleUrl}>Submit</button>
-            </label>
+           <ModifyFileDisplay />
+           
 
             <ReactPlayer url={newVid} />
             

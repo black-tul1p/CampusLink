@@ -1,5 +1,9 @@
 import React from "react";
-import CourseNavBar from "../CourseNavBar";
+import CourseNavBar from "../CourseNavBar"
+import { useState, useEffect } from "react";
+import { collection, query, getDocs, setDoc, doc } from "firebase/firestore";
+import { firestore } from "../../Backend/firebase";
+
 function Discussions() {
   const [currentUser, setCurrentUser] = useState('');
   const [showModal, setShowModal] = useState(false);

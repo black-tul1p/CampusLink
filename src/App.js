@@ -15,22 +15,17 @@ import { AuthContext } from "./Contexts/AuthContext";
 import { CircularProgress } from "@mui/material";
 import { isAdmin } from "./Backend/user";
 
+import { logoutUser } from "./Backend/user";
 
-import FileUpload from "./Backend/FileUpload";
-import { defaultListboxReducer } from "@mui/base";
-import VidUpload from "./Backend/VidUpload";
-
- function App() {
-    return (<FileUpload/>)
+ //function App() {
+   // return (<FileUpload/>)
     //return(<VidUpload/>)
- }
-
-
- export default App;
+ //}
+ //export default App;
 
 
 
-/* function AuthorizedRoute(props) {
+ function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
@@ -69,6 +64,8 @@ import VidUpload from "./Backend/VidUpload";
   return props.children;
 }
 
+logoutUser();
+
 function App() {
   const [isDark, setIsDark] = useState(false); // For future Dark Mode implementation
 
@@ -96,4 +93,4 @@ function App() {
   );
 }
 
-export default App; */
+export default App;
