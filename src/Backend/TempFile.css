@@ -1,0 +1,15 @@
+.input {
+    padding-top: 100px;
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    color: white;
+    position: relative;
+}
+
+.Newimg {
+    width: 300px;
+    margin: 10px;
+    justify-content: center;
+    display: flex;
+}
