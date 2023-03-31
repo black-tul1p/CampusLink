@@ -335,15 +335,15 @@ function Discussions() {
               ))}
             </Select>
           </FormControl>
-          {role === "instructor" && (
-            <>
-              <StyledAddButton
+          <StyledAddButton
                 onClick={() => setShowModal(true)}
                 variant="contained"
               >
                 New Post
                 <AddCircleIcon />
               </StyledAddButton>
+          {role === "instructor" && (
+            <>
               <StyledAddButton
                 onClick={() => setShowTopicModal(true)}
                 variant="contained"
