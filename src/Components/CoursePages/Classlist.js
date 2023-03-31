@@ -102,6 +102,13 @@ function Classlist() {
     }) */
     const add = async () => {
       try {
+      if (mailingList.includes(addStudent)) {
+        throw new Error(`Student is already added`);
+      }
+      } catch (error) {
+        setError(error.message);
+      }
+      try {
       const user = await getUserIdByEmail(addStudent);
       console.log("Student", user);
       const userRef = doc(firestore, "students", user);
