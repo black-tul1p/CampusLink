@@ -11,10 +11,8 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getUserRole } from "../../Backend/user";
 import ErrorBox from "../Error";
-import { useLocation } from "react-router-dom";
-import assignmentContent from "./AssignmentContent"
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
-import loadData from "./AssignmentContent";
 
 
 function Assignments() {
@@ -30,6 +28,7 @@ function Assignments() {
   const [courseDocId, setCourseDocId] = useState("");
   const [assignments, setAssignments] = useState([]);
   const location = useLocation();
+  const navigate = useNavigate();
 
 
 
@@ -100,12 +99,12 @@ function Assignments() {
   }
 
   const displayContent = (e) => {
-    const tDTitle = e.currentTarget.parentElement.getAttribute("assignmenttitle");
-    const tDDueDate = e.currentTarget.parentElement.getAttribute("assignmentduedate");
-    const tDDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
-    const tDSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
-    console.log(tDTitle + " " + tDDueDate + " " + tDDescript + " " + tDSubLim);
-    loadData(tDTitle, tDDueDate, tDDescript, tDSubLim);
+    const assignmentTitle = e.currentTarget.parentElement.getAttribute("assignmenttitle");
+    const assignmentDueDate = e.currentTarget.parentElement.getAttribute("assignmentduedate");
+    const assignmentDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
+    const assignmentSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
+    console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim);
+    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim}});
   }
 
   return (
