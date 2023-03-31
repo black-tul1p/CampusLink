@@ -77,6 +77,7 @@ export async function getQuizAttempt(courseId, studentDocId, quizId) {
     if (quizAttemptSnapshot.exists()) {
       return quizAttemptSnapshot.data();
     } else {
+      console.log("No attempt found");
       return null;
     }
   } catch (error) {
