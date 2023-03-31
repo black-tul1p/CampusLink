@@ -51,7 +51,7 @@ function Announcements() {
         <h2>Course Description: {cDetails.description}</h2>
         <h2>Course Credits: {cDetails.credit}</h2>
         <h2>Course Capacity:{cDetails.capacity}</h2>
-              <VidUpload />
+            
       </div>
       
     </div>

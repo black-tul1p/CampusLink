@@ -55,6 +55,14 @@ text-align: center;
 padding: 20px 0 0 0;
 `;
 
+const SubLimitText = styled.div`
+color: white;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 1em;
+text-align: center;
+padding: 20px 0 0 0;
+`;
+
 function AssignmentContent() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -196,6 +204,9 @@ function AssignmentContent() {
             <Description>
                 {description}
             </Description>
+            <SubLimitText>
+                Submission Limit: {submissionLimit}
+            </SubLimitText>
             <p className="title">
                 <UploadPrompts />
             </p>

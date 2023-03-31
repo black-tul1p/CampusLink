@@ -32,10 +32,19 @@ function VidUpload() {
         if (buffer == null) {
             alert("No video selected")
             return;
-        } else {
-            setNewVid(buffer);
-            alert("Video uploaded!")
         }
+
+        const bufferTest = buffer + "";
+
+        if (!bufferTest.includes("youtube")) {
+            alert("Error please enter a url containing a video");
+            return;
+        }
+
+        setNewVid(buffer);
+        buffer = null
+        alert("Video uploaded!")
+        
        
     }
 

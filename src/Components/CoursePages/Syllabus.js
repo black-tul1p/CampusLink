@@ -9,6 +9,7 @@ function Syllabus() {
     <div style={{ width: "100%" }}>
       <CourseNavBar /> 
       <FileUpload />
+      <VidUpload />
     </div>
   );
 }
