@@ -160,7 +160,7 @@ function Quizzes() {
                   {quiz.points + " pts"}
                 </TableCell>
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                  {quiz.attempts + " times"}
+                  {quiz.attempts == null ? "unlimited attempts" : quiz.attempts + " times"}
                 </TableCell>
                 <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
                   {role === "instructor" && <>
