@@ -119,10 +119,7 @@ function AssignmentContent() {
 			return;
 		}
 
-        if (subcount >= submissionLimit) {
-            alert("You have reached the submission limit of " + submissionLimit + ". Your file can not be submitted.")
-            return;
-        }
+       
 
 		//very rough but temp file type checker
 		var fileCheck = "" + fileUpload.type;
@@ -132,6 +129,12 @@ function AssignmentContent() {
 			return;
 		}
 
+
+        if (subcount >= submissionLimit) {
+            alert("You have reached the submission limit of " + submissionLimit + ". Your file can not be submitted.")
+            return;
+        }
+
  
 
 		//use + v4() for random chars
@@ -139,6 +142,7 @@ function AssignmentContent() {
 		
 		uploadBytes(fileRef, fileUpload).then(() => {
 			alert("File Uploaded!");
+            setFileUpload(null);
 			//console.log(fileUpload)
 		})
 
