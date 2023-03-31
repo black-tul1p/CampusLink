@@ -133,10 +133,11 @@ function Quizzes() {
         <TableContainer>
           <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
           <colgroup>
-            <col width="25%" />
-            <col width="25%" />
-            <col width="25%" />
-            <col width="25%" />
+            <col width="20%" />
+            <col width="20%" />
+            <col width="20%" />
+            <col width="20%" />
+            <col width="20%" />
           </colgroup>
           <TableHead style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}>
             <TableRow style={{borderBottom: "1px solid #fff1"}}>
