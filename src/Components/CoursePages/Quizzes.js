@@ -51,20 +51,28 @@ function Quizzes() {
     });
   };
 
+  const isAttempted = (quiz) => {
+    const checkQuizAttempt = async () => {
+      const attempt = await getQuizAttempt(courseId, studentDocId, quiz.quizId);
+      // console.log(quiz.quizId, attempt);
+      return attempt !== null ? true : false;
+      // console.log("Here", studentAnswers);
+      // setStudentPoints(attempt.points);
+    };
+    return checkQuizAttempt();
+  };
+
   const clickView = (quiz) => {
-    // console.log(courseId, studentDocId, quiz.quizId);
+    console.log(courseId, studentDocId, quiz.quizId);
     const fetchQuizAttempt = async () => {
       const attempt = await getQuizAttempt(courseId, studentDocId, quiz.quizId);
+      console.log("Get", attempt);
       setStudentAnswers(attempt);
-      console.log("Here", studentAnswers);
+      console.log("Set", studentAnswers);
       // setStudentPoints(attempt.points);
     };
 
-    try {
-      fetchQuizAttempt();
-    } catch (error) {
-      console.log("error in getting quiz attempt.");
-    }
+    fetchQuizAttempt();
     setClicked(true);
   };
 
@@ -336,7 +344,7 @@ function Quizzes() {
                           }}
                           style={{ minWidth: "8em" }}
                         >
-                          {!studentAnswers.attempted ? "ATTEMPT" : "VIEW"}
+                          {!isAttempted(quiz) ? "ATTEMPT" : "VIEW"}
                         </Button>
                       </TableCell>
                     </TableRow>
