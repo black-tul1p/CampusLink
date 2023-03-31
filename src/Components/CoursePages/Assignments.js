@@ -26,7 +26,7 @@ function Assignments() {
   const [error, setError] = useState("");
   const [courseDocId, setCourseDocId] = useState("");
   const [assignments, setAssignments] = useState([]);
-  const [submissionLimit, setSubmissionLimit] = useState(1);
+  const [submissionLimit, setSubmissionLimit] = useState("");
   const location = useLocation();
 
 
@@ -57,7 +57,7 @@ function Assignments() {
       setDate("");
       setTime("");
       setDescription("");
-      setSubmissionLimit(1);
+      setSubmissionLimit("");
       setOpen1(false);
     }
   }
@@ -90,7 +90,7 @@ function Assignments() {
     setDate("");
     setTime("");
     setDescription("");
-    setSubmissionLimit(1);
+    setSubmissionLimit("");
     setOpen(false);
   }
 
@@ -216,7 +216,7 @@ function Assignments() {
                 <input placeholder="1"
                   value={submissionLimit}
                   onChange={(e) => {
-                    setSubmissionLimit(Number(e.target.value))
+                    setSubmissionLimit(e.target.value)
                   }}/>
                 <label> Upload PDFs/Images </label> 
                 <input type="file"/>
