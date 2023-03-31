@@ -36,14 +36,14 @@ function Assignments() {
         // Get user role
         const courseID = location.state?.courseId;
         setCourseDocId(courseID);
-        console.log("ID: " + courseID);
+        // console.log("ID: " + courseID);
         const role = await getUserRole();
         setRole(role);
-        console.log("role: " + role);
+        // console.log("role: " + role);
         const assgnts = await getAssigmentsByCourse(courseID);
         setAssignments(assgnts);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     }
     fetchData();
@@ -69,7 +69,7 @@ function Assignments() {
 
   const handleSubmit = () => {
     if (!verifyInput(title, description, date, time)) {
-      console.log("verify: " + verifyInput(title, description, date, time));
+      // console.log("verify: " + verifyInput(title, description, date, time));
       setError("Incorrect input format.");
       setTimeout(() => {
         setError("");
