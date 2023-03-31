@@ -15,7 +15,7 @@ import "../Styles/Announcements.css";
 function VidUpload() {
 
     const sourceVid = "https://www.youtube.com/watch?v=iGWyN2Lq36M&t=795s"
-    const [newVid, setNewVid] = useState(null);
+    const [newVid, setNewVid] = useState();
     var newVal
     var buffer
 
@@ -27,13 +27,16 @@ function VidUpload() {
 
     const handleUrl = async () => {
         //if buffer != null ?
-        setNewVid(buffer);
-        await timeout(1000);
-        if (newVid == null) {
+        
+        
+        if (buffer == null) {
             alert("No video selected")
             return;
+        } else {
+            setNewVid(buffer);
+            alert("Video uploaded!")
         }
-        alert("Video uploaded!")
+       
     }
 
     const [userRole, setUserRole] = useState("student");
@@ -66,7 +69,7 @@ function VidUpload() {
            <ModifyFileDisplay />
            
 
-            <ReactPlayer url={newVid}/>
+            <ReactPlayer url={newVid} />
             
         </div>
     );

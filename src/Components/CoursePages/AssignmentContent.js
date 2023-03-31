@@ -11,6 +11,7 @@ import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "
 import { doc, getDoc, collection } from "@firebase/firestore";
 import { storage } from "../../Backend/firebase"
 import { getCourseDetailsById } from "../../Backend/course";
+import { getCurrentUser } from "../../Backend/user";
 
 const TopbarRow = styled.div`
   height: 4.5em;
@@ -60,6 +61,7 @@ function AssignmentContent() {
     const [error, setError] = useState("");
     const [courseTitle, setCourseTitle] = useState("");
     const [courseId, setCourseId] = useState("");
+    const [userInfo, setUserInfo] = useState("");
 
     const title = location.state?.assignmentTitle;
     const dueDate = location.state?.assignmentDueDate;
@@ -78,8 +80,17 @@ function AssignmentContent() {
     }
     getCourseDetails();
 
+    //Get user info
+    const getUserInfo = async () => {
+        const thisUser = await getCurrentUser();
+        setUserInfo(thisUser.email);
+
+    }
+    getUserInfo();
+    
+
     //file location and set up states
-    const fileLocation = "tempCTitle" + "11111/" + "Assignments/" + title + "/tempStudentID";
+    const fileLocation =  courseTitle + courseId + "/" + "Assignments/" + title + "/studentEmail:" + userInfo;
     const fileListRef = ref(storage, fileLocation + '/');
     const [fileUpload, setFileUpload] = useState(null);
 	const [fileList, setFileList] = useState([])

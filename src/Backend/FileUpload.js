@@ -14,29 +14,33 @@ import { Document, Page } from "react-pdf"
 import { doc, getDoc, collection } from "@firebase/firestore";
 import { firestore } from "./firebase";
 import { useLocation} from "react-router-dom";
+import { getCourseDetailsById } from "./course";
 
 function FileUpload() {
 	//get course info for correct file storage location
-	const [cDetails, setCourseData] = useState([]);
+	//const [cDetails, setCourseData] = useState([]);
 
   	const location = useLocation();
-  	const courseID = location.state?.courseId;
+  	const courseDocId = location.state?.courseId;
 
-  	const course = doc(firestore, "courses", courseID);
+  	//const courseStuff = doc(firestore, "courses", courseID);
 
-  	useEffect(() => {
-    try {
-      getDoc(course).then((courseDoc) => {
-       //console.log(courseDoc.data());
-        setCourseData(courseDoc.data());
-		console.log(cDetails)
-      });
-      //const courseDoc = await getDoc(course)
-      //setCourseData(courseDoc.data())
-    } catch (error) {}
-  }, []);
+  	
+	  
+	  const [courseTitle, setCourseTitle] = useState("");
+	  const [courseId, setCourseId] = useState("");
+	
+	//Get courseTitle and courseId from courseDocId
+	  const getCourseDetails = async () => {
+        const course = await getCourseDetailsById(courseDocId);
+        const courseTitleT = course.courseTitle;
+        setCourseTitle(courseTitleT);
+        const courseIdT = course.courseId;
+        setCourseId(courseIdT);
+    }
+    getCourseDetails();
 
-    var fileLocation = "" + cDetails.courseTitle + cDetails.courseId + "/LectureNotes";
+    var fileLocation = courseTitle + courseId + "/LectureNotes";
 
 	const [fileUpload, setFileUpload] = useState(null);
 	const [fileList, setFileList] = useState([])
@@ -44,12 +48,10 @@ function FileUpload() {
 	var fileListRef = ref(storage, fileLocation + '/')
 
 	//upload file to firebase
-	console.log(cDetails)
 	
 	const uploadFile = () => {
 		if (fileUpload == null) {
 			alert("No file selected");
-			console.log(cDetails)
 			LoadFiles();
 			return;
 		}
@@ -62,8 +64,6 @@ function FileUpload() {
 			return;
 		}
 
-		
-		console.log(fileList); 
  
 
 		//use + v4() for random chars
@@ -71,6 +71,8 @@ function FileUpload() {
 		
 		uploadBytes(fileRef, fileUpload).then(() => {
 			alert("File Uploaded!");
+			setFileUpload(null);
+			LoadFiles();
 			//console.log(fileUpload)
 		})
 
@@ -91,7 +93,8 @@ function FileUpload() {
 			//console.log(allFiles.items.length)
 			
 			if (allFiles.items.length == 0) {
-				//LoadFiles()
+				LoadFiles()
+				//console.log("no dice")
 			} 
 			
 			allFiles.items.forEach(async item => {
