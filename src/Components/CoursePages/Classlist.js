@@ -140,7 +140,7 @@ function Classlist() {
               }}
             />
             <Button
-              className="add-button"
+              className="email-button"
               onClick={handleAdd}
               variant="contained"
             >
