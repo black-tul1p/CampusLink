@@ -42,6 +42,14 @@ const TopbarText = styled.div`
   font-size: 1em;
 `;
 
+const Description = styled.div`
+color: white;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 2em;
+text-align: center;
+padding: 20px 0 0 0;
+`;
+
 function AssignmentContent() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -52,9 +60,6 @@ function AssignmentContent() {
     const submissionLimit = location.state?.assignmentSumLim;
     console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit);
     
-    const displayDueDate = (new Date(dueDate)).toDateString();
-    console.log((new Date(dueDate)));
-
     return(
         <div className = "main-box" style={{ width: "100%" }}>
             {error && <ErrorBox text={error} />}
@@ -74,9 +79,12 @@ function AssignmentContent() {
             <h1 className="title">
                 {title}
             </h1>
-            <h2>
-                {displayDueDate}
-            </h2>
+            <Description>
+                Due: {dueDate}
+            </Description>
+            <Description>
+                {description}
+            </Description>
         </div>
     );
 }

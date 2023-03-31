@@ -131,16 +131,21 @@ function Assignments() {
               <div className="all-assigments-box">
                 {assignments.length > 0 ? (
                     assignments
-                      .filter(
-                        (assignment) =>
-                          assignment.title
-                      )
-                      .map((assignment) => (
-                        <div className = 'assignment-list-box'>
-                          <NavigateNextIcon/>
-                          <label>{assignment.title}</label>
-                        </div>
-                      ))
+                    .map((assignment) => (
+                      <div className = 'assignment-list-box' 
+                        assignmenttitle={assignment.title}
+                        assignmentdescript={assignment.description}
+                        assignmentduedate={assignment.dueDate.toDate()}
+                        assignmentsublim={assignment.submissionLimit}
+                        >
+                        <Button
+                          className="Mini-button"
+                          onClick={displayContent}
+                        >
+                          {assignment.title}
+                        </Button>
+                      </div>
+                    ))
                 ):
                 (<label>No Assignments</label>) 
                 }
@@ -167,15 +172,11 @@ function Assignments() {
               <div className="all-assigments-box">
                 {assignments.length > 0 ? (
                     assignments
-                      /*.filter(
-                        (assignment) =>
-                          assignment.title
-                      )*/
                       .map((assignment) => (
                         <div className = 'assignment-list-box' 
                           assignmenttitle={assignment.title}
                           assignmentdescript={assignment.description}
-                          assignmentduedate={assignment.dueDate}
+                          assignmentduedate={assignment.dueDate.toDate()}
                           assignmentsublim={assignment.submissionLimit}
                           >
                           <Button
