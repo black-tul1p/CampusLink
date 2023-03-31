@@ -1,6 +1,5 @@
 import React from "react";
 import Home from "./Home";
-import Navbar from "./NavBar";
 import FAQ from "./FAQ";
 import SettingsPage from "./Settings";
 import styled from "@emotion/styled";
@@ -15,6 +14,7 @@ import ClasslistStudent from "./CoursePages/ClasslistStudent";
 import Classlist from "./CoursePages/Classlist";
 import Admin from "./Admin";
 import AssignmentContent from "./CoursePages/AssignmentContent";
+import Navbar from "./Navbar";
 
 const Container = styled.div`
   display: flex;

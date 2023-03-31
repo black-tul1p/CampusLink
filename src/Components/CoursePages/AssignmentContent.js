@@ -7,6 +7,9 @@ import styled from "@emotion/styled";
 import { Timestamp } from "@firebase/firestore";
 import "../../Styles/Assignments.css";
 import "../../Styles/App.css";
+import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "firebase/storage"
+import { doc, getDoc, collection } from "@firebase/firestore";
+import { storage } from "../../Backend/firebase"
 
 const TopbarRow = styled.div`
   height: 4.5em;
@@ -59,6 +62,61 @@ function AssignmentContent() {
     const description = location.state?.assignmentDescript;
     const submissionLimit = location.state?.assignmentSumLim;
     console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit);
+
+
+    //file location and set up states
+    const fileLocation = title + "";
+    const fileListRef = ref(storage, fileLocation + '/');
+    const [fileUpload, setFileUpload] = useState(null);
+	const [fileList, setFileList] = useState([])
+
+    //file upload function
+    const uploadFile = () => {
+		if (fileUpload == null) {
+			alert("No file selected");
+			return;
+		}
+
+		//very rough but temp file type checker
+		var fileCheck = "" + fileUpload.type;
+
+		if (!fileCheck.includes("pdf")) {
+			alert("Error: Only PDF files are accepted. Please try again with a pdf file");
+			return;
+		}
+
+ 
+
+		//use + v4() for random chars
+		const fileRef = ref(storage, fileLocation + '/' + fileUpload.name);
+		
+		uploadBytes(fileRef, fileUpload).then(() => {
+			alert("File Uploaded!");
+			//console.log(fileUpload)
+		})
+
+	};
+
+    //sunmission input and upload buttons
+    function UploadPrompts() {
+		return <div>
+        
+            <input  
+		        type="file"  
+			    style={{display: 'none'}} 
+			    onChange={(event) => {setFileUpload(event.target.files[0]);}}
+			    id="file-input-button"
+			    multiple
+		    />
+		    <label htmlFor="file-input-button">
+	            <Button className="Button" component="span">
+		            Choose File
+	            </Button>
+		    </label> 
+		    <button onClick={uploadFile}>Upload File</button>  
+		    </div>
+	} 
+
     
     return(
         <div className = "main-box" style={{ width: "100%" }}>
@@ -85,6 +143,10 @@ function AssignmentContent() {
             <Description>
                 {description}
             </Description>
+            <p className="title">
+                <UploadPrompts />
+            </p>
+            
         </div>
     );
 }

@@ -10,6 +10,7 @@ import "./TempFile.css";
 import "../Styles/App.css"
 import { Button } from "@mui/material";
 import { color } from "@mui/system";
+import "../Styles/Announcements.css";
 
 function VidUpload() {
 
@@ -27,12 +28,12 @@ function VidUpload() {
     const handleUrl = async () => {
         //if buffer != null ?
         setNewVid(buffer);
-        await timeout(250);
+        await timeout(1000);
         if (newVid == null) {
             alert("No video selected")
             return;
         }
-        alert("" + newVid + "uploaded!")
+        alert("Video uploaded!")
     }
 
     const [userRole, setUserRole] = useState("student");
@@ -61,11 +62,11 @@ function VidUpload() {
 
 
     return(
-        <div>
+        <div className="classInfo">
            <ModifyFileDisplay />
            
 
-            <ReactPlayer url={newVid} />
+            <ReactPlayer url={newVid}/>
             
         </div>
     );
