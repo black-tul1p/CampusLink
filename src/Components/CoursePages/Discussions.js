@@ -26,6 +26,7 @@ import {
   getCourseTopics,
   updateTopicName,
   getEnrolledStudents,
+  updateDiscussionPrivacy,
 } from "../../Backend/discuss";
 import { getUserRole } from "../../Backend/user";
 import { CheckCircle, WarningAmber } from "@mui/icons-material";
@@ -334,15 +335,15 @@ function Discussions() {
               ))}
             </Select>
           </FormControl>
-          {role === "instructor" && (
-            <>
-              <StyledAddButton
+          <StyledAddButton
                 onClick={() => setShowModal(true)}
                 variant="contained"
               >
                 New Post
                 <AddCircleIcon />
               </StyledAddButton>
+          {role === "instructor" && (
+            <>
               <StyledAddButton
                 onClick={() => setShowTopicModal(true)}
                 variant="contained"
@@ -367,6 +368,8 @@ function Discussions() {
           setEditingDiscussion={setEditingDiscussion}
           handleDiscussionUpdate={handleDiscussionUpdate}
           handleEditTopic={handleEditTopic}
+          role={role}
+          updateDiscussionPrivacy={updateDiscussionPrivacy}
         />
       </DiscussionContainer>
       <NewDiscussionModal
