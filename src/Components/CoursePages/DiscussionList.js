@@ -184,6 +184,15 @@ function DiscussionList(props) {
                   <Typography variant="body1">
                     {props.selectedDiscussion.description}
                   </Typography>
+                  <Typography variant="body1">
+                    Replies:
+                  </Typography>
+                  
+                  {props.selectedDiscussion.replies.map((reply) => (
+                    <Typography variant="body1">
+                    {"- " + reply.reply}
+                    </Typography>
+                  ))}
                   <div
                     style={{
                       display: "flex"
