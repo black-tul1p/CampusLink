@@ -11,7 +11,8 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getUserRole } from "../../Backend/user";
 import ErrorBox from "../Error";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Button } from "@mui/material";
 
 
 function Assignments() {
@@ -26,7 +27,9 @@ function Assignments() {
   const [error, setError] = useState("");
   const [courseDocId, setCourseDocId] = useState("");
   const [assignments, setAssignments] = useState([]);
+  const [submissionLimit, setSubmissionLimit] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
 
 
 
@@ -56,6 +59,7 @@ function Assignments() {
       setDate("");
       setTime("");
       setDescription("");
+      setSubmissionLimit("");
       setOpen1(false);
     }
   }
@@ -68,8 +72,8 @@ function Assignments() {
   }
 
   const handleSubmit = () => {
-    if (!verifyInput(title, description, date, time)) {
-      console.log("verify: " + verifyInput(title, description, date, time));
+    if (!verifyInput(title, description, date, time, submissionLimit)) {
+      console.log("verify: " + verifyInput(title, description, date, time, submissionLimit));
       setError("Incorrect input format.");
       setTimeout(() => {
         setError("");
@@ -77,7 +81,7 @@ function Assignments() {
         return;
     } else {
       const due = date + " " + time;
-      addAssignment(title, description, due, courseDocId);
+      addAssignment(title, description, due, submissionLimit, courseDocId);
       alert("New Assignment Added!");
       handleCancel();
     }
@@ -88,12 +92,22 @@ function Assignments() {
     setDate("");
     setTime("");
     setDescription("");
+    setSubmissionLimit("");
     setOpen(false);
   }
 
 
   const handleUpload = () => {
     console.log("File Changed");
+  }
+
+  const displayContent = (e) => {
+    const assignmentTitle = e.currentTarget.parentElement.getAttribute("assignmenttitle");
+    const assignmentDueDate = e.currentTarget.parentElement.getAttribute("assignmentduedate");
+    const assignmentDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
+    const assignmentSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
+    console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim);
+    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim}});
   }
 
   return (
@@ -120,16 +134,21 @@ function Assignments() {
               <div className="all-assigments-box">
                 {assignments.length > 0 ? (
                     assignments
-                      .filter(
-                        (assignment) =>
-                          assignment.title
-                      )
-                      .map((assignment) => (
-                        <div className = 'assignment-list-box'>
-                          <NavigateNextIcon/>
-                          <label>{assignment.title}</label>
-                        </div>
-                      ))
+                    .map((assignment) => (
+                      <div className = 'assignment-list-box' 
+                        assignmenttitle={assignment.title}
+                        assignmentdescript={assignment.description}
+                        assignmentduedate={assignment.dueDate.toDate()}
+                        assignmentsublim={assignment.submissionLimit}
+                        >
+                        <Button
+                          className="Mini-button"
+                          onClick={displayContent}
+                        >
+                          {assignment.title}
+                        </Button>
+                      </div>
+                    ))
                 ):
                 (<label>No Assignments</label>) 
                 }
@@ -156,14 +175,19 @@ function Assignments() {
               <div className="all-assigments-box">
                 {assignments.length > 0 ? (
                     assignments
-                      .filter(
-                        (assignment) =>
-                          assignment.title
-                      )
                       .map((assignment) => (
-                        <div className = 'assignment-list-box'>
-                          <NavigateNextIcon/>
-                          <label>{assignment.title}</label>
+                        <div className = 'assignment-list-box' 
+                          assignmenttitle={assignment.title}
+                          assignmentdescript={assignment.description}
+                          assignmentduedate={assignment.dueDate.toDate()}
+                          assignmentsublim={assignment.submissionLimit}
+                          >
+                          <Button
+                            className="Mini-button"
+                            onClick={displayContent}
+                          >
+                            {assignment.title}
+                          </Button>
                         </div>
                       ))
                 ):
@@ -209,6 +233,12 @@ function Assignments() {
                     setDescription(e.target.value);
                   }}
                 />
+                <label> Number of Submissions </label>
+                <input placeholder="1"
+                  value={submissionLimit}
+                  onChange={(e) => {
+                    setSubmissionLimit(e.target.value)
+                  }}/>
                 <label> Upload PDFs/Images </label> 
                 <input type="file"/>
                 <div className="button-box">
