@@ -10,6 +10,7 @@ import "../../Styles/App.css";
 import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "firebase/storage"
 import { doc, getDoc, collection } from "@firebase/firestore";
 import { storage } from "../../Backend/firebase"
+import { getCourseDetailsById } from "../../Backend/course";
 
 const TopbarRow = styled.div`
   height: 4.5em;
@@ -57,12 +58,25 @@ function AssignmentContent() {
     const navigate = useNavigate();
     const location = useLocation();
     const [error, setError] = useState("");
+    const [courseTitle, setCourseTitle] = useState("");
+    const [courseId, setCourseId] = useState("");
+
     const title = location.state?.assignmentTitle;
     const dueDate = location.state?.assignmentDueDate;
     const description = location.state?.assignmentDescript;
-    const submissionLimit = location.state?.assignmentSumLim;
+    const submissionLimit = location.state?.assignmentSubLim;
+    const courseDocId = location.state?.courseDocId;
     console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit);
 
+    //Get courseTitle and courseId from courseDocId
+    const getCourseDetails = async () => {
+        const course = await getCourseDetailsById(courseDocId);
+        const courseTitleT = course.courseTitle;
+        setCourseTitle(courseTitleT);
+        const courseIdT = course.courseId;
+        setCourseId(courseIdT);
+    }
+    getCourseDetails();
 
     //file location and set up states
     const fileLocation = title + "";

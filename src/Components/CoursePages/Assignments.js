@@ -107,7 +107,7 @@ function Assignments() {
     const assignmentDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
     const assignmentSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
     console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim);
-    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim}});
+    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId}});
   }
 
   return (
