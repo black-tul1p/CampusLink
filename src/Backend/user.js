@@ -228,16 +228,25 @@ export async function getUserRoleByEmail(email) {
  * @throws {Error} - If there was an error retrieving data from Firestore.
  */
 export async function getUserIdByEmail(email) {
-  const usersRef = collection(firestore, "instructors");
-  const querySnapshot = await getDocs(
-    query(usersRef, where("email", "==", email))
+  const instructorsRef = collection(firestore, "instructors");
+  const studentsRef = collection(firestore, "students")
+
+  const instructorQuerySnapshot = await getDocs(
+    query(instructorsRef, where("email", "==", email))
   );
 
-  if (querySnapshot.docs.length > 0) {
-    const userId = querySnapshot.docs[0].id;
+  const studentQuerySnapshot = await getDocs(
+    query(studentsRef, where("email", "==", email))
+  );
+
+  if (instructorQuerySnapshot.docs.length > 0) {
+    const userId = instructorQuerySnapshot.docs[0].id;
+    return userId;
+  } else if (studentQuerySnapshot.docs.length > 0) {
+    const userId = studentQuerySnapshot.docs[0].id;
     return userId;
   } else {
-    return null;
+    throw new Error(`User does not exist`);
   }
 }
 

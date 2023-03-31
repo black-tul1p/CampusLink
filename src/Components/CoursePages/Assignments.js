@@ -11,7 +11,10 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getUserRole } from "../../Backend/user";
 import ErrorBox from "../Error";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Button } from "@mui/material";
+import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "firebase/storage";
+import { storage } from "../../Backend/firebase";
 
 
 function Assignments() {
@@ -27,7 +30,9 @@ function Assignments() {
   const [courseDocId, setCourseDocId] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [submissionLimit, setSubmissionLimit] = useState("");
+  const [fileUpload, setFileUpload] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
 
 
@@ -68,6 +73,35 @@ function Assignments() {
       handleCancel();
     }
   }
+  const UploadFile = () => {
+    const fileLocation =    "STAT40200/" + "Assignments/" + title + "/pdfs";
+    const fileListRef = ref(storage, fileLocation + '/');
+    if (fileUpload == null) {
+			console.log("no pdfs added.")
+			return;
+		}
+
+		var fileCheck = "" + fileUpload.type;
+
+		if (!fileCheck.includes("pdf")) {
+			setError("Only pdfs allowed.");
+      setTimeout(() => {
+        setError("");
+      }, 1500);
+        return;
+			return;
+		}
+ 
+
+		const fileRef = ref(storage, fileLocation + '/' + fileUpload.name);
+		
+		uploadBytes(fileRef, fileUpload).then(() => {
+			console.log("File Uploaded!");
+      setFileUpload(null);
+			//console.log(fileUpload)
+		})
+  }
+  
 
   const handleSubmit = () => {
     if (!verifyInput(title, description, date, time, submissionLimit)) {
@@ -80,6 +114,7 @@ function Assignments() {
     } else {
       const due = date + " " + time;
       addAssignment(title, description, due, submissionLimit, courseDocId);
+      UploadFile();
       alert("New Assignment Added!");
       handleCancel();
     }
@@ -97,6 +132,15 @@ function Assignments() {
 
   const handleUpload = () => {
     console.log("File Changed");
+  }
+
+  const displayContent = (e) => {
+    const assignmentTitle = e.currentTarget.parentElement.getAttribute("assignmenttitle");
+    const assignmentDueDate = e.currentTarget.parentElement.getAttribute("assignmentduedate");
+    const assignmentDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
+    const assignmentSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
+    console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim);
+    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim}});
   }
 
   return (
@@ -123,16 +167,21 @@ function Assignments() {
               <div className="all-assigments-box">
                 {assignments.length > 0 ? (
                     assignments
-                      .filter(
-                        (assignment) =>
-                          assignment.title
-                      )
-                      .map((assignment) => (
-                        <div className = 'assignment-list-box'>
-                          <NavigateNextIcon/>
-                          <label>{assignment.title}</label>
-                        </div>
-                      ))
+                    .map((assignment) => (
+                      <div className = 'assignment-list-box' 
+                        assignmenttitle={assignment.title}
+                        assignmentdescript={assignment.description}
+                        assignmentduedate={assignment.dueDate.toDate()}
+                        assignmentsublim={assignment.submissionLimit}
+                        >
+                        <Button
+                          className="Mini-button"
+                          onClick={displayContent}
+                        >
+                          {assignment.title}
+                        </Button>
+                      </div>
+                    ))
                 ):
                 (<label>No Assignments</label>) 
                 }
@@ -159,14 +208,19 @@ function Assignments() {
               <div className="all-assigments-box">
                 {assignments.length > 0 ? (
                     assignments
-                      .filter(
-                        (assignment) =>
-                          assignment.title
-                      )
                       .map((assignment) => (
-                        <div className = 'assignment-list-box'>
-                          <NavigateNextIcon/>
-                          <label>{assignment.title}</label>
+                        <div className = 'assignment-list-box' 
+                          assignmenttitle={assignment.title}
+                          assignmentdescript={assignment.description}
+                          assignmentduedate={assignment.dueDate.toDate()}
+                          assignmentsublim={assignment.submissionLimit}
+                          >
+                          <Button
+                            className="Mini-button"
+                            onClick={displayContent}
+                          >
+                            {assignment.title}
+                          </Button>
                         </div>
                       ))
                 ):
@@ -219,7 +273,10 @@ function Assignments() {
                     setSubmissionLimit(e.target.value)
                   }}/>
                 <label> Upload PDFs/Images </label> 
-                <input type="file"/>
+                <input type="file"
+                onChange={(event) => {setFileUpload(event.target.files[0]);}}
+                multiple
+                />
                 <div className="button-box">
                   <button onClick={handleSubmit}>
                     Submit

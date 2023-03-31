@@ -14,6 +14,7 @@ import Quizzes from "./CoursePages/Quizzes";
 import ClasslistStudent from "./CoursePages/ClasslistStudent";
 import Classlist from "./CoursePages/Classlist";
 import Admin from "./Admin";
+import AssignmentContent from "./CoursePages/AssignmentContent";
 
 const Container = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ export const PageList = {
   Classlist: "/classlist",
   ClasslistStud: "/classlistStudent",
   Admin: "/adminHome",
+  AssignmentContent: "/assignmentContent",
 };
 
 export default function Landing(props) {
@@ -65,7 +67,9 @@ export default function Landing(props) {
     content = <Classlist theme={props} />;
   } else if (props.page === PageList.ClasslistStud) {
     content = <ClasslistStudent theme={props} />;
-  } else {
+  } else if (props.page === PageList.AssignmentContent) {
+    content = <AssignmentContent theme={props} />;
+  }else {
     content = <p>Invalid page.</p>;
   }
 
