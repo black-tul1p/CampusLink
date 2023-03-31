@@ -244,8 +244,10 @@ function Quizzes() {
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                   {quiz.deadline !== null ? quiz.deadline.toLocaleString('en-US') : "No Deadline"}
                 </TableCell>
+    
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                  {quiz.finalScore+" / "+quiz.points + " pts"}
+                  {quiz.isGraded ? quiz.finalScore + " / "+quiz.points + " pts" : "Ungraded"}
+                  
                 </TableCell>
                 <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
                   <Button variant="outlined" 
