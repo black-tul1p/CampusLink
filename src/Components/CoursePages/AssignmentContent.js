@@ -87,6 +87,9 @@ function AssignmentContent() {
 
     }
     getUserInfo();
+
+
+
     
 
     //file location and set up states
@@ -95,12 +98,31 @@ function AssignmentContent() {
     const [fileUpload, setFileUpload] = useState(null);
 	const [fileList, setFileList] = useState([])
 
+
+
+    //get # of user submissions
+    const [subcount, setSubCount] = useState(0);
+   
+    const getCurrentSubmissions  = async () => {
+        const allFiles = await list(fileListRef);
+        console.log(allFiles.items.length)
+        setSubCount(allFiles.items.length);
+     }
+     getCurrentSubmissions();
+
+     
+
     //file upload function
     const uploadFile = () => {
 		if (fileUpload == null) {
 			alert("No file selected");
 			return;
 		}
+
+        if (subcount >= submissionLimit) {
+            alert("You have reached the submission limit of " + submissionLimit + ". Your file can not be submitted.")
+            return;
+        }
 
 		//very rough but temp file type checker
 		var fileCheck = "" + fileUpload.type;
@@ -122,7 +144,9 @@ function AssignmentContent() {
 
 	};
 
-    //sunmission input and upload buttons
+   
+
+    //submission input and upload buttons
     function UploadPrompts() {
 		return <div>
         

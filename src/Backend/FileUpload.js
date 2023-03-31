@@ -23,6 +23,8 @@ function FileUpload() {
   	const location = useLocation();
   	const courseDocId = location.state?.courseId;
 
+	console.log(courseDocId)
+
   	//const courseStuff = doc(firestore, "courses", courseID);
 
   	
@@ -117,7 +119,7 @@ function FileUpload() {
 
 	function LoadFiles() {
 
-		console.log(fileListRef)
+		//console.log(fileListRef)
 		setFileList([]);
 		const tempFunc = async () => { 
 
