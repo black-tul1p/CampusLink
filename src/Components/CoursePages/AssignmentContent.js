@@ -4,6 +4,7 @@ import ErrorBox from "../Error";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button, Typography} from "@mui/material";
 import styled from "@emotion/styled";
+import { Timestamp } from "@firebase/firestore";
 import "../../Styles/Assignments.css";
 import "../../Styles/App.css";
 
@@ -50,6 +51,9 @@ function AssignmentContent() {
     const description = location.state?.assignmentDescript;
     const submissionLimit = location.state?.assignmentSumLim;
     console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit);
+    
+    const displayDueDate = (new Date(dueDate)).toDateString();
+    console.log((new Date(dueDate)));
 
     return(
         <div className = "main-box" style={{ width: "100%" }}>
@@ -67,11 +71,12 @@ function AssignmentContent() {
                     </TopbarButton>
                 </TopbarRow>
             </div>
-            <div className="assignment-box">
-                <label>
-                    {title}
-                </label>
-            </div>
+            <h1 className="title">
+                {title}
+            </h1>
+            <h2>
+                {displayDueDate}
+            </h2>
         </div>
     );
 }
