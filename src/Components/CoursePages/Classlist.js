@@ -14,14 +14,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CourseNavBar from "../CourseNavBar";
 
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
 
 function Classlist() {
   const [students, setStudents] = useState([]);
@@ -117,13 +109,15 @@ function Classlist() {
             </Button>
           </div>
           <table className="classlist">
-            <tbody>
+            <thead>
               <tr>
                 <th className="profile-pic-column"></th>
                 <th>Name</th>
                 <th>Email</th>
               </tr>
+            </thead>
 
+            <tbody>
               {students.map((student) => (
                 <tr>
                   <td

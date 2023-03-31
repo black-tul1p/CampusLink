@@ -214,6 +214,24 @@ body {
   transform: scale(1.1);
 }
 
+.course-container:hover > .delete-course-container {
+  opacity: 0.3;
+}
+
+.delete-course-container {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition-duration: 0.15s;
+}
+
+.delete-course-container:hover {
+  transform: scale(1);
+  opacity: 0.8 !important;
+}
+
 .course-container-top {
   background-color: #0a2232;
   border-top-right-radius: 10px;

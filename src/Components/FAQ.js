@@ -164,8 +164,6 @@ export default function FAQ() {
   };
 
   const validateSuggestion = () => {
-    var error;
-
     // Check if suggestion is empty
     if (!suggestionRef.current.value.trim()) {
       return "Suggestion cannot be empty";

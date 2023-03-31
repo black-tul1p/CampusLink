@@ -3,7 +3,7 @@ import { updateUserProfile } from "../Backend/user";
 import { FiEdit2 } from "react-icons/fi";
 import "firebase/firestore";
 import { auth } from "../Backend/firebase";
-import { TextField, Button } from "@mui/material";
+import { TextField } from "@mui/material";
 import "../Styles/Profile.css";
 
 function Profile(props) {

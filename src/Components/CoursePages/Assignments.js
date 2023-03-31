@@ -105,7 +105,7 @@ function Assignments() {
       {error && <ErrorBox text={error} />}
       <div className = "assignment-box">
         {role === "student" ? (
-          <div>
+          <div className="inner-assignment-box">
             <div className ="header-box">
               <div className="header-titles">
                 <p>Assignments</p>
@@ -141,7 +141,7 @@ function Assignments() {
             )}
           </div>
         ): role === "instructor" ? (
-          <div>
+          <div className="inner-assignment-box">
             <div className ="header-box">
               <div className="header-titles">
               <p>Assignments</p>
@@ -150,7 +150,7 @@ function Assignments() {
               <div className="header-divider"></div>
             </div>
             <div className="assignments-bar"  onClick={firstToggle}>
-              <p style={{fontSize:"1.4em"}}>
+              <p style={{fontSize:"1.3em"}}>
                 All Assignments
               </p>
               {open1 ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
@@ -176,8 +176,8 @@ function Assignments() {
               </div>
             )}
             <div className="create-assignment-bar" onClick={toggle}>
-              <p style={{fontSize:"1.4em"}}>
-                Create Assignment
+              <p style={{fontSize:"1.3em"}}>
+                Create An Assignment
               </p>
               {open ? <RemoveCircleIcon/> : <AddCircleIcon />}
             </div>
