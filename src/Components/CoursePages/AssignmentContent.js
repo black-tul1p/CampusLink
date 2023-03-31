@@ -174,7 +174,7 @@ function AssignmentContent() {
 		            Choose File
 	            </Button>
 		    </label> 
-		    <button onClick={uploadFile}>Upload File</button>  
+		    <button onClick={uploadFile}>Submit</button>  
 		    </div>
 	} 
 
