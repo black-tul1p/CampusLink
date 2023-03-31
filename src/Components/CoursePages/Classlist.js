@@ -42,6 +42,7 @@ function Classlist() {
     } else {
       console.log(courseID);
       const course = doc(firestore, "courses", courseID);
+      setCourse(course);
       try {
         const courseDoc = await getDoc(course);
         if (courseDoc.exists()) {
@@ -100,11 +101,15 @@ function Classlist() {
       setError(error.message)
     }) */
     const add = async () => {
+      try {
       const user = await getUserIdByEmail(addStudent);
       console.log("Student", user);
       const userRef = doc(firestore, "students", user);
       await updateDoc(userRef, {courses: arrayUnion(course)});
-      await updateDoc(courseDocId, {enrolledStudents: arrayUnion(user)});
+      await updateDoc(course, {enrolledStudents: arrayUnion(userRef)});
+      } catch (error) {
+        setError(error.message);
+      }
     };
 
     add();
