@@ -60,7 +60,8 @@ function Quizzes() {
             studentAnswers: attempt.answers,
             studentPoints: attempt.points,
             attemptedOn: attempt.attemptedOn,
-            isGraded: attempt.isGraded
+            isGraded: attempt.isGraded,
+            attempts: quiz.attempts,
           }
           setQuizDetails(QuizDetails);
           if(quiz.deadline !== null) {
@@ -141,7 +142,8 @@ function Quizzes() {
             <TableRow style={{borderBottom: "1px solid #fff1"}}>
               <TableCell style={{color: "white", fontSize: "1em"}}>Quiz</TableCell>
               <TableCell style={{color: "white", fontSize: "1em"}}>Due</TableCell>
-              <TableCell style={{color: "white", fontSize: "1em", textAlign: "right"}}>Points</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Points</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Attempts</TableCell>
               <TableCell/>
             </TableRow>
           </TableHead>
@@ -154,8 +156,11 @@ function Quizzes() {
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                   {quiz.deadline !== null ? quiz.deadline.toLocaleString('en-US') : "No Deadline"}
                 </TableCell>
-                <TableCell style={{color: "white", borderBottom: "1px solid #fff1", textAlign: "right"}}>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                   {quiz.points + " pts"}
+                </TableCell>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                  {quiz.attempts == null ? "unlimited attempts" : quiz.attempts + " times"}
                 </TableCell>
                 <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
                   {role === "instructor" && <>

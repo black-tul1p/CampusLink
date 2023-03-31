@@ -46,6 +46,8 @@ export function QuizCreationDialog(props) {
     const [quizQuestions, setQuizQuestions]           = useState([]);
     const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
     const [defaultQuestion, setDefaultQuestion]       = useState({});
+    const [attempts, setattempts]             = useState(1);
+    const [unlimitedAttempts, setUnlimitedAttempts]   = useState(false);
 
     const resetFields = () => {
       setNewQuizName(props.default.name);
@@ -105,6 +107,7 @@ export function QuizCreationDialog(props) {
                 deadline:     noDeadline ? null : newQuizDeadline,
                 questions:    quizQuestions,
                 timeLimit:    noTimeLimit ? null : Number(timeLimitHours) * 60 + Number(timeLimitMinutes),
+                attempts:     unlimitedAttempts ? null : Number(attempts),
               };
               props.onSave(quiz);
             }}>
@@ -200,6 +203,26 @@ export function QuizCreationDialog(props) {
                 defaultValue={(props.open && props.default.timeLimit) ? props.default.timeLimit % 60 : 0}
                 disabled={noTimeLimit}
               />
+              <TextField
+                label="Quiz Attempts"
+                sx={{
+                  margin: "5px",
+                  width: "50%",
+                  "& .MuiInputBase-input": { color: "black !important" },
+                  "& .MuiInputLabel-root": { color: "#000A !important" },
+                }}
+                variant="standard"
+                style={{ width: "10em" }}
+                type="number"
+                inputProps={{ min: 1 }}
+                onChange={(e) => {
+                  if (e.target.value < 1) e.target.value = 1;
+                  setattempts(e.target.value);
+                }}
+                defaultValue={props.open ? props.default.attempts : 1}
+                disabled={unlimitedAttempts}
+              />
+              
             </FormGroup>
             <FormControlLabel
               label="Unlimited Time"
@@ -209,6 +232,19 @@ export function QuizCreationDialog(props) {
                 onChange={event => {setNoTimeLimit(event.target.checked)}}
                 defaultChecked={props.open ? !Boolean(props.default.timeLimit) : true}
               />}
+            />
+            <FormControlLabel
+              label="Unlimited Attempts"
+              style={{ color: "#333" }}
+              control={
+                <Checkbox
+                  sx={{ "& .MuiSvgIcon-root": { color: "unset" } }}
+                  onChange={(event) => {
+                    setUnlimitedAttempts(event.target.checked);
+                  }}
+                  defaultChecked={props.open ? !Boolean(props.default.quizAttempts) : false}
+                />
+              }
             />
           </FormControl>
 

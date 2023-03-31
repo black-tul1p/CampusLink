@@ -27,6 +27,7 @@ function Assignments() {
   const [error, setError] = useState("");
   const [courseDocId, setCourseDocId] = useState("");
   const [assignments, setAssignments] = useState([]);
+  const [submissionLimit, setSubmissionLimit] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -58,6 +59,7 @@ function Assignments() {
       setDate("");
       setTime("");
       setDescription("");
+      setSubmissionLimit("");
       setOpen1(false);
     }
   }
@@ -70,8 +72,8 @@ function Assignments() {
   }
 
   const handleSubmit = () => {
-    if (!verifyInput(title, description, date, time)) {
-      console.log("verify: " + verifyInput(title, description, date, time));
+    if (!verifyInput(title, description, date, time, submissionLimit)) {
+      console.log("verify: " + verifyInput(title, description, date, time, submissionLimit));
       setError("Incorrect input format.");
       setTimeout(() => {
         setError("");
@@ -79,7 +81,7 @@ function Assignments() {
         return;
     } else {
       const due = date + " " + time;
-      addAssignment(title, description, due, courseDocId);
+      addAssignment(title, description, due, submissionLimit, courseDocId);
       alert("New Assignment Added!");
       handleCancel();
     }
@@ -90,6 +92,7 @@ function Assignments() {
     setDate("");
     setTime("");
     setDescription("");
+    setSubmissionLimit("");
     setOpen(false);
   }
 
@@ -230,6 +233,12 @@ function Assignments() {
                     setDescription(e.target.value);
                   }}
                 />
+                <label> Number of Submissions </label>
+                <input placeholder="1"
+                  value={submissionLimit}
+                  onChange={(e) => {
+                    setSubmissionLimit(e.target.value)
+                  }}/>
                 <label> Upload PDFs/Images </label> 
                 <input type="file"/>
                 <div className="button-box">

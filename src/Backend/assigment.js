@@ -11,7 +11,7 @@ import {
 } from "@firebase/firestore";
 
 
-export const addAssignment = async (title, description, dueDate, courseDocId) => {
+export const addAssignment = async (title, description, dueDate, submissionLimit, courseDocId) => {
     const d = new Date(dueDate);
     const date = Timestamp.fromDate(d);
   
@@ -19,6 +19,7 @@ export const addAssignment = async (title, description, dueDate, courseDocId) =>
       dueDate: date,
       title: title,
       description: description,
+      submissionLimit: submissionLimit,
       courseDocId: courseDocId,
     };
   
@@ -90,17 +91,14 @@ export const addAssignment = async (title, description, dueDate, courseDocId) =>
     }
   };
 
-  export function verifyInput(title, description, dueDate, time) {
+  export function verifyInput(title, description, dueDate, time, submissionLimit) {
     const dateRegex = /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/;
     const timeRegex = /^[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/;
     const nonEmptyRegex = /^.+$/;
-    if (!dateRegex.test(dueDate) || !timeRegex.test(time) || !nonEmptyRegex.test(title)) {
-      console.log(dueDate + dateRegex.test(dueDate) + "," + timeRegex.test(time) + "," + nonEmptyRegex.test(title));
+    const submissionLimitRegex = /^\d+%/;
+    if (!dateRegex.test(dueDate) || !timeRegex.test(time) || !nonEmptyRegex.test(title) || !submissionLimitRegex.test(submissionLimit)) {
+      console.log(dueDate + dateRegex.test(dueDate) + "," + timeRegex.test(time) + "," + nonEmptyRegex.test(title) + "," + submissionLimitRegex.test(submissionLimit));
       return false;
     }
     return true;
   }
-
-
-
-
