@@ -32,21 +32,11 @@ const CloseButton = styled("span")({
   cursor: "pointer",
 });
 
-function NewDiscussionModal({
-  showModal,
-  closeModal,
-  handleAddDiscussion,
-  newDiscussionTitle,
-  setNewDiscussionTitle,
-  newDiscussionDescription,
-  setNewDiscussionDescription,
-  discussionPrivacy,
-  setDiscussionPrivacy,
-}) {
+function NewDiscussionModal(props) {
   return (
-    <StyledModal open={showModal} onClose={closeModal}>
+    <StyledModal open={props.showModal} onClose={props.closeModal}>
       <ModalWrapper>
-        <CloseButton onClick={closeModal}>&times;</CloseButton>
+        <CloseButton onClick={props.closeModal}>&times;</CloseButton>
         <h2 style={{ color: "white", paddingBottom: "1em" }}>
           Start a new discussion
         </h2>
@@ -55,8 +45,8 @@ function NewDiscussionModal({
             <TextField
               label="Title"
               fullWidth
-              value={newDiscussionTitle}
-              onChange={(e) => setNewDiscussionTitle(e.target.value)}
+              value={props.newDiscussionTitle}
+              onChange={(e) => props.setNewDiscussionTitle(e.target.value)}
             />
           </div>
           <div>
@@ -65,8 +55,8 @@ function NewDiscussionModal({
               fullWidth
               multiline
               rows={4}
-              value={newDiscussionDescription}
-              onChange={(e) => setNewDiscussionDescription(e.target.value)}
+              value={props.newDiscussionDesc}
+              onChange={(e) => props.setNewDiscussionDesc(e.target.value)}
             />
           </div>
           <div>
@@ -75,8 +65,8 @@ function NewDiscussionModal({
               <Select
                 label="Privacy"
                 labelId="privacy-select-label"
-                value={discussionPrivacy}
-                onChange={(e) => setDiscussionPrivacy(e.target.value)}
+                value={props.discussionPrivacy}
+                onChange={(e) => props.setDiscussionPrivacy(e.target.value)}
               >
                 <MenuItem style={{ justifyContent: "center" }} value="open">
                   Open
@@ -96,7 +86,7 @@ function NewDiscussionModal({
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddDiscussion}
+            onClick={props.handleAddDiscussion}
             style={{
               padding: "1em",
               borderRadius: "1em",

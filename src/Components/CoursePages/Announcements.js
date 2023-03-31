@@ -30,7 +30,7 @@ function Announcements() {
   useEffect(() => {
     try {
       getDoc(course).then((courseDoc) => {
-        console.log(courseDoc.data());
+        // console.log(courseDoc.data());
         setCourseData(courseDoc.data());
       });
       //const courseDoc = await getDoc(course)

@@ -8,11 +8,38 @@ import {
   Typography,
   TextField,
   Button,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  FormGroup,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { auth } from "../../Backend/firebase";
 
 function DiscussionList(props) {
+  const handlePrivacyChange = async (discussion, e) => {
+    e.stopPropagation();
+    const newValue = e.target.value;
+    console.log(`Discussion: ${discussion.id}, privacy: ${newValue}`);
+  
+    const updatedDiscussions = props.discussions.map((d) => {
+      if (d.id === discussion.id) {
+        return { ...d, privacy: newValue };
+      }
+      return d;
+    });
+  
+    try {
+      await props.updateDiscussionPrivacy(discussion.id, newValue);
+      console.log("Privacy updated successfully");
+    } catch (error) {
+      console.error("Error updating privacy:", error);
+    } finally {
+      props.setDiscussions(updatedDiscussions);
+    }
+  };
+  
   return (
     <List
       sx={{
@@ -40,39 +67,53 @@ function DiscussionList(props) {
             alignItems: "flex-start",
           }}
         >
-          <ListItemText
-            primary={
-              <Typography variant="h6" component="div">
-                {discussion.title}
-              </Typography>
-            }
-            secondary={
-              <>
-                <Typography component="span" variant="body2" color="gray">
-                  {new Date(
-                    discussion.created_at.toMillis()
-                  ).toLocaleDateString()}
+          <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <ListItemText
+              primary={
+                <Typography variant="h6" component="div">
+                  {discussion.title}
                 </Typography>
-                <Typography component="span" variant="body2" color="gray">
-                  {" by "}
-                  {discussion.creator_name}
-                </Typography>
-              </>
-            }
-          />
-          {auth.currentUser.uid === discussion.creator_id && (
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  props.handleEditDiscussion(discussion);
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          )}
+              }
+              secondary={
+                <>
+                  <Typography component="span" variant="body2" color="gray">
+                    {new Date(
+                      discussion.createdAt.toMillis()
+                    ).toLocaleDateString()}
+                  </Typography>
+                  <Typography component="span" variant="body2" color="gray">
+                    {" by "}
+                    {discussion.creatorName}
+                  </Typography>
+                </>
+              }
+            />
+            {props.role === "instructor" && (
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <FormControl>
+                  <InputLabel htmlFor="privacy-select">Privacy</InputLabel>
+                  <Select
+                    id="privacy-select"
+                    value={discussion.privacy}
+                    onChange={(e) => handlePrivacyChange(discussion, e)}
+                  >
+                    <MenuItem value="open">Open</MenuItem>
+                    <MenuItem value="private">Private</MenuItem>
+                    <MenuItem value="restricted">Restricted</MenuItem>
+                  </Select>
+                </FormControl>
+                <IconButton
+                  edge="end"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    props.handleEditDiscussion(discussion);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </div>
+            )}
+          </div>
           {props.selectedDiscussion === discussion && (
             <div className="discussion-content">
               {props.editingDiscussion &&
