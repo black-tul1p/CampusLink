@@ -77,11 +77,7 @@ function Quizzes() {
     } catch (error) {
       console.log("error in getting quiz attempt.");
     }
-    
-    
   }
-
-
 
   const defaultNewQuiz = {
     name: "",
