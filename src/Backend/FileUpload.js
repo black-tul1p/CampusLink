@@ -36,7 +36,7 @@ function FileUpload() {
     } catch (error) {}
   }, []);
 
-    var fileLocation = "" + cDetails.courseTitle + cDetails.courseId;
+    var fileLocation = "" + cDetails.courseTitle + cDetails.courseId + "/LectureNotes";
 
 	const [fileUpload, setFileUpload] = useState(null);
 	const [fileList, setFileList] = useState([])

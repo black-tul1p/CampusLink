@@ -79,7 +79,7 @@ function AssignmentContent() {
     getCourseDetails();
 
     //file location and set up states
-    const fileLocation = title + "";
+    const fileLocation = "tempCTitle" + "11111/" + "Assignments/" + title + "/tempStudentID";
     const fileListRef = ref(storage, fileLocation + '/');
     const [fileUpload, setFileUpload] = useState(null);
 	const [fileList, setFileList] = useState([])
