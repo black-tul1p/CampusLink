@@ -77,7 +77,7 @@ export async function getQuizAttempt(courseId, studentDocId, quizId) {
     if (quizAttemptSnapshot.exists()) {
       return quizAttemptSnapshot.data();
     } else {
-      throw new Error("Quiz attempt not found");
+      return null;
     }
   } catch (error) {
     throw new Error("Error getting quiz attempt data:", error);
@@ -86,8 +86,12 @@ export async function getQuizAttempt(courseId, studentDocId, quizId) {
 
 export async function setQuizAttempt(courseId, studentDocId, quizId, data) {
   try {
-    const newData = { ...data };
-    newData.attempted = true;
+    const newData = {
+      ...data,
+      isGraded: false,
+      attemptNumber: data.attemptNumber ? data.attemptNumber + 1 : 1,
+      attemptedOn: new Date(),
+    };
 
     const quizAttemptRef = doc(
       firestore,
