@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "@emotion/styled";
 import {
   Container,
@@ -59,30 +59,22 @@ const SubmitButton = styled(Button)`
 `;
 
 const QuizPopup = (props) => {
-  // const quiz = props.quiz;
-  const [quiz, setQuiz] = useState({ ...props.quiz });
+  const quiz = { ...props.quiz };
   const [attempt, setAttempt] = useState({ ...props.answers });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [remTime, setRemTime] = useState();
-  const taken = attempt ? attempt.attempted : false;
-  const navigate = useNavigate();
-
-  console.log("POP", attempt);
-
-  // const handleAnswerChange = (index, answer) => {
-  //   const updatedQuiz = { ...quiz };
-  //   const newAnswers = updatedQuiz.questions[index].answers;
-  //   if (!newAnswers) {
-  //     newAnswers = [answer];
-  //   } else if (Array.isArray(answer) && answer.length > 1) {
-  //     newAnswers = answer;
-  //   } else {
-  //     newAnswers[0] = answer;
-  //   }
-  //   setQuiz(updatedQuiz);
-  // };
+  const textFieldRefs = useRef(""); // create an array of refs
+  const newAttempt = Object.keys(attempt).length > 0 ? false : true;
+  const viewOnly =
+    props.quiz.deadline !== null
+      ? props.quiz.deadline < new Date()
+        ? true
+        : false
+      : false;
+  // const navigate = useNavigate();
+  console.log(attempt);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -98,29 +90,28 @@ const QuizPopup = (props) => {
     setAttempt(newAnswers);
     console.log("AFTER:", attempt);
 
-    handleSubmit();
+    // handleSubmit();
+  };
+
+  const handleTextBox = (index) => {
+    console.log("REF", textFieldRefs.current);
   };
 
   const handleSubmit = () => {
     // logic to handle quiz submission
-    // console.log(props.courseId, props.userId, quiz.quizId);
     const attemptQuiz = async () => {
       await setQuizAttempt(props.courseId, props.userId, quiz.quizId, attempt);
     };
 
     attemptQuiz();
-    // console.log("Submitted!");
     setSnackbarMessage("Quiz submitted");
     setOpenSnackbar(true);
-    // console.log("====================================");
-    // console.log(quiz);
-    // console.log("====================================");
     setSubmitted(true);
     props.onClose();
   };
 
   const handleTimer = () => {
-    if (!taken && !attempt.attemptedOn) {
+    if (!viewOnly && !attempt.attemptedOn) {
       attempt.attemptedOn = new Date();
       attempt.attempted = true;
     } else if (quiz.startTime) {
@@ -170,7 +161,7 @@ const QuizPopup = (props) => {
             </Question>
             {question.type === "Multiple Choice" ? (
               <AnswerContainer
-                value={attempt?.answers[index]?.answer}
+                value={!newAttempt ? attempt?.answers[index]?.answer : ""}
                 onChange={(event) =>
                   handleAnswerUpdate(index, event.target.value)
                 }
@@ -181,13 +172,13 @@ const QuizPopup = (props) => {
                     value={choice}
                     control={<Radio />}
                     label={choice}
-                    disabled={taken}
+                    disabled={viewOnly}
                   />
                 ))}
               </AnswerContainer>
             ) : question.type === "True or False" ? (
               <AnswerContainer
-                value={attempt?.answers[index]?.answer}
+                value={!newAttempt ? attempt?.answers[index]?.answer : ""}
                 onChange={(event) =>
                   handleAnswerUpdate(index, event.target.value)
                 }
@@ -196,18 +187,18 @@ const QuizPopup = (props) => {
                   value="true"
                   control={<Radio />}
                   label="True"
-                  disabled={taken}
+                  disabled={viewOnly}
                 />
                 <AnswerLabel
                   value="false"
                   control={<Radio />}
                   label="False"
-                  disabled={taken}
+                  disabled={viewOnly}
                 />
               </AnswerContainer>
             ) : question.type === "Checkbox" ? (
               <AnswerContainer
-                value={attempt?.answers[index]?.answer}
+                value={!newAttempt ? attempt?.answers[index]?.answer : ""}
                 onChange={(event) =>
                   handleAnswerUpdate(index, event.target.value)
                 }
@@ -218,7 +209,7 @@ const QuizPopup = (props) => {
                     value={choice}
                     control={<CheckboxAnswerContainer />}
                     label={choice}
-                    disabled={taken}
+                    disabled={viewOnly}
                   />
                 ))}
               </AnswerContainer>
@@ -229,20 +220,21 @@ const QuizPopup = (props) => {
                 multiline
                 rows={4}
                 size="small"
-                value={
-                  attempt?.answers[index]?.answer
-                    ? attempt.answers[index].answer
-                    : ""
-                }
-                onChange={(event) =>
-                  handleAnswerUpdate(index, event.target.value)
-                }
-                disabled={taken}
+                // defaultValue={
+                //   Object.keys(attempt).length > 0
+                //     ? attempt?.answers[index]?.answer
+                //     : " "
+                // }
+                onChange={(event) => {
+                  console.log(event.target.value);
+                  handleAnswerUpdate(index, event.target.value);
+                }}
+                disabled={viewOnly}
               />
             )}
           </QuestionContainer>
         ))}
-        {!taken && (
+        {!viewOnly && (
           <SubmitButton
             variant="contained"
             color="primary"
