@@ -271,7 +271,6 @@ export async function isAdmin(email) {
 export async function logoutUser() {
   try {
     await signOut(auth);
-    console.log("User signed out successfully");
   } catch (error) {
     console.error("Error signing out user:", error);
     throw error;

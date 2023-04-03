@@ -12,17 +12,13 @@ import { firestore } from "./firebase";
 
 export async function createQuiz(courseId, quiz) {
   try {
-    const newQuiz = {
-      ...quiz,
-      attempted: false,
-    };
     const quizCollection = collection(
       firestore,
       "courses",
       courseId,
       "quizzes"
     );
-    await addDoc(quizCollection, newQuiz);
+    await addDoc(quizCollection, quiz);
   } catch (error) {
     throw new Error("Error adding quiz:", error);
   }
@@ -77,7 +73,6 @@ export async function getQuizAttempt(courseId, studentDocId, quizId) {
     if (quizAttemptSnapshot.exists()) {
       return quizAttemptSnapshot.data();
     } else {
-      console.log("No attempt found");
       return null;
     }
   } catch (error) {

@@ -1,17 +1,18 @@
 import CourseNavBar from "../CourseNavBar";
-import Button from "@mui/material/Button";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import Table from "@mui/material/Table";
-import TableContainer from "@mui/material/TableContainer";
-import { IconButton } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-
-import { getUserRole } from "../../Backend/user";
+import {
+  Button,
+  IconButton,
+  Table,
+  TableContainer,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import { getUserRole, getLoggedInUserId } from "../../Backend/user";
 import {
   createQuiz,
   fetchQuizzes,
@@ -20,18 +21,18 @@ import {
   getQuizAttempt,
 } from "../../Backend/quiz";
 import { QuizCreationDialog } from "./QuizCreationDialog";
-import ViewPastQuiz from "./ViewPastQuiz";
-import { getLoggedInUserId } from "../../Backend/user";
 import QuizPopup from "./QuizPopup";
+import ViewPastQuiz from "./ViewPastQuiz";
 
 function Quizzes() {
   const [open, setOpen] = useState(false);
   const [quizzes, setQuizzes] = useState([]);
   const [role, setRole] = useState("");
   const [clicked, setClicked] = useState(false);
-  const [studentAnswers, setStudentAnswers] = useState({});
-  // const [studentPoints, setStudentPoints] = useState("");
+  const [studentAnswers, setStudentAnswers] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [attemptedQuizzes, setAttemptedQuizzes] = useState({});
+  // const [studentPoints, setStudentPoints] = useState("");
 
   const dateFormat = {
     day: "2-digit",
@@ -51,30 +52,49 @@ function Quizzes() {
     });
   };
 
-  const isAttempted = (quiz) => {
-    const checkQuizAttempt = async () => {
-      const attempt = await getQuizAttempt(courseId, studentDocId, quiz.quizId);
-      // console.log(quiz.quizId, attempt);
-      return attempt !== null ? true : false;
-      // console.log("Here", studentAnswers);
-      // setStudentPoints(attempt.points);
-    };
-    return checkQuizAttempt();
+  const updateAttempted = (quiz) => {
+    return getQuizAttempt(courseId, studentDocId, quiz.quizId)
+      .then((attempt) => {
+        const attempted = attempt !== null ? true : false;
+        setAttemptedQuizzes((prev) => ({
+          ...prev,
+          [quiz.quizId]: attempted,
+        }));
+        return attempted;
+      })
+      .catch((error) => {
+        console.error("Error getting quiz attempt:", error);
+        return false;
+      });
   };
+
+  useEffect(() => {
+    if (quizzes.length > 0) {
+      quizzes.map((quiz, index) => {
+        updateAttempted(quiz);
+      });
+    }
+  }, [quizzes]);
 
   const clickView = (quiz) => {
-    console.log(courseId, studentDocId, quiz.quizId);
-    const fetchQuizAttempt = async () => {
-      const attempt = await getQuizAttempt(courseId, studentDocId, quiz.quizId);
-      console.log("Get", attempt);
-      setStudentAnswers(attempt);
-      console.log("Set", studentAnswers);
-      // setStudentPoints(attempt.points);
-    };
-
-    fetchQuizAttempt();
-    setClicked(true);
+    getQuizAttempt(courseId, studentDocId, quiz.quizId).then((res) => {
+      if (res !== null) setStudentAnswers(res);
+      else setStudentAnswers({});
+    });
   };
+
+  useEffect(() => {
+    try {
+      if (studentAnswers !== null) {
+        setClicked(true);
+      }
+      // if (Object.keys(studentAnswers).length > 0) {
+      //   setClicked(true);
+      // }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [studentAnswers]);
 
   const defaultNewQuiz = {
     name: "",
@@ -212,7 +232,7 @@ function Quizzes() {
                                 });
                               }}
                             >
-                              <DeleteIcon />
+                              <Delete />
                             </IconButton>
                           </>
                         )}
@@ -225,6 +245,7 @@ function Quizzes() {
           </TableContainer>
         </div>
       )}
+
       <QuizCreationDialog
         title="Create Quiz"
         open={open}
@@ -254,10 +275,10 @@ function Quizzes() {
           setEditingQuiz(null);
         }}
       />
+
       {role === "student" && (
         <div
           style={{
-            display: "block",
             margin: "auto",
             padding: "20px 0",
             width: "80%",
@@ -334,17 +355,11 @@ function Quizzes() {
                           variant="outlined"
                           onClick={() => {
                             setSelectedQuiz(quiz);
-                            // setQuizName(quiz.name);
-                            // setQuizDesc(quiz.description);
-                            // setQuizDeadline(quiz.deadline);
-                            // setQuizQuestions(quiz.questions);
-                            // setQuizAnswers(quiz.answers);
-                            // setQuizPoints(quiz.points);
                             clickView(quiz);
                           }}
                           style={{ minWidth: "8em" }}
                         >
-                          {!isAttempted(quiz) ? "ATTEMPT" : "VIEW"}
+                          {attemptedQuizzes[quiz.quizId] ? "View" : "Attempt"}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -356,15 +371,6 @@ function Quizzes() {
         </div>
       )}
       {clicked && (
-        // <ViewPastQuiz
-        //   title={quizTitle}
-        //   quiz={selectedQuiz}
-        //   quizDetails={quizDetails}
-        //   open={clicked}
-        //   onClose={() => {
-        //     setClicked(false);
-        //   }}
-        // />
         <QuizPopup
           userId={studentDocId}
           courseId={courseId}
