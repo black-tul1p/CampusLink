@@ -154,6 +154,37 @@ function FileUpload() {
 		return userRole;
 	}
 
+	
+	const [mp4File, setMP4Upload] = useState([]);
+	//upload file to firebase  (change function)
+	const uploadMP4 = () => {
+		if (mp4File == null) {
+			alert("No MP4 selected");
+			return;
+		}
+
+		//very rough but temp file type checker
+		var fileCheck = "" + mp4File.type;
+
+		if (!fileCheck.includes("mp4")) {
+			alert("Error: Only mp4 files are accepted. Please try again with a mp4 file");
+			console.log(mp4File);
+			//return;
+		}
+
+ 
+
+		//use + v4() for random chars
+		const fileRef = ref(storage, fileLocation + '/mp4Videos/' + mp4File.name);
+		
+		uploadBytes(fileRef, mp4File).then(() => {
+			alert("File Uploaded!");
+			setFileUpload(null);
+			//console.log(fileUpload)
+		})
+
+	};
+
 	 function ModifyFileDisplay() {
 		modifyFiles();
 		//console.log(userRole)
@@ -167,11 +198,31 @@ function FileUpload() {
 		/>
 		<label htmlFor="file-input-button">
 	  <Button className="Button" component="span">
-		Choose File
+		Choose PDF File
 	  </Button>
 		</label> 
 		<button onClick={uploadFile}>Upload File</button>  
+		
+		
+		<input 
+		type="file"
+		style={{display: 'none'}}
+		onChange={(event) => {setMP4Upload(event.target.files[0]);}}
+		id="mp4-input-button"
+		multiple
+		/>
+
+		<label htmlFor="mp4-input-button">
+			<Button className="Button" component="span">
+				Choose MP4 File
+			</Button>
+		</label>
+		<button onClick={uploadMP4}>Upload MP4</button>
+		
 		</div>
+
+
+
 		}
 
 	} 
