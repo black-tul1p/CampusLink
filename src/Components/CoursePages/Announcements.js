@@ -5,10 +5,11 @@ import { firestore } from "../../Backend/firebase";
 import ProfilePic from "../../Assets/user_logo.jpg";
 //import LogoBanner from '../Components/LogoBanner.js'
 import { useState, useEffect } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import { getCourseDetailsById } from "../../Backend/course";
 import "../../Styles/Announcements.css";
 import CourseNavBar from "../CourseNavBar";
+import VidUpload from "../../Backend/VidUpload";
 
 function Announcements() {
   //useEffect(async () => {
@@ -30,7 +31,7 @@ function Announcements() {
   useEffect(() => {
     try {
       getDoc(course).then((courseDoc) => {
-        // console.log(courseDoc.data());
+       //console.log(courseDoc.data());
         setCourseData(courseDoc.data());
       });
       //const courseDoc = await getDoc(course)
@@ -38,7 +39,7 @@ function Announcements() {
     } catch (error) {}
   }, []);
 
-  // console.log(cDetails.courseID);
+  //console.log(cDetails.assignments);
 
   return (
     <div style={{ width: "100%" }}>
@@ -50,7 +51,9 @@ function Announcements() {
         <h2>Course Description: {cDetails.description}</h2>
         <h2>Course Credits: {cDetails.credit}</h2>
         <h2>Course Capacity:{cDetails.capacity}</h2>
+            
       </div>
+      
     </div>
   );
 }

@@ -184,21 +184,33 @@ function DiscussionList(props) {
                   <Typography variant="body1">
                     {props.selectedDiscussion.description}
                   </Typography>
+                  {props.selectedDiscussion.privacy !== 'restricted' &&
+                    <Typography variant="body1">
+                      Replies:
+                    </Typography>
+                  }
+                  
+                  {props.selectedDiscussion.replies.map((reply) => (
+                    <Typography variant="body1">
+                    {"- " + reply.reply}
+                    </Typography>
+                  ))}
+                  {props.selectedDiscussion.privacy !== 'restricted' &&
                   <div
                     style={{
                       display: "flex"
                       }}
                   >
-                  <form style={{ display: "flex", flexDirection: "column", gap: "2em" }}>
-                    <div>
-                      <TextField
-                        label="type here"
-                        fullWidth
-                        value={reply}
-                        onChange={(e) => setReply(e.target.value)}
-                      />
-                    </div>
-                  </form>
+                    <form style={{ display: "flex", flexDirection: "column", gap: "2em" }}>
+                      <div>
+                        <TextField
+                          label="type here"
+                          fullWidth
+                          value={reply}
+                          onChange={(e) => setReply(e.target.value)}
+                        />
+                      </div>
+                    </form>
                     <button
                       onClick={() => sendReply(discussion.id)}
                       style={{
@@ -216,6 +228,7 @@ function DiscussionList(props) {
                       <ReplyIcon />
                     </button>
                   </div>
+                  }
                   {props.selectedDiscussion?.attachment_url && (
                     <a
                       href={props.selectedDiscussion.attachment_url}
