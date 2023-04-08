@@ -178,6 +178,21 @@ function AssignmentContent() {
 		    </div>
 	} 
 
+    //Temp test for navigation to regrade request page
+    function Regrade() {
+       return <div> 
+            <h3>Space</h3>
+            <button onClick={testFunc()}>
+                Request Regrade  
+            </button>
+
+        </div>
+    }
+
+    function testFunc() {
+        alert("ko?")
+    }
+
     
     return(
         <div className = "main-box" style={{ width: "100%" }}>
@@ -209,6 +224,7 @@ function AssignmentContent() {
             </SubLimitText>
             <p className="title">
                 <UploadPrompts />
+                <Regrade/>
             </p>
             
         </div>
