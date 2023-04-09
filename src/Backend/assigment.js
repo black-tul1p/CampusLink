@@ -102,3 +102,13 @@ export const addAssignment = async (title, description, dueDate, submissionLimit
     }
     return true;
   }
+
+  export const editAssignment = async (assignmentDocId, updatedAssignment) => {
+    try {
+      const ref = doc(collection(firestore, "assignments"), assignmentDocId);
+      await updateDoc(ref, updatedAssignment);
+      console.log("Assignment updated successfully");
+    } catch (error) {
+      console.error("Error updating assignment:", error);
+    }
+  };

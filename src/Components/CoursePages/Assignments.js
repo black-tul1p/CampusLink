@@ -1,5 +1,5 @@
 import CourseNavBar from "../CourseNavBar";
-import { addAssignment, verifyInput, getAssigmentsByCourse } from "../../Backend/assigment";
+import { addAssignment, verifyInput, getAssigmentsByCourse, editAssignment, getAssignmentById } from "../../Backend/assigment";
 import "../../Styles/Assignments.css";
 import "../../Styles/App.css";
 import { useState, useEffect} from "react";
@@ -33,8 +33,7 @@ function Assignments() {
   const [fileUpload, setFileUpload] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-
-
+  const [editingAssignment, setEditingAssignment] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -143,6 +142,10 @@ function Assignments() {
     navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId}});
   }
 
+  const handleEdit = (assignmentId) => {
+    setEditingAssignment(assignmentId);
+  };
+
   return (
     <div className = "main-box" style={{ width: "100%" }}>
       <CourseNavBar />
@@ -209,7 +212,8 @@ function Assignments() {
                 {assignments.length > 0 ? (
                     assignments
                       .map((assignment) => (
-                        <div className = 'assignment-list-box' 
+                        <div className = 'assignment-list-box'
+                          assignmentdocid={assignment.id}
                           assignmenttitle={assignment.title}
                           assignmentdescript={assignment.description}
                           assignmentduedate={assignment.dueDate.toDate()}
@@ -220,6 +224,12 @@ function Assignments() {
                             onClick={displayContent}
                           >
                             {assignment.title}
+                          </Button>
+                          <Button
+                            className="Mini-button edit-button"
+                            onClick={() => handleEdit(assignment.id)}
+                          >
+                            Edit
                           </Button>
                         </div>
                       ))
