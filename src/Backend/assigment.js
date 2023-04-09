@@ -95,7 +95,7 @@ export const addAssignment = async (title, description, dueDate, submissionLimit
     const dateRegex = /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/;
     const timeRegex = /^[0-9][0-9]:[0-9][0-9]:[0-9][0-9]$/;
     const nonEmptyRegex = /^.+$/;
-    const submissionLimitRegex = /^\d+%/;
+    const submissionLimitRegex = /^\d+$/;
     if (!dateRegex.test(dueDate) || !timeRegex.test(time) || !nonEmptyRegex.test(title) || !submissionLimitRegex.test(submissionLimit)) {
       console.log(dueDate + dateRegex.test(dueDate) + "," + timeRegex.test(time) + "," + nonEmptyRegex.test(title) + "," + submissionLimitRegex.test(submissionLimit));
       return false;
