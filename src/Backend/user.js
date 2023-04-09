@@ -291,6 +291,32 @@ export function getLoggedInUserId() {
 }
 
 /**
+ * Retrieves the Display Name of the currently logged-in user from Firebase Authentication.
+ *
+ * @returns {string|null} - The Display Name of the currently logged-in user, or null if no user is logged in.
+ */
+export function getLoggedInUserName() {
+  const user = auth.currentUser;
+  if (!user) {
+    return null;
+  }
+  return user.displayName;
+}
+
+/**
+ * Retrieves the Email of the currently logged-in user from Firebase Authentication.
+ *
+ * @returns {string|null} - The Email of the currently logged-in user, or null if no user is logged in.
+ */
+export function getLoggedInUserEmail() {
+  const user = auth.currentUser;
+  if (!user) {
+    return null;
+  }
+  return user.email;
+}
+
+/**
  * Retrieves user information from the Firestore database by their email
  *
  * @param {string} email - The email of the user to retrieve

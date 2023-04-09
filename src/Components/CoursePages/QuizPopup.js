@@ -15,16 +15,28 @@ import {
   IconButton,
   Snackbar,
   SnackbarContent,
+  Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { setQuizAttempt } from "../../Backend/quiz";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "@mui/icons-material";
+import { getCurrentUser } from "../../Backend/user";
+import { getLoggedInUserName } from "../../Backend/user";
+import { getLoggedInUserEmail } from "../../Backend/user";
+import Timer from "./Timer";
 
 const QuizPopupContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   align-items: left;
+  padding: 2rem;
+`;
+
+const QuizInfoBox = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
   padding: 2rem;
 `;
 
@@ -63,21 +75,35 @@ const QuizPopup = (props) => {
   const [attempt, setAttempt] = useState({ ...props.answers });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [start, setStart] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [startTime, setStartTime] = useState(new Date());
   const [remTime, setRemTime] = useState();
+  const [viewOnly, setViewOnly] = useState(true);
   const textFieldRefs = useRef(""); // create an array of refs
   const newAttempt = Object.keys(attempt).length > 0 ? false : true;
-  const viewOnly =
+  const late =
     props.quiz.deadline !== null
       ? props.quiz.deadline < new Date()
         ? true
         : false
       : false;
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   console.log(attempt);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
+  };
+
+  const handleAttemptStart = () => {
+    const millis = Math.abs(attempt.attemptedOn - startTime);
+    const minutes = Math.floor(millis / 1000 / 60);
+    console.log("Minutes since last attempt: ", minutes);
+    if (minutes > quiz.timeLimit && !late) {
+      attempt.attemptNumber = attempt.attemptNumber + 1;
+      setViewOnly(false);
+    }
+    setStart(true);
   };
 
   const handleAnswerUpdate = (index, answer) => {
@@ -133,13 +159,15 @@ const QuizPopup = (props) => {
       }}
     >
       <AppBar
+        position="fixed"
         style={{ position: "sticky" }}
-        sx={{ position: "fixed", bgcolor: "#20232a" }}
+        sx={{ bgcolor: "#20232a" }}
       >
         <Toolbar>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h4" component="div">
             {props.quiz ? props.quiz.name : ""}
           </Typography>
+          {!viewOnly && <Timer timestamp={new Date()} />}
           <IconButton
             edge="start"
             color="inherit"
@@ -153,128 +181,214 @@ const QuizPopup = (props) => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <QuizPopupContainer maxWidth="sm">
-        {quiz.questions.map((question, index) => (
-          <QuestionContainer key={index}>
-            <Question variant="subtitle1">
-              {index + 1}. {question.text}
-            </Question>
-            {question.type === "Multiple Choice" ? (
-              <AnswerContainer
-                value={!newAttempt ? attempt?.answers[index]?.answer : ""}
-                onChange={(event) =>
-                  handleAnswerUpdate(index, event.target.value)
-                }
-              >
-                {question.choices.map((choice, choiceIndex) => (
+      {start ? (
+        <QuizPopupContainer maxWidth="sm">
+          {quiz.questions.map((question, index) => (
+            <QuestionContainer key={index}>
+              <Question variant="subtitle1">
+                {index + 1}. {question.text}
+              </Question>
+              {question.type === "Multiple Choice" ? (
+                <AnswerContainer
+                  value={!newAttempt ? attempt?.answers[index]?.answer : ""}
+                  onChange={(event) =>
+                    handleAnswerUpdate(index, event.target.value)
+                  }
+                >
+                  {question.choices.map((choice, choiceIndex) => (
+                    <AnswerLabel
+                      key={choiceIndex}
+                      value={choice}
+                      control={<Radio />}
+                      label={choice}
+                      disabled={viewOnly}
+                      disableTypography={viewOnly}
+                    />
+                  ))}
+                </AnswerContainer>
+              ) : question.type === "True or False" ? (
+                <AnswerContainer
+                  value={!newAttempt ? attempt?.answers[index]?.answer : ""}
+                  onChange={(event) =>
+                    handleAnswerUpdate(index, event.target.value)
+                  }
+                >
                   <AnswerLabel
-                    key={choiceIndex}
-                    value={choice}
+                    value="true"
                     control={<Radio />}
-                    label={choice}
+                    label="True"
                     disabled={viewOnly}
+                    disableTypography={viewOnly}
                   />
-                ))}
-              </AnswerContainer>
-            ) : question.type === "True or False" ? (
-              <AnswerContainer
-                value={!newAttempt ? attempt?.answers[index]?.answer : ""}
-                onChange={(event) =>
-                  handleAnswerUpdate(index, event.target.value)
-                }
-              >
-                <AnswerLabel
-                  value="true"
-                  control={<Radio />}
-                  label="True"
-                  disabled={viewOnly}
-                />
-                <AnswerLabel
-                  value="false"
-                  control={<Radio />}
-                  label="False"
-                  disabled={viewOnly}
-                />
-              </AnswerContainer>
-            ) : question.type === "Checkbox" ? (
-              <AnswerContainer
-                value={!newAttempt ? attempt?.answers[index]?.answer : ""}
-                onChange={(event) =>
-                  handleAnswerUpdate(index, event.target.value)
-                }
-              >
-                {question.choices.map((choice, choiceIndex) => (
                   <AnswerLabel
-                    key={choiceIndex}
-                    value={choice}
-                    control={<CheckboxAnswerContainer />}
-                    label={choice}
+                    value="false"
+                    control={<Radio />}
+                    label="False"
                     disabled={viewOnly}
+                    disableTypography={viewOnly}
                   />
-                ))}
-              </AnswerContainer>
-            ) : (
-              <TextFieldAnswerContainer
-                label="Answer"
-                variant="outlined"
-                multiline
-                rows={4}
-                size="small"
-                // defaultValue={
-                //   Object.keys(attempt).length > 0
-                //     ? attempt?.answers[index]?.answer
-                //     : " "
-                // }
-                onChange={(event) => {
-                  console.log(event.target.value);
-                  handleAnswerUpdate(index, event.target.value);
-                }}
-                disabled={viewOnly}
-              />
-            )}
-          </QuestionContainer>
-        ))}
-        {!viewOnly && (
-          <SubmitButton
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
+                </AnswerContainer>
+              ) : question.type === "Checkbox" ? (
+                <AnswerContainer
+                  value={!newAttempt ? attempt?.answers[index]?.answer : ""}
+                  onChange={(event) =>
+                    handleAnswerUpdate(index, event.target.value)
+                  }
+                >
+                  {question.choices.map((choice, choiceIndex) => (
+                    <AnswerLabel
+                      key={choiceIndex}
+                      value={choice}
+                      control={<CheckboxAnswerContainer />}
+                      label={choice}
+                      disabled={viewOnly}
+                      disableTypography={viewOnly}
+                    />
+                  ))}
+                </AnswerContainer>
+              ) : (
+                <TextFieldAnswerContainer
+                  label="Answer"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  size="small"
+                  // defaultValue={
+                  //   Object.keys(attempt).length > 0
+                  //     ? attempt?.answers[index]?.answer
+                  //     : " "
+                  // }
+                  onChange={(event) => {
+                    console.log(event.target.value);
+                    handleAnswerUpdate(index, event.target.value);
+                  }}
+                  disabled={viewOnly}
+                  disableTypography={viewOnly}
+                />
+              )}
+            </QuestionContainer>
+          ))}
+          {!viewOnly && (
+            <SubmitButton
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Submit
+            </SubmitButton>
+          )}
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={5000}
+            onClose={handleCloseSnackbar}
           >
-            Submit
-          </SubmitButton>
-        )}
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={5000}
-          onClose={handleCloseSnackbar}
-        >
-          <SnackbarContent
-            style={{
-              backgroundColor: "green",
-              display: "flex",
-              alignItems: "center",
-            }}
-            message={
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                <CheckCircle />
-                <span
+            <SnackbarContent
+              style={{
+                backgroundColor: "green",
+                display: "flex",
+                alignItems: "center",
+              }}
+              message={
+                <div
                   style={{
-                    marginLeft: "1em",
-                    alignSelf: "center",
+                    display: "flex",
+                    flexDirection: "row",
                   }}
                 >
-                  {snackbarMessage}
-                </span>
-              </div>
-            }
-          />
-        </Snackbar>
-      </QuizPopupContainer>
+                  <CheckCircle />
+                  <span
+                    style={{
+                      marginLeft: "1em",
+                      alignSelf: "center",
+                    }}
+                  >
+                    {snackbarMessage}
+                  </span>
+                </div>
+              }
+            />
+          </Snackbar>
+        </QuizPopupContainer>
+      ) : (
+        <div>
+          <QuizPopupContainer maxWidth="sm">
+            <Box sx={{ color: "whitesmoke" }}>
+              <Typography sx={{ flex: 1 }} variant="h4">
+                Quiz Details
+              </Typography>
+              <QuizInfoBox>
+                <div>
+                  <Typography variant="h5">Current Time</Typography>
+                  <Typography variant="h6" color="lightgray">
+                    {startTime.toLocaleTimeString()}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="h5">Current User</Typography>
+                  <Typography variant="h6" color="lightgray">
+                    {`${
+                      getLoggedInUserName() || ""
+                    } (${getLoggedInUserEmail()})`}
+                    {console.log(getCurrentUser())}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="h5">Time Limit</Typography>
+                  <Typography variant="h6" color="lightgray">
+                    {quiz.timeLimit === null
+                      ? "Unlimited"
+                      : `${quiz.timeLimit} minutes`}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="h5">Maximum Attempts</Typography>
+                  <Typography variant="h6" color="lightgray">
+                    {`Allowed - ${quiz.attempts || "Unlimited"}, Completed - ${
+                      attempt.attemptNumber || 0
+                    }`}
+                  </Typography>
+                </div>
+              </QuizInfoBox>
+              <Typography sx={{ flex: 1 }} variant="h4">
+                Instructions
+              </Typography>
+              <QuizInfoBox>
+                <div>
+                  <Typography paragraph align="alignJustify">
+                    Before you submit the quiz, you can modify the answers to
+                    any question. If you close the quiz without submitting, you
+                    can return to the quiz any time before the deadline.
+                    <br />
+                    Once the deadline has passed or if you click the submit
+                    button, the quiz will be submitted and you may attempt it
+                    again (if you have remaining attempts).
+                  </Typography>
+                </div>
+              </QuizInfoBox>
+            </Box>
+          </QuizPopupContainer>
+          <AppBar
+            position="fixed"
+            sx={{
+              bgcolor: "#20232a",
+              top: "auto",
+              bottom: 0,
+              alignItems: "center",
+            }}
+          >
+            <Toolbar>
+              <Button
+                variant="contained"
+                onClick={handleAttemptStart}
+                aria-label="close"
+                id="general-Button"
+              >
+                {late ? "View" : "Start"}
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </div>
+      )}
     </Dialog>
   );
 };
