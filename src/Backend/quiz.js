@@ -60,11 +60,66 @@ export async function getQuizAttempts(courseId, studentDocId) {
         const takeQuizzes = await getDocs(collection(firestore, "courses", courseId, "quizAttempts", studentDocId, "takenQuizzes"));
         return takeQuizzes.docs.map(doc => {
             let attempts = {...doc.data(), quizId: doc.id};
-            console.log("attempt points: " + attempts.points)
             return attempts;
         });
     } catch (error) {
         throw new Error("Error getting quiz attempt:", error);
+    }
+}
+export const getEnrolledStudents = async (courseId) => {
+    
+    try {
+        const course = await getDoc(doc(firestore, "courses", courseId));
+        console.log("reached enrolled 1");
+        const enrolledNames = [];
+        const studentpaths = course.data().enrolledStudents;
+        console.log("reached enrolled 3");
+        await Promise.all (
+            studentpaths.map(async (path) => {
+                console.log("reached enrolled 2" + path.path);
+                const refId = path.path.split("/")[1].trim();
+                const student = await getDoc(doc(firestore, "students", refId));
+                if(student) {
+                    enrolledNames.push({
+                        id: student.id,
+                        firstName: student.data().firstName,
+                        lastName: student.data().lastName,
+                    });
+                  }
+            })
+        );
+        return enrolledNames;
+    } catch (error) {
+        throw new Error("Error getting students enrolled: " + error);
+    }
+}
+export const getAttemptedBy = async (courseId, quizId) => {
+    try {
+        const quiz = await getDoc(doc(firestore, "courses", courseId, "quizzes", quizId));
+        const names = [];
+        const studentIds = quiz.data().attemptedBy;
+        await Promise.all (
+            studentIds.map(async (studentId) => {
+              const student = await getDoc(doc(firestore, "students", studentId));
+              if(student) {
+                names.push({
+                    id: studentId,
+                    firstName: student.data().firstName,
+                    lastName: student.data().lastName,
+                });
+              }
+        })
+        );
+        if (names.length > 0) {
+            return names;
+        }
+        else {
+            console.log("returning null");
+            return names;
+        }
+        
+    } catch (error) {
+        throw new Error("Error getting students who attempted quiz:" + error);
     }
 }
 

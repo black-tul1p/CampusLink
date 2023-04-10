@@ -1,6 +1,6 @@
 import CourseNavBar from "../CourseNavBar";
 import Button from '@mui/material/Button';
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -24,18 +24,10 @@ function Quizzes() {
   const [role, setRole]         = useState("");
   const [clicked, setClicked] = useState(false);
   const [quizTitle, setQuizTitle] = useState("");
-  const [studentAnswers, setStudentAnswers] = useState([]);
-  const [studentPoints, setStudentPoints] = useState("");
-  const [quizName, setQuizName] = useState("");
-  const [quizDesc, setQuizDesc] = useState("");
-  const [quizDeadline, setQuizDeadline] = useState(null);
-  const [quizQuestions, setQuizQuestions] = useState([]);
-  const [quizPoints, setQuizPoints] = useState("");
-  const [quizDetails, setQuizDetails] = useState(null);
-  const [currentTimestamp, setCurrentTimestamp] = useState(null);
-  
-
+  const [quizDetails, setQuizDetails] = useState(null);  
+  const [studentDocId, setStudentDocId] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
   const courseId = location.state?.courseId;
 
   const updateQuizList = (courseId) => {
@@ -49,8 +41,6 @@ function Quizzes() {
       if (quiz.attempted) {
         const studentDocId = getLoggedInUserId();
         getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
-          setStudentAnswers(attempt.answers);
-          setStudentAnswers(attempt.points);
           const QuizDetails = {
             name: quiz.name,
             description: quiz.description,
@@ -80,6 +70,7 @@ function Quizzes() {
     }
   }
 
+
   const defaultNewQuiz = {
     name: "",
     description: "",
@@ -94,6 +85,7 @@ function Quizzes() {
   const [editingQuiz, setEditingQuiz] = useState(null);
 
   useEffect(() => {
+    setStudentDocId(getLoggedInUserId());
     getUserRole().then(role => {
       setRole(role);
     })
@@ -127,7 +119,7 @@ function Quizzes() {
         display: "block",
         margin: "auto",
         padding: "20px 0",
-        width: "80%",
+        width: "90%",
       }}>
 
         <TableContainer>
@@ -135,16 +127,18 @@ function Quizzes() {
           <colgroup>
             <col width="20%" />
             <col width="20%" />
+            <col width="10%" />
             <col width="20%" />
-            <col width="20%" />
-            <col width="20%" />
+            <col width="10%" />
+            <col width="40%" />
           </colgroup>
           <TableHead style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}>
             <TableRow style={{borderBottom: "1px solid #fff1"}}>
               <TableCell style={{color: "white", fontSize: "1em"}}>Quiz</TableCell>
               <TableCell style={{color: "white", fontSize: "1em"}}>Due</TableCell>
               <TableCell style={{color: "white", fontSize: "1em"}}>Points</TableCell>
-              <TableCell style={{color: "white", fontSize: "1em"}}>Attempts</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Attempts Allowed</TableCell>
+              <TableCell style={{color: "white", fontSize: "1em"}}>Student Attempts</TableCell>
               <TableCell/>
             </TableRow>
           </TableHead>
@@ -162,6 +156,14 @@ function Quizzes() {
                 </TableCell>
                 <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                   {quiz.attempts == null ? "unlimited attempts" : quiz.attempts + " times"}
+                </TableCell>
+                <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                  <Button variant="outlined" onClick={()=>{
+                      const quizId = quiz.quizId;
+                      const attemptedBy = quiz.attemptedBy;
+                      const quizName = quiz.name;
+                      navigate("/quizAttempts", { state: { quizId, courseId, attemptedBy, quizName } });
+                    }}>Attempts</Button>
                 </TableCell>
                 <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
                   {role === "instructor" && <>
@@ -254,11 +256,6 @@ function Quizzes() {
                 <TableCell style={{textAlign: "right", borderBottom: "1px solid #fff1"}}>
                   <Button variant="outlined" 
                   onClick={()=>{
-                    setQuizName(quiz.name);
-                    setQuizDesc(quiz.description);
-                    setQuizDeadline(quiz.deadline);
-                    setQuizQuestions(quiz.questions);
-                    setQuizPoints(quiz.points);
                     clickView(quiz);
                   }}>VIEW</Button>
                 </TableCell>
