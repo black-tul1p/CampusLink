@@ -85,8 +85,6 @@ export async function setQuizAttempt(courseId, studentDocId, quizId, data) {
     const newData = {
       ...data,
       isGraded: false,
-      attemptNumber: data.attemptNumber ? data.attemptNumber + 1 : 1,
-      attemptedOn: new Date(),
     };
 
     const quizAttemptRef = doc(
@@ -99,16 +97,10 @@ export async function setQuizAttempt(courseId, studentDocId, quizId, data) {
       quizId
     );
 
-    const quizAttemptSnapshot = await getDoc(quizAttemptRef);
-
-    if (quizAttemptSnapshot.exists()) {
-      await setDoc(quizAttemptRef, newData);
-      return "Quiz attempt data updated successfully";
-    } else {
-      throw new Error("Quiz attempt not found");
-    }
+    await setDoc(quizAttemptRef, newData);
+    return "Quiz attempt data updated successfully";
   } catch (error) {
-    throw new Error("Error updating quiz attempt data:", error);
+    throw new Error("Error submitting quiz attempt", error);
   }
 }
 
