@@ -63,6 +63,7 @@ function Assignments() {
       setDescription("");
       setSubmissionLimit("");
       setOpen1(false);
+      setEditingAssignment(null);
     }
   }
 
@@ -142,8 +143,34 @@ function Assignments() {
     navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId}});
   }
 
-  const handleEdit = (assignmentId) => {
-    setEditingAssignment(assignmentId);
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    return year + "-" + month + "-" + day;
+  }
+
+  function formatTime(date) {
+    const hours = ("0" + date.getHours()).slice(-2);
+    const minutes = ("0" + date.getMinutes()).slice(-2);
+    const seconds = ("0" + date.getSeconds()).slice(-2);
+    return hours + ":" + minutes + ":" + seconds;
+  }
+
+  const handleEdit = async (assignmentId) => {
+    console.log(assignmentId)
+    try {
+      const assignment = await getAssignmentById(assignmentId);
+      setEditingAssignment(assignmentId);
+      setTitle(assignment.title);
+      setDate(formatDate(assignment.dueDate.toDate()));
+      setTime(formatTime(assignment.dueDate.toDate()));
+      setDescription(assignment.description);
+      setSubmissionLimit(assignment.submissionLimit.toString());
+      setOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -216,7 +243,8 @@ function Assignments() {
                           assignmentdocid={assignment.id}
                           assignmenttitle={assignment.title}
                           assignmentdescript={assignment.description}
-                          assignmentduedate={assignment.dueDate.toDate()}
+                          assignmentduedate={new Date(assignment.dueDate.seconds * 1000)}
+                          //assignmentduedate={assignment.dueDate.toDate()}
                           assignmentsublim={assignment.submissionLimit}
                           >
                           <Button
@@ -241,7 +269,7 @@ function Assignments() {
             )}
             <div className="create-assignment-bar" onClick={toggle}>
               <p style={{fontSize:"1.3em"}}>
-                Create An Assignment
+                Create or Edit An Assignment
               </p>
               {open ? <RemoveCircleIcon/> : <AddCircleIcon />}
             </div>
@@ -289,6 +317,7 @@ function Assignments() {
                 />
                 <div className="button-box">
                   <button onClick={handleSubmit}>
+                    {editingAssignment ? "Update" : "Submit"}
                     Submit
                   </button>
                   <button onClick={handleCancel}>Cancel</button>
