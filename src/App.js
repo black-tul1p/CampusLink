@@ -15,17 +15,13 @@ import { AuthContext } from "./Contexts/AuthContext";
 import { CircularProgress } from "@mui/material";
 import { isAdmin } from "./Backend/user";
 
-import { logoutUser } from "./Backend/user";
+//function App() {
+// return (<FileUpload/>)
+//return(<VidUpload/>)
+//}
+//export default App;
 
- //function App() {
-   // return (<FileUpload/>)
-    //return(<VidUpload/>)
- //}
- //export default App;
-
-
-
- function AuthorizedRoute(props) {
+function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
@@ -63,8 +59,6 @@ import { logoutUser } from "./Backend/user";
 
   return props.children;
 }
-
-logoutUser();
 
 function App() {
   const [isDark, setIsDark] = useState(false); // For future Dark Mode implementation
