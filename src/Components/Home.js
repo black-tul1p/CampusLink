@@ -13,7 +13,7 @@ import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from "react-router-dom";
-
+import EditIcon from "@mui/icons-material/Edit";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {
@@ -91,6 +91,8 @@ function Homepage() {
     fetchData();
   }, []);
 
+  const [editingCourse, setEditingCourse] = useState(null);
+
   return (
     <div className="homepage-student">
       
@@ -136,6 +138,12 @@ function Homepage() {
 
                     { role === "instructor" && // Display delete button only for instructors
                     <div className="delete-course-container" onClick={(event) => {
+                      const courseid = event.currentTarget.parentElement.getAttribute('forcourse');
+                      
+                      }} >
+                        <EditIcon fontSize="large" /> 
+                    </div> &&
+                    <div className="delete-course-container" onClick={(event) => {
                         const id = event.currentTarget.parentElement.getAttribute('forcourse');
                         try {
                           removeCourse(id).then(() => {fetchData();});
@@ -145,6 +153,7 @@ function Homepage() {
                         }
                      }}>
                        <DeleteIcon fontSize="large" />
+                       
                     </div>
                     }
 

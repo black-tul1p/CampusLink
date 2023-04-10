@@ -81,6 +81,15 @@ export async function createCourse(
   }
 }
 
+export async function updateCourse(courseId, data) {
+  try {
+    const course = doc(firestore, "courses", courseId);
+    await updateDoc(course, data);
+  } catch (error) {
+    throw new Error("Error updating course:", error);
+  }
+}
+
 /**
  * Removes a course from the Firestore collection named "courses" with the specified ID.
  *
