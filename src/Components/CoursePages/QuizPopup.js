@@ -82,33 +82,35 @@ const QuizPopup = (props) => {
   const startTime = new Date();
 
   const handleAttemptStart = () => {
-    // Update Attempt number
-    if (!attempt.attemptNumber) attempt.attemptNumber = 0;
-    // Set start time if first attempt
-    if (attempt.attemptNumber === 0) attempt.attemptedOn = startTime;
+    // Update Attempt number and set start time if first attempt
+    if (!attempt.attemptNumber) {
+      attempt.attemptNumber = 1;
+      attempt.attemptedOn = startTime;
+    }
 
     // Calculate time since last attempt
     const attemptMillis =
       attempt.attemptedOn.seconds * 1000 +
       attempt.attemptedOn.nanoseconds / 1000000;
-    const millis = Math.abs(attemptMillis - startTime);
-    const minutes = Math.floor(millis / 1000 / 60);
+    const timeSinceLastAttempt = Math.abs(startTime - attemptMillis);
+    const minutesSinceLastAttempt = Math.floor(
+      timeSinceLastAttempt / (1000 * 60)
+    );
 
-    // Allow attempt if deadline has not passed and there are
-    // remaining attempts
-    if (minutes && minutes < quiz.timeLimit && !late) {
+    // Allow attempt if deadline has not passed and there are remaining attempts
+    if (minutesSinceLastAttempt < quiz.timeLimit && !late) {
       console.log("Continuing quiz");
       setViewOnly(false);
-    } else if (!late && quiz.attempts >= attempt.attemptNumber) {
-      attempt.attemptNumber = attempt.attemptNumber + 1;
+    } else if (!late && attempt.attemptNumber <= quiz.attempts) {
+      attempt.attemptNumber += 1;
       console.log(
         `Starting new attempt: ${attempt.attemptNumber}/${quiz.attempts}`
       );
       attempt.answers = {};
       attempt.attemptedOn = startTime;
-      attempt.attemptNumber = attempt.attemptNumber + 1;
       setViewOnly(false);
     }
+
     setStarted(true);
   };
 
@@ -170,7 +172,7 @@ const QuizPopup = (props) => {
                 )
               }
               minutes={quiz.timeLimit}
-              onEnd={handleSubmit}
+              onEnd={setSubmitted}
             />
           )}
           <IconButton
