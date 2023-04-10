@@ -22,7 +22,6 @@ import {
 } from "../../Backend/quiz";
 import { QuizCreationDialog } from "./QuizCreationDialog";
 import QuizPopup from "./QuizPopup";
-import ViewPastQuiz from "./ViewPastQuiz";
 
 function Quizzes() {
   const [open, setOpen] = useState(false);
@@ -31,7 +30,7 @@ function Quizzes() {
   const [clicked, setClicked] = useState(false);
   const [studentAnswers, setStudentAnswers] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
-  const [attemptedQuizzes, setAttemptedQuizzes] = useState({});
+  // const [attemptedQuizzes, setAttemptedQuizzes] = useState({});
   // const [studentPoints, setStudentPoints] = useState("");
 
   const dateFormat = {
@@ -52,30 +51,6 @@ function Quizzes() {
     });
   };
 
-  const updateAttempted = (quiz) => {
-    return getQuizAttempt(courseId, studentDocId, quiz.quizId)
-      .then((attempt) => {
-        const attempted = attempt !== null ? true : false;
-        setAttemptedQuizzes((prev) => ({
-          ...prev,
-          [quiz.quizId]: attempted,
-        }));
-        return attempted;
-      })
-      .catch((error) => {
-        console.error("Error getting quiz attempt:", error);
-        return false;
-      });
-  };
-
-  useEffect(() => {
-    if (quizzes.length > 0) {
-      quizzes.map((quiz, index) => {
-        updateAttempted(quiz);
-      });
-    }
-  }, [quizzes]);
-
   const clickView = (quiz) => {
     getQuizAttempt(courseId, studentDocId, quiz.quizId).then((res) => {
       if (res !== null) setStudentAnswers(res);
@@ -88,9 +63,6 @@ function Quizzes() {
       if (studentAnswers !== null) {
         setClicked(true);
       }
-      // if (Object.keys(studentAnswers).length > 0) {
-      //   setClicked(true);
-      // }
     } catch (error) {
       console.log(error);
     }
@@ -105,6 +77,11 @@ function Quizzes() {
     questions: [],
   };
 
+  const getNumQuizAttempts = async (quiz) => {
+    const attempt = await getQuizAttempt(courseId, studentDocId, quiz.quizId);
+    return attempt.attemptNumber;
+  };
+
   const [editingQuiz, setEditingQuiz] = useState(null);
 
   useEffect(() => {
@@ -116,7 +93,7 @@ function Quizzes() {
 
     updateRole();
     updateQuizList(courseId);
-  }, [location]);
+  }, [location, courseId]);
 
   return (
     <div style={{ width: "100%" }}>
@@ -359,7 +336,9 @@ function Quizzes() {
                           }}
                           style={{ minWidth: "8em" }}
                         >
-                          {attemptedQuizzes[quiz.quizId] ? "View" : "Attempt"}
+                          {quiz.attempts < getNumQuizAttempts
+                            ? "Attempt"
+                            : "View"}
                         </Button>
                       </TableCell>
                     </TableRow>

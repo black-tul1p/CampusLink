@@ -1,7 +1,7 @@
 import { Timer } from "@mui/icons-material";
 import React, { useState, useEffect } from "react";
 
-const Countdown = ({ timestamp, minutes }) => {
+const Countdown = ({ timestamp, minutes, onEnd }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   function calculateTimeLeft() {
@@ -33,6 +33,10 @@ const Countdown = ({ timestamp, minutes }) => {
     timeLeft.hours > 0
       ? timeLeft.hours * 60 + timeLeft.minutes
       : timeLeft.minutes;
+
+  useEffect(() => {
+    if (minutesLeft === 0) onEnd(true);
+  }, [minutesLeft]);
 
   return (
     <div

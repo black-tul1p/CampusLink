@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import {
   Container,
@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { setQuizAttempt } from "../../Backend/quiz";
-import { getCurrentUser } from "../../Backend/user";
 import { getLoggedInUserName } from "../../Backend/user";
 import { getLoggedInUserEmail } from "../../Backend/user";
 import Countdown from "./Countdown";
@@ -81,34 +80,34 @@ const QuizPopup = (props) => {
         : false
       : false;
   const startTime = new Date();
-  console.log(attempt);
 
   const handleAttemptStart = () => {
     // Update Attempt number
     if (!attempt.attemptNumber) attempt.attemptNumber = 0;
-    attempt.attemptNumber = attempt.attemptNumber + 1;
-    console.log("time:", attempt.attemptedOn);
     // Set start time if first attempt
-    if (!attempt.attemptedOn) {
-      attempt.attemptedOn = startTime;
-    }
-    console.log("time:", attempt.attemptedOn);
+    if (attempt.attemptNumber === 0) attempt.attemptedOn = startTime;
+
     // Calculate time since last attempt
-    const millis = Math.abs(attempt.attemptedOn - startTime);
+    const attemptMillis =
+      attempt.attemptedOn.seconds * 1000 +
+      attempt.attemptedOn.nanoseconds / 1000000;
+    const millis = Math.abs(attemptMillis - startTime);
     const minutes = Math.floor(millis / 1000 / 60);
 
     // Allow attempt if deadline has not passed and there are
     // remaining attempts
-    if (minutes < quiz.timeLimit && !late) {
+    if (minutes && minutes < quiz.timeLimit && !late) {
       console.log("Continuing quiz");
       setViewOnly(false);
     } else if (!late && quiz.attempts >= attempt.attemptNumber) {
+      attempt.attemptNumber = attempt.attemptNumber + 1;
       console.log(
-        `Starting new attempt, ${attempt.attemptNumber}/${quiz.attempts}`
+        `Starting new attempt: ${attempt.attemptNumber}/${quiz.attempts}`
       );
       attempt.answers = {};
       attempt.attemptedOn = startTime;
       attempt.attemptNumber = attempt.attemptNumber + 1;
+      setViewOnly(false);
     }
     setStarted(true);
   };
@@ -116,17 +115,17 @@ const QuizPopup = (props) => {
   const handleAnswerUpdate = (index, answer) => {
     console.log("BEFORE:", attempt);
     const newAnswers = { ...attempt };
-    newAnswers[index] = {
+    newAnswers.answers[index] = {
       answer: answer,
       points: quiz.questions[index].points,
     };
     setAttempt(newAnswers);
     console.log("AFTER:", attempt);
 
-    // handleSubmit();
+    handleSubmit();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (quit) => {
     // logic to handle quiz submission
     const attemptQuiz = async () => {
       await setQuizAttempt(props.courseId, props.userId, quiz.quizId, attempt);
@@ -136,6 +135,8 @@ const QuizPopup = (props) => {
       console.error(error);
       setError(error);
     });
+
+    if (quit) props.onClose();
   };
 
   return (
@@ -161,7 +162,16 @@ const QuizPopup = (props) => {
             {props.quiz ? props.quiz.name : ""}
           </Typography>
           {!viewOnly && !submitted && (
-            <Countdown timestamp={startTime} minutes={quiz.timeLimit} />
+            <Countdown
+              timestamp={
+                new Date(
+                  attempt.attemptedOn.seconds * 1000 +
+                    attempt.attemptedOn.nanoseconds / 1000000
+                )
+              }
+              minutes={quiz.timeLimit}
+              onEnd={handleSubmit}
+            />
           )}
           <IconButton
             edge="start"
@@ -256,11 +266,7 @@ const QuizPopup = (props) => {
                     multiline
                     rows={4}
                     size="small"
-                    // defaultValue={
-                    //   Object.keys(attempt).length > 0
-                    //     ? attempt?.answers[index]?.answer
-                    //     : " "
-                    // }
+                    defaultValue={attempt?.answers[index]?.answer || ""}
                     onChange={(event) => {
                       console.log(event.target.value);
                       handleAnswerUpdate(index, event.target.value);
@@ -305,7 +311,6 @@ const QuizPopup = (props) => {
                     {`${
                       getLoggedInUserName() || ""
                     } (${getLoggedInUserEmail()})`}
-                    {console.log(getCurrentUser())}
                   </Typography>
                 </div>
                 <div>
