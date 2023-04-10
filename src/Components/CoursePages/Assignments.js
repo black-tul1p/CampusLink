@@ -52,7 +52,7 @@ function Assignments() {
       }
     }
     fetchData();
-  }, [location]);
+  }, [location, assignments.length]);
 
   const toggle = () => {
     setOpen(!open);
@@ -103,23 +103,38 @@ function Assignments() {
   }
   
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!verifyInput(title, description, date, time, submissionLimit)) {
       console.log("verify: " + verifyInput(title, description, date, time, submissionLimit));
       setError("Incorrect input format.");
       setTimeout(() => {
         setError("");
       }, 1500);
-        return;
+      return;
     } else {
       const due = date + " " + time;
-      addAssignment(title, description, due, submissionLimit, courseDocId);
+      if (editingAssignment) {
+        const updatedAssignment = await editAssignment(editingAssignment.id, title, description, due, submissionLimit, courseDocId);
+        setAssignments(assignments.map(a => a.id === updatedAssignment.id ? updatedAssignment : a));
+      } else {
+        await addAssignment(title, description, due, submissionLimit, courseDocId);
+        const assgnts = await getAssigmentsByCourse(courseDocId);
+        setAssignments(assgnts);
+      }
       UploadFile();
-      alert("New Assignment Added!");
+      if (editingAssignment) {
+        alert("Assignment Updated!");
+      } else {
+        alert("New Assignment Added!");
+      }
+  
       handleCancel();
+      const assgnts = await getAssigmentsByCourse(courseDocId);
+      setAssignments(assgnts);
     }
-    
-  }
+  };
+  
+
   const handleCancel = () => {
     setTitle("");
     setDate("");
@@ -157,16 +172,16 @@ function Assignments() {
     return hours + ":" + minutes + ":" + seconds;
   }
 
-  const handleEdit = async (assignmentId) => {
-    console.log(assignmentId)
+  const handleEdit = async (assignment) => {
+    console.log(assignment.id);
     try {
-      const assignment = await getAssignmentById(assignmentId);
-      setEditingAssignment(assignmentId);
       setTitle(assignment.title);
-      setDate(formatDate(assignment.dueDate.toDate()));
-      setTime(formatTime(assignment.dueDate.toDate()));
+      const due = assignment.dueDate.toDate();
+      setDate(formatDate(due));
+      setTime(formatTime(due));
       setDescription(assignment.description);
       setSubmissionLimit(assignment.submissionLimit.toString());
+      setEditingAssignment(assignment);
       setOpen(true);
     } catch (error) {
       console.error(error);
@@ -240,7 +255,6 @@ function Assignments() {
                     assignments
                       .map((assignment) => (
                         <div className = 'assignment-list-box'
-                          assignmentdocid={assignment.id}
                           assignmenttitle={assignment.title}
                           assignmentdescript={assignment.description}
                           assignmentduedate={new Date(assignment.dueDate.seconds * 1000)}
@@ -255,7 +269,7 @@ function Assignments() {
                           </Button>
                           <Button
                             className="Mini-button edit-button"
-                            onClick={() => handleEdit(assignment.id)}
+                            onClick={() => handleEdit(assignment)}
                           >
                             Edit
                           </Button>
@@ -318,7 +332,6 @@ function Assignments() {
                 <div className="button-box">
                   <button onClick={handleSubmit}>
                     {editingAssignment ? "Update" : "Submit"}
-                    Submit
                   </button>
                   <button onClick={handleCancel}>Cancel</button>
                 </div>

@@ -24,11 +24,14 @@ export const addAssignment = async (title, description, dueDate, submissionLimit
   };
 
   try {
-    const assignmentDoc = await addDoc(collection(firestore, "assignments"), assignment);
-    const assignmentId = assignmentDoc.id;
-    console.log("Assignment added successfully:" + assignmentDoc.id);
-    assignment = { ...assignment, id: assignmentId };
-    addAssignmentToCourse (assignment, courseDocId);
+    const assignmentDocRef = await addDoc(collection(firestore, "assignments"), assignment);
+    const assignmentId = assignmentDocRef.id;
+    console.log("Assignment added successfully:" + assignmentId);
+
+    const updatedAssignment = { ...assignment, id: assignmentId };
+    await updateDoc(doc(firestore, "assignments", assignmentId), updatedAssignment);
+
+    addAssignmentToCourse(updatedAssignment, courseDocId);
   } catch (error) {
     console.error("Error adding assignment", error);
   }
@@ -79,7 +82,10 @@ export const addAssignmentToCourse = async (assignment, courseDocId) => {
             coursesData.map(async (assignment) => {
               const assignDocId = assignment.path.split("/")[1].trim();
               const res = await getAssignmentById(assignDocId);
-              if (res) assignments.push(res);
+              if (res) {
+                res.id = assignDocId;
+                assignments.push(res);
+              }
             })
           );
   
@@ -103,15 +109,22 @@ export const addAssignmentToCourse = async (assignment, courseDocId) => {
     return true;
   }
 
-  export const editAssignment = async (assignmentDocId, updatedAssignment) => {
-    try {
-      const ref = doc(firestore, "assignments", assignmentDocId);
-      const updatedAssignmentRef = await updateDoc(ref, {
-        ...updatedAssignment,
-        dueDate: Timestamp.fromDate(new Date(updatedAssignment.dueDate))
-      });
-      console.log("Assignment updated successfully");
-    } catch (error) {
-      console.error("Error updating assignment:", error);
-    }
-  };
+  export async function editAssignment(assignmentId, title, description, due, submissionLimit, courseId) {
+    const assignmentsRef = collection(firestore, "assignments");
+    const assignmentRef = doc(assignmentsRef, assignmentId);
+    const dueDate = new Date(due);
+    const updatedData = {
+      title: title,
+      description: description,
+      dueDate: Timestamp.fromDate(dueDate),
+      submissionLimit: parseInt(submissionLimit),
+      courseId: courseId
+    };
+  
+    await updateDoc(assignmentRef, updatedData);
+    return {
+      id: assignmentId,
+      ...updatedData,
+      dueDate: dueDate
+    };
+  }
