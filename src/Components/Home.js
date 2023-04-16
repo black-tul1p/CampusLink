@@ -92,6 +92,11 @@ function Homepage() {
   }, []);
 
   const [editingCourse, setEditingCourse] = useState(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [editingId, setEditingId] = useState("");
+  const [editingDept, setEditingDept] = useState("");
+  const [editingDesc, setEditingDesc] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
 
   return (
     <div className="homepage-student">
@@ -137,12 +142,13 @@ function Homepage() {
                   >
 
                     { role === "instructor" && // Display delete button only for instructors
-                    <div className="delete-course-container" onClick={(event) => {
+                    <div>
+                    <div className="edit-course-container" onClick={(event) => {
                       const courseid = event.currentTarget.parentElement.getAttribute('forcourse');
                       
                       }} >
                         <EditIcon fontSize="large" /> 
-                    </div> &&
+                    </div> 
                     <div className="delete-course-container" onClick={(event) => {
                         const id = event.currentTarget.parentElement.getAttribute('forcourse');
                         try {
@@ -154,6 +160,7 @@ function Homepage() {
                      }}>
                        <DeleteIcon fontSize="large" />
                        
+                    </div>
                     </div>
                     }
 
@@ -281,6 +288,61 @@ function Homepage() {
         <DialogActions>
           <Button onClick={closeCourseDialogue}>Cancel</Button>
           <Button onClick={submitCourseDialogue}>Create</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog class="create-course-dialogue" open={editOpen} onClose={closeEditDialogue} sx={{
+        "& .MuiDialog-container": {
+          "& .MuiPaper-root": {
+            width: "100%",
+            maxWidth: "500px",  // Set your width here
+          },
+        },
+      }}>
+        <DialogTitle>Edit Course</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+          </DialogContentText>
+          <TextField
+              label="Course Title"
+              sx={{ margin : '5px', width: "50%", 
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              onChange={e => {setNewCourseTitle(e.target.value);}}
+          />
+          <TextField
+              label="Course ID"
+              sx={{ margin : '5px', width: "25%",
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              onChange={e => {setNewCourseId(e.target.value);}}
+          />
+          <TextField
+              label="Department"
+              sx={{ margin : '5px',
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              fullWidth
+              onChange={e => {setNewCourseDept(e.target.value);}}
+          />
+          <TextField
+              label="Description"
+              sx={{ margin : '5px',
+                    "& .MuiInputBase-input": { color: 'black !important' },
+                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              variant="standard"
+              minRows="2"
+              fullWidth
+              multiline
+              onChange={e => {setNewCourseDesc(e.target.value);}}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeEditDialogue}>Cancel</Button>
+          <Button onClick={submitEditDialogue}>Create</Button>
         </DialogActions>
       </Dialog>
 
