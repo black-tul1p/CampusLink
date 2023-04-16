@@ -58,15 +58,18 @@ export async function createCourse(
   capacity,
   registeredStudents,
   description,
-  instructorId
+  instructorId,
+  weight = { quiz: 50, assignment: 50 }
 ) {
   let data = {
     courseTitle: title,
+    courseId: id,
     credit: credit,
     department: department,
     capacity: capacity,
     registeredStudents: registeredStudents,
     description: description,
+    weight: weight
   };
 
   try {
