@@ -15,6 +15,13 @@ body {
   scroll-behavior: smooth;
 }
 
+#general-Button {
+  padding: 1em;
+  border-radius: 1em;
+  height: 3rem;
+  width: 6rem;
+}
+
 /********************************** App.js **********************************/
 
 .App {
