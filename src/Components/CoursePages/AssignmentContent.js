@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import CourseNavBar from "../CourseNavBar";
 import ErrorBox from "../Error";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, redirect } from "react-router-dom";
 import { Button, Typography} from "@mui/material";
 import styled from "@emotion/styled";
 import { Timestamp } from "@firebase/firestore";
@@ -180,17 +180,22 @@ function AssignmentContent() {
 
     //Temp test for navigation to regrade request page
     function Regrade() {
-       return <div> 
-            <h3>Space</h3>
-            <button onClick={testFunc()}>
+       return <div>
+            <button onClick={toRegrade}>
                 Request Regrade  
             </button>
 
         </div>
     }
-
-    function testFunc() {
-        alert("ko?")
+    const redirecting = redirect;
+    const toRegrade = (e) => {
+        const assignmentTitle = title
+        const assignmentDueDate = dueDate
+        const assignmentDescript = description
+        const assignmentSubLim = submissionLimit
+      //  console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim); 
+        navigate("/regradeRequest", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId}});
+       //redirecting("/grades");
     }
 
     

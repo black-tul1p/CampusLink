@@ -14,6 +14,7 @@ import ClasslistStudent from "./CoursePages/ClasslistStudent";
 import Classlist from "./CoursePages/Classlist";
 import Admin from "./Admin";
 import AssignmentContent from "./CoursePages/AssignmentContent";
+import RegradeRequest from "./CoursePages/RegradeRequest";
 import Navbar from "./Navbar";
 
 const Container = styled.div`
@@ -37,6 +38,7 @@ export const PageList = {
   ClasslistStud: "/classlistStudent",
   Admin: "/adminHome",
   AssignmentContent: "/assignmentContent",
+  RegradeRequest: "/regradeRequest",
 };
 
 export default function Landing(props) {
@@ -69,6 +71,8 @@ export default function Landing(props) {
     content = <ClasslistStudent theme={props} />;
   } else if (props.page === PageList.AssignmentContent) {
     content = <AssignmentContent theme={props} />;
+  } else if (props.page === PageList.RegradeRequest) {
+    content = <RegradeRequest theme={props} />
   }else {
     content = <p>Invalid page.</p>;
   }
