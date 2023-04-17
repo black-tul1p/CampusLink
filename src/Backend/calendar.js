@@ -17,6 +17,7 @@ export const getAssignmentsWithDueDates = async () => {
 
     // Get all assignments for each course
     const assignmentPromises = courses.map(async (course) => {
+      console.log(course.databaseId);
       const hws = await getAssigmentsByCourse(course.databaseId);
       return hws.map((assignment) => {
         return {

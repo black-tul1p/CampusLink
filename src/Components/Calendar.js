@@ -9,6 +9,9 @@ import { CircularProgress, Dialog, Typography } from "@mui/material";
 import { format } from "date-fns";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import {CustomListView} from "./ListView";
 
 const localizer = momentLocalizer(moment);
 
@@ -185,6 +188,7 @@ const CalendarPage = () => {
           <StyledTitle variant="h4" gutterBottom>
             Calendar
           </StyledTitle>
+
           <StyledDialog
             fullScreen
             open={showPopup}
@@ -212,6 +216,8 @@ const CalendarPage = () => {
             startAccessor="start"
             endAccessor="end"
             eventPropGetter={eventStyleGetter}
+            views={{month: true, week: true, agenda: CustomListView}}
+            messages={{agenda: 'List'}}
             onSelectEvent={(event) => {
               setShowPopup(true);
               setSelectedDate(event.start);
