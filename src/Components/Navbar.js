@@ -162,7 +162,9 @@ export default function Navbar() {
       <SidebarDivider />
       <SidebarRow>
         <Tooltip
-          title={<Typography style={{ fontSize: "1.5em" }}>FAQ</Typography>}
+          title={
+            <Typography style={{ fontSize: "1.5em" }}>Calendar</Typography>
+          }
           placement="right"
         >
           <SidebarButton
