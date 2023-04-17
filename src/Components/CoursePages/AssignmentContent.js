@@ -194,7 +194,7 @@ function AssignmentContent() {
         const assignmentDescript = description
         const assignmentSubLim = submissionLimit
       //  console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim); 
-        navigate("/regradeRequest", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId}});
+        navigate("/regradeRequest", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseTitle, courseId, userInfo}});
        //redirecting("/grades");
     }
 

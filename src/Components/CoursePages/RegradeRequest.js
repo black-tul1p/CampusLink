@@ -8,10 +8,11 @@ import { Timestamp } from "@firebase/firestore";
 import "../../Styles/Assignments.css";
 import "../../Styles/App.css";
 import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "firebase/storage"
-import { doc, getDoc, collection } from "@firebase/firestore";
+import { doc, getDoc, collection, addDoc, getDocs, updateDoc } from "@firebase/firestore";
 import { storage } from "../../Backend/firebase"
 import { getCourseDetailsById } from "../../Backend/course";
 import { getCurrentUser } from "../../Backend/user";
+import { firestore } from "../../Backend/firebase";
 
 const TopbarRow = styled.div`
   height: 4.5em;
@@ -73,7 +74,9 @@ function RegradeRequest() {
     const dueDate = location.state?.assignmentDueDate;
     const description = location.state?.assignmentDescript;
     const submissionLimit = location.state?.assignmentSubLim;
-    const courseDocId = location.state?.courseDocId;
+    const courseTitle = location.state?.courseTitle;
+    const courseId = location.state?.courseId;
+    const userEmail = location.state?.userInfo;
 
 
     const [reason, setReason] = useState("");
@@ -95,7 +98,9 @@ function RegradeRequest() {
     </div>
     }
 
-    const submitRequest = () => {
+    
+
+    const submitRequest = async () => {
       
         //stop request if reason is empty or full of only spaces
         if (reason == ""  ||  reason == null || reason.replace(" ", "") == 0)  {
@@ -104,7 +109,25 @@ function RegradeRequest() {
             return;
         } 
 
-        alert("you have text");
+        alert("you have text" + courseTitle + courseId);
+        let data = {
+            assignment: title,
+            completed: false,
+            course: "" + courseTitle + courseId, 
+            reply: "",
+            student: userEmail,
+        };
+
+        try {
+            const docRef = await addDoc(collection(firestore, "regrade_requests"), data);
+            console.log("Regrade: ", docRef.id);            
+            alert("Regrade Request successfully submitted!")
+
+        } catch (e) {
+            console.error("Error creating regrade request")
+        }
+
+
 
     }
 
