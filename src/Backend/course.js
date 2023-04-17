@@ -58,7 +58,8 @@ export async function createCourse(
   capacity,
   registeredStudents,
   description,
-  instructorId
+  instructorId,
+  weight = { quiz: 50, assignment: 50 }
 ) {
   let data = {
     courseTitle: title,
@@ -69,6 +70,7 @@ export async function createCourse(
     registeredStudents: registeredStudents,
     description: description,
     assignments: [],
+    weight: weight
   };
 
   try {
