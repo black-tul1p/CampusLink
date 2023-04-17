@@ -313,6 +313,10 @@ function Discussions() {
     setOpenSnackbar(false);
   };
 
+  const sendUpdateEmail = () => {
+    
+  };
+
   return (
     <div>
       <CourseNavBar />
