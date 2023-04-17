@@ -34,6 +34,7 @@ const Sidebar = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  z-index: 2;
 `;
 
 const SidebarItem = styled.div`
