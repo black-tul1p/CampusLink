@@ -69,6 +69,7 @@ export async function createCourse(
     capacity: capacity,
     registeredStudents: registeredStudents,
     description: description,
+    assignments: [],
     weight: weight
   };
 
@@ -148,7 +149,11 @@ export const getUserCourses = async (role) => {
           coursesData.map(async (course) => {
             const courseIDF = course.path.split("/")[1].trim();
             const res = await getCourseDetailsById(courseIDF);
-            if (res) courses.push(res);
+            if (res && role === "student" && Object.keys(res).length > 1) {
+              courses.push(res);
+            } else if (res && role === "instructor") {
+              courses.push(res);
+            }
           })
         );
       })
