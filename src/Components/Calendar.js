@@ -34,26 +34,26 @@ const CalendarPage = () => {
       }
     };
     fetchAssignmentsAndQuizzes();
-    console.log("HW", assignments);
-    console.log("Quiz", quizzes);
   }, []);
 
   const events = [
     ...assignments.map((a) => ({
-      title: `Assignment: ${a.assignmentTitle}`,
+      title: a.assignmentTitle,
       start: new Date(a.dueDate),
       end: new Date(a.dueDate),
       allDay: true,
       resource: { type: "assignment", courseName: a.courseName },
     })),
     ...quizzes.map((q) => ({
-      title: `Quiz: ${q.quizName}`,
+      title: q.quizName,
       start: new Date(q.deadline),
       end: new Date(q.deadline),
       allDay: true,
       resource: { type: "quiz", courseName: q.courseName },
     })),
   ];
+
+  console.log("Events", events);
 
   const eventStyleGetter = (event) => {
     const backgroundColor =
@@ -89,7 +89,7 @@ const CalendarPage = () => {
         tooltipAccessor={(event) => {
           const date = format(event.start, "MMMM do, yyyy");
           const courseName = event.resource.courseName;
-          return `${event.title} due on ${date} for ${courseName}`;
+          return `Due on ${date} for ${courseName}`;
         }}
       />
     </CalendarContainer>

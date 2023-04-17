@@ -22,7 +22,7 @@ export const getAssignmentsWithDueDates = async () => {
         return {
           courseName: `${course.courseTitle} ${course.courseId}`,
           assignmentTitle: assignment.title,
-          dueDate: assignment.dueDate,
+          dueDate: assignment.dueDate.toDate(),
         };
       });
     });
