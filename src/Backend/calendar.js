@@ -15,31 +15,21 @@ export const getAssignmentsWithDueDates = async () => {
     const role = await getUserRole();
     const courses = await getUserCourses(role);
 
-    // console.log("Courses:", courses);
-
     // Get all assignments for each course
-    const courseAssignments = [];
-    const assignments = await Promise.all(
-      courses.map(async (course) => {
-        const assignments = await getAssigmentsByCourse(course.databaseId);
-        // console.log("Assignments:", assignments);
-        assignments.forEach((doc) => {
-          const assignment = doc;
-          if (assignment.dueDate) {
-            courseAssignments.push({
-              courseName: `${course.courseTitle} ${course.courseId}`,
-              assignmentTitle: assignment.title,
-              dueDate: assignment.dueDate,
-            });
-          }
-        });
-
-        return courseAssignments;
-      })
-    );
+    const assignmentPromises = courses.map(async (course) => {
+      const hws = await getAssigmentsByCourse(course.databaseId);
+      return hws.map((assignment) => {
+        return {
+          courseName: `${course.courseTitle} ${course.courseId}`,
+          assignmentTitle: assignment.title,
+          dueDate: assignment.dueDate,
+        };
+      });
+    });
+    const assignmentsArray = await Promise.all(assignmentPromises);
 
     // Flatten all the course assignments into a single array
-    const allAssignments = assignments.flat();
+    const allAssignments = assignmentsArray.flat();
 
     // Sort the assignments by due date
     allAssignments.sort((a, b) => a.dueDate - b.dueDate);
