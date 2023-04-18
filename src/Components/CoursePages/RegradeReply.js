@@ -66,7 +66,7 @@ padding: 20px 0 0 0;
 
 
 
-function RegradeRequest() {
+function RegradeReply() {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -176,6 +176,7 @@ function RegradeRequest() {
                 }}
                 />
                 <Button onClick={submitRequest}>Submit Request</Button>
+                WOOOOOOO
             </p>
 
             
@@ -194,4 +195,4 @@ function RegradeRequest() {
     );
 
 } 
-export default RegradeRequest
+export default RegradeReply

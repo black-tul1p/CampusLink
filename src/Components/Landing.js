@@ -16,6 +16,7 @@ import Admin from "./Admin";
 import AssignmentContent from "./CoursePages/AssignmentContent";
 import RegradeRequest from "./CoursePages/RegradeRequest";
 import Navbar from "./Navbar";
+import RegradeReply from "./CoursePages/RegradeReply";
 
 const Container = styled.div`
   display: flex;
@@ -39,6 +40,7 @@ export const PageList = {
   Admin: "/adminHome",
   AssignmentContent: "/assignmentContent",
   RegradeRequest: "/regradeRequest",
+  RegradeReply: "/regradeReply",
 };
 
 export default function Landing(props) {
@@ -73,7 +75,9 @@ export default function Landing(props) {
     content = <AssignmentContent theme={props} />;
   } else if (props.page === PageList.RegradeRequest) {
     content = <RegradeRequest theme={props} />
-  }else {
+  } else if (props.page == PageList.RegradeReply) {
+    content = <RegradeReply theme={props} />
+  } else {
     content = <p>Invalid page.</p>;
   }
 
