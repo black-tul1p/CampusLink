@@ -103,13 +103,14 @@ function RegradeRequest() {
     const submitRequest = async () => {
       
         //stop request if reason is empty or full of only spaces
-        if (reason == ""  ||  reason == null || reason.replace(" ", "") == 0)  {
+        if (reason === ""  ||  reason === null || reason.replace(" ", null).length === 0)  {
             alert("Please provide a reason before submitting the request!");
             console.log(reason.length)
             return;
         } 
+        console.log(reason.replace(" ", null).length)
 
-        alert("you have text" + courseTitle + courseId);
+        //alert("you have text" + courseTitle + courseId);
         let data = {
             assignment: title,
             completed: false,
@@ -121,11 +122,12 @@ function RegradeRequest() {
 
         try {
             const docRef = await addDoc(collection(firestore, "regrade_requests"), data);
-            console.log("Regrade: ", docRef.id);            
+            //console.log("Regrade: ", docRef.id);            
             alert("Regrade Request successfully submitted!")
 
         } catch (e) {
             console.error("Error creating regrade request")
+            alert("There was a problem completing the regrade request!")
         }
 
 
@@ -160,9 +162,6 @@ function RegradeRequest() {
             <Description>
                 {description}
             </Description>
-            <SubLimitText>
-                Submission Limit: {submissionLimit}
-            </SubLimitText>
 
             <p className="title">
                 <TextField

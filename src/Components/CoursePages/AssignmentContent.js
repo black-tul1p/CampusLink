@@ -191,7 +191,7 @@ function AssignmentContent() {
 
         </div>
     }
-    const redirecting = redirect;
+    
     const toRegrade = (e) => {
         const assignmentTitle = title
         const assignmentDueDate = dueDate
