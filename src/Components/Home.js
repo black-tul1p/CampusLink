@@ -101,12 +101,26 @@ function Homepage() {
     fetchData();
   }, []);
 
-  const [editingCourse, setEditingCourse] = useState(null);
+  const [editingCourseId, setEditingCourseId] = useState("");
   const [editingTitle, setEditingTitle] = useState("");
   const [editingId, setEditingId] = useState("");
   const [editingDept, setEditingDept] = useState("");
   const [editingDesc, setEditingDesc] = useState("");
   const [editOpen, setEditOpen] = useState(false);
+
+  const openEditDialouge = () => {
+    setEditOpen(true);
+  };
+
+  const closeEditDialogue = () => {
+    setEditOpen(false);
+    setEditingCourseId("");
+  };
+
+  const submitEditDialogue = () => {
+    setSnackbarMessage("Successfully Edited Course Information");
+    setOpenSnackbar(true);
+  };
 
   return (
     <div className="homepage-student">
@@ -156,7 +170,8 @@ function Homepage() {
                     <div>
                     <div className="edit-course-container" onClick={(event) => {
                       const courseid = event.currentTarget.parentElement.getAttribute('forcourse');
-                      
+                      setEditingCourseId(courseid);
+                      openEditDialouge();
                       }} >
                         <EditIcon fontSize="large" /> 
                     </div> 
@@ -256,7 +271,7 @@ function Homepage() {
       </Snackbar>
 
       <Dialog
-        class="create-course-dialogue"
+        className="create-course-dialogue"
         open={open}
         onClose={closeCourseDialogue}
         sx={{
@@ -331,7 +346,8 @@ function Homepage() {
           <Button onClick={submitCourseDialogue}>Create</Button>
         </DialogActions>
       </Dialog>
-      <Dialog class="create-course-dialogue" open={editOpen} onClose={closeEditDialogue} sx={{
+        
+      <Dialog className="create-course-dialogue" open={editOpen} onClose={closeEditDialogue} sx={{
         "& .MuiDialog-container": {
           "& .MuiPaper-root": {
             width: "100%",

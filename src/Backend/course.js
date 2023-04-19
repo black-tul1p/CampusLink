@@ -62,6 +62,7 @@ export async function createCourse(
 ) {
   let data = {
     courseTitle: title,
+    courseId: id,
     credit: credit,
     department: department,
     capacity: capacity,
