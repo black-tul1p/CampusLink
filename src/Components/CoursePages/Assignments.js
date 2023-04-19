@@ -23,6 +23,7 @@ function Assignments() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
+  const [points, setPoints] = useState("");
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(true);
   const [role, setRole] = useState("");
@@ -63,6 +64,7 @@ function Assignments() {
       setTime("");
       setDescription("");
       setSubmissionLimit("");
+      setPoints("");
       setOpen1(false);
     }
   }
@@ -105,7 +107,7 @@ function Assignments() {
 
   const handleSubmit = () => {
     if (!verifyInput(title, description, date, time, submissionLimit)) {
-      console.log("verify: " + verifyInput(title, description, date, time, submissionLimit));
+      console.log("verify: " + verifyInput(title, description, date, time));
       setError("Incorrect input format.");
       setTimeout(() => {
         setError("");
@@ -113,7 +115,7 @@ function Assignments() {
         return;
     } else {
       const due = date + " " + time;
-      addAssignment(title, description, due, submissionLimit, courseDocId);
+      addAssignment(title, description, due, submissionLimit, courseDocId, points);
       UploadFile();
       alert("New Assignment Added!");
       handleCancel();
@@ -126,6 +128,7 @@ function Assignments() {
     setTime("");
     setDescription("");
     setSubmissionLimit("");
+    setPoints("");
     setOpen(false);
   }
 
@@ -272,6 +275,13 @@ function Assignments() {
                   onChange={(e) => {
                     setSubmissionLimit(e.target.value)
                   }}/>
+                <label> Total Points </label>
+                <input placeholder="100"
+                  value={points}
+                  onChange={(e) => {
+                    setPoints(e.target.value);
+                  }}
+                />  
                 <label> Upload PDFs/Images </label> 
                 <input type="file"
                 onChange={(event) => {setFileUpload(event.target.files[0]);}}

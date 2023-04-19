@@ -77,7 +77,8 @@ function Quizzes() {
     points: 0,
     deadline: null,
     timeLimit: null,
-    questions: []
+    questions: [],
+    attemptedBy: [],
   }
 
 
@@ -90,6 +91,7 @@ function Quizzes() {
       setRole(role);
     })
     updateQuizList(courseId);
+    console.log("quizzes: " + quizzes.length);
   }, [location]);
 
   return (
