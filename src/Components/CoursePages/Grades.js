@@ -29,10 +29,12 @@ function Grades() {
 
   const [weights, setWeights] = useState([]);
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const [role, setRole] = useState("");
   const [courseDocId, setCourseDocId] = useState("")
 
-  const [gradeItem, setGradeItem] = useState("");
+  const [gradeTitle, setGradeTitle] = useState("");
+  const [gradePoints, setGradePoints] = useState("");
 
 
   useEffect(() => {
@@ -84,6 +86,14 @@ function Grades() {
     setOpen(false);
   };
 
+  const handleOpened = () => {
+    setOpen1(true);
+  };
+
+  const handleClosed = () => {
+    setOpen1(false);
+  };
+
   const handleUpdate = () => {
     const totalWeight = weights.reduce((acc, w) => acc + Number(w.weight), 0);
     if (totalWeight !== 100) {
@@ -92,6 +102,10 @@ function Grades() {
     }
     updateCourseWeight(courseDocId, weights);
     handleClose();
+  };
+
+  const handleAdd = () => {
+    handleClosed();
   };
 
   const clickView = () => {
@@ -247,7 +261,7 @@ function Grades() {
             </Table>
           </TableContainer>
           <Button
-              onClick={clickAddGrade}
+              onClick={handleOpened}
               variant="contained"
               color="primary"
               style={{
@@ -257,6 +271,42 @@ function Grades() {
             >
             Add Grade Item
           </Button> 
+          <Dialog 
+          open={open1} 
+          onClose={handleClosed}
+          sx={{ "& .MuiPaper-root": { backgroundColor: "rgb(16, 46, 68)" } }}
+          >
+            <DialogTitle sx={{ color: "#fff" }}>Add Grade Item</DialogTitle>
+            <DialogContent>
+              <TextField
+              autoFocus
+              margin="dense"
+              id="title"
+              label="Title"
+              type="string"
+              defaultValue={gradeTitle}
+              onChange={(e) => {
+                setGradeTitle(e.target.value);
+              }}
+              fullWidth
+            />
+            <TextField
+              margin="dense"
+              id="totalPoints"
+              label="Total Points"
+              type="number"
+              defaultValue={gradePoints}
+              onChange={(e) => {
+                setGradePoints(e.target.value);
+              }}
+              fullWidth
+            />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleAdd}>Update</Button>
+              <Button onClick={handleClosed}>Cancel</Button>
+            </DialogActions>
+          </Dialog>
         </div>
         } 
       </div>
