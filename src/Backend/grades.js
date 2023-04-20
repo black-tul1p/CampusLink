@@ -52,14 +52,15 @@ export async function getAssignmentById(assignmentDocId) {
 
   export const getAssigmentSubmissions = async (assignmentDocId) => {
     try {
-      const submissions = await getDocs(collection(firestore, "assignments", assignmentDocId, "submissions"));
-      return submissions.docs.map(doc => {
+      const submissions = [];
+      
+      const submissionList = await getDocs(collection(firestore, "assignments", assignmentDocId, "submissions"));;
+      return submissionList.docs.map(doc => {
           let assigmentSubmissions = {...doc.data()};
-          console.log("score:" + assigmentSubmissions[0].score);
           return assigmentSubmissions;
       });
     } catch (error) {
-      throw new Error("Error getting assignment submissions:", error);
+      throw new Error("Error getting assignment submissions:"+ error);
     }
   };
 
@@ -82,3 +83,25 @@ export async function getAssignmentById(assignmentDocId) {
       console.error("Error updating course weight with ID ", courseId, ": ", e);
     }
   }
+  export async function getClassList (courseID) {
+    if (courseID === undefined) {
+      console.log("Course not specified!");
+    } else {
+      try {
+        const course = doc(firestore, "courses", courseID);
+        const courseDoc = await getDoc(course);
+        if (courseDoc.exists()) {
+          //Add enrolled students to classlist
+          const enrolled = courseDoc.data().enrolledStudents;
+          const stdnts = await Promise.all(enrolled.map(getDoc));
+          
+          console.log("firstName: " + stdnts[0].id);
+          return stdnts;
+        } else {
+          console.log("Course not found!");
+        }
+      } catch (error) {
+        console.log("error getting students from course:" + error);
+      }
+    }
+  };

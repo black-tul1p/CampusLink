@@ -118,13 +118,10 @@ export const getEnrolledStudents = async (courseId) => {
     
     try {
         const course = await getDoc(doc(firestore, "courses", courseId));
-        console.log("reached enrolled 1");
         const enrolledNames = [];
         const studentpaths = course.data().enrolledStudents;
-        console.log("reached enrolled 3");
         await Promise.all (
             studentpaths.map(async (path) => {
-                console.log("reached enrolled 2" + path.path);
                 const refId = path.path.split("/")[1].trim();
                 const student = await getDoc(doc(firestore, "students", refId));
                 if(student) {

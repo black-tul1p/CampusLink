@@ -10,6 +10,7 @@ import {
   where,
   FieldValue,
   arrayUnion,
+  arrayRemove,
 } from "@firebase/firestore";
 import { auth, firestore } from "./firebase";
 
@@ -186,3 +187,21 @@ export async function createAnnouncement(
     console.error("Error adding announcements: "+e);
   }
 }
+
+
+export async function deleteAnnouncement(announcement, courseDocId) {
+  try {
+    const courseRef = doc(firestore, "courses", courseDocId);
+    updateDoc(courseRef, {
+      announcements: arrayRemove(announcement),
+    }).then(() => {
+      console.log("returning true");
+      return true;
+    });
+  } catch(error) {
+    console.log("error in deleting announcement" + error);
+    return false;
+  }
+  
+}
+

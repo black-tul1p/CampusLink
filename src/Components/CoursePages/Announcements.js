@@ -2,10 +2,11 @@ import React from "react";
 import { firestore } from "../../Backend/firebase";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate} from "react-router-dom";
-import { getCourseDetailsById, createAnnouncement } from "../../Backend/course";
+import { getCourseDetailsById, createAnnouncement, deleteAnnouncement } from "../../Backend/course";
 import "../../Styles/Assignments.css";
 import { getUserRole } from "../../Backend/user";
 import CourseNavBar from "../CourseNavBar";
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Modal,
   TextField,
@@ -53,6 +54,20 @@ function Announcements() {
     }
     
     
+  }
+
+  const clickDelete = async (announcement) => {
+    try {
+      const checkDelete = await deleteAnnouncement(announcement, courseID);
+      if(checkDelete) {
+        alert("Announcement Successfully Deleted!");
+      }
+      setTitle("");
+      setDescription("");
+      fetchData();
+    } catch(error) {
+      console.log("error deleting announcement: " + error);
+    } 
   }
   return (
     <div style={{ width: "100%", maxHeight:"100vh", overflow:"auto"}}>
@@ -119,7 +134,16 @@ function Announcements() {
             <p style={{fontSize:"1.4em", paddingBottom:"0.2em"}}>{announcement.title}</p>
             <p style={{fontSize:"1.1em", paddingBottom:"0.2em"}}>{announcement.timestamp.toDate().toLocaleTimeString('en-US')+", "+announcement.timestamp.toDate().toDateString()}</p>
           </div>
+          <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
           <p style={{fontSize:"1.2em", color:"rgb(174, 192, 208)"}}>{announcement.description}</p>
+          {role === "instructor" && <DeleteIcon
+          onClick={() => {
+            clickDelete(announcement);
+          }}
+          />
+          }
+          </div>
+          
         </div>
         )}
         </div>
