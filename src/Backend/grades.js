@@ -105,3 +105,30 @@ export async function getAssignmentById(assignmentDocId) {
       }
     }
   };
+
+  export const getAssignmentGradesForStudent = async (courseDocId, studentDocId) => {
+    try {
+      const assignmentRef = await getDocs(collection(firestore, "grades", courseDocId, "students", studentDocId, "assignments"));
+      return assignmentRef.docs.map(doc => {
+          let grades = {...doc.data(), id: doc.id};
+          console.log("grades in assignment: "  + doc.data().title);
+          return grades;
+      });
+    } catch (error) {
+      throw new Error("Error getting assignment grades:" + error);
+    }
+
+  }
+  export const getAdditionalGradesForStudent = async (courseDocId, studentDocId) => {
+    try {
+      const additionalRef = await getDocs(collection(firestore, "grades", courseDocId, "students", studentDocId, "additionalItems"));
+      return additionalRef.docs.map(doc => {
+          let grades = {...doc.data(), id: doc.id};
+          console.log("grades in additional: "  + doc.data().title);
+          return grades;
+      });
+    } catch (error) {
+      throw new Error("Error getting additional grades:" + error);
+    }
+  }
+

@@ -8,7 +8,7 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import Table from '@mui/material/Table';
 import TableContainer from '@mui/material/TableContainer';
-import { getAssigmentsByCourse, getAssigmentSubmission, updateCourseWeight,getAssigmentSubmissions, } from "../../Backend/grades";
+import { getAssigmentsByCourse, getAssigmentSubmission, updateCourseWeight,getAssigmentSubmissions, getAdditionalGradesForStudent, getAssignmentGradesForStudent } from "../../Backend/grades";
 import { getLoggedInUserId } from "../../Backend/user";
 import "../../Styles/Assignments.css";
 import { getUserRole } from "../../Backend/user";
@@ -24,6 +24,8 @@ function Grades() {
   const [assignments, setAssignments] = useState([]);
   const [courseAssignments, setCourseAssignments] = useState([]);
   const [allSubmissions, setAllSubmissions] = useState([]);
+  const [assignmentGrades, setAssignmentGrades] = useState([]);
+  const [additionalGrades, setAdditionalGrades] = useState([]);
 
   const [weights, setWeights] = useState([]);
   const [open, setOpen] = useState(false);
@@ -41,6 +43,10 @@ function Grades() {
       setCourseDocId(courseID);
       const role = await getUserRole();
       setRole(role);
+      const assgnGrades = await getAssignmentGradesForStudent(courseId, getLoggedInUserId());
+      const addGrades = await getAdditionalGradesForStudent(courseId, getLoggedInUserId())
+      setAdditionalGrades(addGrades);
+      setAssignmentGrades(assgnGrades);
       const assgns = await getAssigmentsByCourse(courseId);
       setCourseAssignments(assgns);
       await Promise.all(
@@ -50,21 +56,6 @@ function Grades() {
         })
       );
       setAllSubmissions(allSubs);
-      await Promise.all(
-        assgns.map(async (assignment) => {
-          const submission = await getAssigmentSubmission(assignment.id, getLoggedInUserId());
-          const assignmentDetails = {
-            title: assignment.title,
-            points: assignment.points,
-            score: submission.score,
-            comments: submission.comments,
-          }
-          assignmentSubmissions.push(assignmentDetails);
-
-        })
-      );      
-      setAssignments(assignmentSubmissions);  
-      
     }
     fetchData();
 
@@ -110,7 +101,7 @@ function Grades() {
   };
   
   return (
-    <div style={{ width: "100%", color: "white"}}>
+    <div style={{ width: "100%", color: "white", maxHeight:"100vh", overflow:"auto"}}>
       <CourseNavBar />
 
       <div style={{padding: "1.5em"}}>
@@ -123,18 +114,7 @@ function Grades() {
         </div>
         {role === "student" && 
         <>
-          <Button
-              onClick={clickAddGrade}
-              variant="contained"
-              color="primary"
-              style={{
-                padding: "1em",
-                borderRadius: "1em",
-              }}
-            >
-            Post Announcement
-          </Button>
-          <TableContainer >
+          <TableContainer style={{marginBottom:"2em"}}>
             <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
             <colgroup>
               <col width="25%" />
@@ -152,16 +132,32 @@ function Grades() {
               </TableRow>
             </TableHead>
             <TableBody style={{width: "100%", backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              {assignments.map((assignment)=><>
+              {assignmentGrades.map((assignment)=><>
                 <TableRow>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                     {assignment.title}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {assignment.score + " / " + assignment.points}
+                    {assignment.earnedPoints + " / " + assignment.totalPoints}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {Number((assignment.score / assignment.points) * 100).toFixed(1) + "%"}
+                    {Number((assignment.earnedPoints / assignment.totalPoints) * 100).toFixed(1) + "%"}
+                  </TableCell>
+                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                    {assignment.comments !== null &&  assignment.comments !== undefined ? assignment.comments : "No Comments"}
+                  </TableCell>
+                </TableRow>
+              </>)}
+              {additionalGrades.map((assignment)=><>
+                <TableRow>
+                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                    {assignment.title}
+                  </TableCell>
+                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                    {assignment.earnedPoints + " / " + assignment.totalPoints}
+                  </TableCell>
+                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
+                    {Number((assignment.earnedPoints / assignment.totalPoints) * 100).toFixed(1) + "%"}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                     {assignment.comments !== null &&  assignment.comments !== undefined ? assignment.comments : "No Comments"}
@@ -210,7 +206,7 @@ function Grades() {
         }
         {role === "instructor" && 
         <div>
-          <TableContainer >
+          <TableContainer style={{marginBottom:"2em"}}>
             <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
             {/* <colgroup>
               <col width="25%" />
@@ -250,6 +246,17 @@ function Grades() {
             </TableBody>
             </Table>
           </TableContainer>
+          <Button
+              onClick={clickAddGrade}
+              variant="contained"
+              color="primary"
+              style={{
+                padding: "1em",
+                borderRadius: "1em",
+              }}
+            >
+            Add Grade Item
+          </Button> 
         </div>
         } 
       </div>
