@@ -123,9 +123,6 @@ function Assignments() {
       return;
     } else {
       const due = date + " " + time;
-<<<<<<< HEAD
-      addAssignment(title, description, due, submissionLimit, courseDocId, points);
-=======
       if (editingAssignment) {
         const updatedAssignment = await editAssignment(editingAssignment.id, title, description, due, submissionLimit, courseDocId);
         setAssignments(assignments.map(a => a.id === updatedAssignment.id ? updatedAssignment : a));
@@ -134,7 +131,6 @@ function Assignments() {
         const assgnts = await getAssigmentsByCourse(courseDocId);
         setAssignments(assgnts);
       }
->>>>>>> main
       UploadFile();
       if (editingAssignment) {
         alert("Assignment Updated!");

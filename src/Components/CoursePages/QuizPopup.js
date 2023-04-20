@@ -377,5 +377,3 @@ const QuizPopup = (props) => {
 };
 
 export default QuizPopup;
-
-export default QuizPopup;
