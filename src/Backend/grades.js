@@ -1,15 +1,19 @@
-import { firestore } from "./firebase";
-
 import {
   collection,
-  addDoc,
-  getDoc,
-  getDocs,
-  updateDoc,
   doc,
+  addDoc,
+  deleteDoc,
+  getDocs,
+  getDoc,
+  updateDoc,
+  query,
+  where,
+  FieldValue,
   arrayUnion,
+  setDoc,
   Timestamp,
 } from "@firebase/firestore";
+import { auth, firestore } from "./firebase";
 
 export async function getAssignmentById(assignmentDocId) {
     const ref = collection(firestore, "assignments");
@@ -69,3 +73,12 @@ export async function getAssignmentById(assignmentDocId) {
       throw new Error("Error getting student's assignment submission: " + error);
     }
   };
+  export async function updateCourseWeight(courseId, weight) {
+    try {
+      const courseRef = doc(collection(firestore, "courses"), courseId);
+      await updateDoc(courseRef, { weight });
+      console.log("Course weight updated for course ID: ", courseId);
+    } catch (e) {
+      console.error("Error updating course weight with ID ", courseId, ": ", e);
+    }
+  }
