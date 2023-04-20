@@ -158,3 +158,23 @@ export const getUserCourses = async (role) => {
     throw new Error("Error fetching courses:", error);
   }
 };
+
+export async function createAnnouncement(
+  title,
+  description,
+  courseDocId
+) {
+  let data = {
+    title: title,
+    description: description,
+    timestamp: new Date,
+  };
+
+  try {
+    const userRef = doc(firestore, "courses", courseDocId);
+    await updateDoc(userRef, {announcements: arrayUnion(data)});
+    console.log("Announcement added successfully!");
+  } catch (e) {
+    console.error("Error adding announcements: "+e);
+  }
+}

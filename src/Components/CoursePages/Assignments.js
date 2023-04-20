@@ -147,7 +147,7 @@ function Assignments() {
   }
 
   return (
-    <div className = "main-box" style={{ width: "100%" }}>
+    <div style={{ width: "100%", maxHeight:"100vh", overflow:"auto" }}>
       <CourseNavBar />
       {error && <ErrorBox text={error} />}
       <div className = "assignment-box">
