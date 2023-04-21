@@ -133,6 +133,10 @@ const QuizPopup = (props) => {
     const newAnswers = { ...attempt };
     newAnswers.answers[index] = {
       answer: answer,
+      points:
+        quiz.questions[index].answers[0] === answer
+          ? parseInt(quiz.questions[index].points)
+          : 0,
     };
     setAttempt(newAnswers);
     // console.log("AFTER:", attempt);
@@ -151,6 +155,8 @@ const QuizPopup = (props) => {
       await setQuizAttempt(props.courseId, props.userId, quiz.quizId, attempt);
     };
 
+    console.log(attempt);
+
     attemptQuiz().catch((error) => {
       console.error(error);
       setError(error);
@@ -161,7 +167,7 @@ const QuizPopup = (props) => {
     if (quit) props.onClose();
   };
 
-  console.log(attempt);
+  // console.log(attempt);
   // console.log(`New? ${newAttempt ? "yes" : "no"}`);
 
   return (
