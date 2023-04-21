@@ -199,6 +199,24 @@ const QuizPopup = (props) => {
               onEnd={setSubmitted}
             />
           )}
+          {viewOnly && attempt.isGraded && started && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                alignItems: "center",
+                width: "8rem",
+                gap: "0.5rem",
+                marginRight: "1rem",
+              }}
+            >
+              <Typography variant="h6">Grade: </Typography>
+              <Typography
+                variant="h6"
+                color="lightgreen"
+              >{`${attempt.points}/${quiz.points}`}</Typography>
+            </div>
+          )}
           <IconButton
             edge="start"
             color="inherit"
