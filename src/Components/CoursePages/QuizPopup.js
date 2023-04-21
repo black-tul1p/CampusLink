@@ -70,7 +70,7 @@ const QuizPopup = (props) => {
   const [attempt, setAttempt] = useState({ ...props.answers });
   const [started, setStarted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [clicked, setClicked] = useState(false);
+  // const [clicked, setClicked] = useState(false);
   const [error, setError] = useState(null);
   const [viewOnly, setViewOnly] = useState(true);
   const newAttempt = attempt.answers?.length > 0 ? false : true;
@@ -134,22 +134,22 @@ const QuizPopup = (props) => {
     newAnswers.answers[index] = {
       answer: answer,
       points:
-        quiz.questions[index].answers[0] === answer
+        quiz.questions[index].answers[0] === answer &&
+        !quiz.questions[index].manual
           ? parseInt(quiz.questions[index].points)
           : 0,
     };
     setAttempt(newAnswers);
-    // console.log("AFTER:", attempt);
 
     handleSubmit();
   };
 
-  const handleSubmit = (quit) => {
-    console.log(clicked);
+  const handleSubmit = (quit, clicked) => {
+    // Update attempt count if submitted
     if (clicked) {
-      console.log("Increment!");
-      attempt.attemptNumber += 1;
+      attempt.attemptNumber = attempt.attemptNumber + 1;
     }
+
     // logic to handle quiz submission
     const attemptQuiz = async () => {
       await setQuizAttempt(props.courseId, props.userId, quiz.quizId, attempt);
@@ -161,8 +161,6 @@ const QuizPopup = (props) => {
       console.error(error);
       setError(error);
     });
-
-    setClicked(false);
 
     if (quit) props.onClose();
   };
@@ -313,8 +311,9 @@ const QuizPopup = (props) => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  setClicked(true);
-                  handleSubmit();
+                  // setClicked(true);
+                  // console.log(clicked);
+                  handleSubmit(false, true);
                   setSubmitted(true);
                 }}
               >

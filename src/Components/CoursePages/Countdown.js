@@ -37,7 +37,7 @@ const Countdown = ({ timestamp, minutes, onEnd }) => {
       : timeLeft.minutes;
 
   useEffect(() => {
-    if (minutesLeft === 0 && !isUnlimited) onEnd(true);
+    if (minutesLeft === 0 && !isUnlimited) onEnd(true, true);
   }, [minutesLeft]);
 
   return (
