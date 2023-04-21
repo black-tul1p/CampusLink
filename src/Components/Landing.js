@@ -15,8 +15,9 @@ import ClasslistStudent from "./CoursePages/ClasslistStudent";
 import Classlist from "./CoursePages/Classlist";
 import Admin from "./Admin";
 import AssignmentContent from "./CoursePages/AssignmentContent";
-import AttemptsList from "./CoursePages/AttemptsList";
+import RegradeRequest from "./CoursePages/RegradeRequest";
 import Navbar from "./Navbar";
+import RegradeReply from "./CoursePages/RegradeReply";
 
 const Container = styled.div`
   display: flex;
@@ -40,7 +41,8 @@ export const PageList = {
   Calendar: "/calendar",
   Admin: "/adminHome",
   AssignmentContent: "/assignmentContent",
-  AttemptsList: "/quizAttempts",
+  RegradeRequest: "/regradeRequest",
+  RegradeReply: "/regradeReply",
 };
 
 export default function Landing(props) {
@@ -75,8 +77,10 @@ export default function Landing(props) {
     content = <ClasslistStudent theme={props} />;
   } else if (props.page === PageList.AssignmentContent) {
     content = <AssignmentContent theme={props} />;
-  }else if (props.page === PageList.AttemptsList) {
-    content = <AttemptsList theme={props} />;
+  } else if (props.page === PageList.RegradeRequest) {
+    content = <RegradeRequest theme={props} />
+  } else if (props.page == PageList.RegradeReply) {
+    content = <RegradeReply theme={props} />
   } else {
     content = <p>Invalid page.</p>;
   }
