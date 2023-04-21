@@ -27,6 +27,7 @@ import {
   updateTopicName,
   getEnrolledStudents,
   updateDiscussionPrivacy,
+  sendUpdateEmail,
 } from "../../Backend/discuss";
 import { getUserRole } from "../../Backend/user";
 import { CheckCircle, WarningAmber } from "@mui/icons-material";
@@ -248,6 +249,7 @@ function Discussions() {
     const message = await updateDiscussion(editingDiscussion);
     setSnackbarMessage(message);
     setOpenSnackbar(true);
+    sendUpdateEmail(editingDiscussion);
 
     setEditingDiscussion(null);
     fetchData();
@@ -313,9 +315,6 @@ function Discussions() {
     setOpenSnackbar(false);
   };
 
-  const sendUpdateEmail = () => {
-    
-  };
 
   return (
     <div>

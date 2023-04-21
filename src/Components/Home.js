@@ -220,7 +220,7 @@ function Homepage() {
         />
       </Snackbar>
 
-      <Dialog class="create-course-dialogue" open={open} onClose={closeCourseDialogue} sx={{
+      <Dialog className="create-course-dialogue" open={open} onClose={closeCourseDialogue} sx={{
         "& .MuiDialog-container": {
           "& .MuiPaper-root": {
             width: "100%",

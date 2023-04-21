@@ -18,7 +18,7 @@ import { useState, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import ReplyIcon from '@mui/icons-material/Reply';
 import { auth } from "../../Backend/firebase";
-import { createReply } from "../../Backend/discuss";
+import { createReply, sendUpdateEmail } from "../../Backend/discuss";
 
 function DiscussionList(props) {
   const [reply, setReply] = useState("");
@@ -47,6 +47,7 @@ function DiscussionList(props) {
   const sendReply = async (discussionId) => {
     try {
       await createReply(discussionId, reply);
+      await sendUpdateEmail(discussionId);
       console.log("Reply added successfully");
     } catch (error) {
       console.error("Error adding reply:", error);

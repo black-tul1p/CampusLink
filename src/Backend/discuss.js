@@ -206,3 +206,31 @@ export const updateDiscussionPrivacy = async (discussionId, newValue) => {
     throw new Error("Failed to update discussion privacy:", error);
   }
 };
+
+export const sendUpdateEmail = async (discussionId) => {
+  try {
+    const discussionRef = doc(firestore, "discussions", discussionId);
+    const discussionSnapshot = await getDoc(discussionRef);
+    const replyList = discussionSnapshot.data().replies;
+    const postStudents = collection(firestore, "students");
+    const studentQuerySnapshot = await getDocs(postStudents);
+    let emailList = "mailto:";
+    for (let i = 0; i < replyList.length; i++) {
+      let stdnt = doc(studentQuerySnapshot, replyList[i].creator_id);
+      const email = stdnt.data().email;
+      if (emailList.includes(email)) {
+        console.log("Duplicate ID");
+        continue;
+      }
+      if (i === 0) {
+        emailList = emailList + email;
+      } else {
+        emailList = emailList + ";" + email;
+      }      
+    }
+    console.log(emailList);
+  } catch (error) {
+    console.error("Error sending update email: ", error);
+    throw error;
+  }
+};
