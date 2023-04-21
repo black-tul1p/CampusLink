@@ -57,6 +57,7 @@ function ViewPastQuiz(props) {
   useEffect(() => {
     if (props.open) setFields();
     setIsEdit(false);
+    setIsValidInput(true);
   }, [props.open]);
 
   const handleClose = () => {
@@ -162,13 +163,9 @@ function ViewPastQuiz(props) {
                   className="add-button"
                   style={{ backgroundColor: "green" }}
                   onClick={() => {
-                    if (isValidInput) {
-                      setIsEdit(false);
+                    setIsEdit(false);
                       UpdateAttempt();
-                    } else {
-                      alert("invalid input!");
-                    }
-                    
+
                   }}
                   variant="contained"
                 >
@@ -228,13 +225,14 @@ function ViewPastQuiz(props) {
                           type="text"
                           defaultValue={studentAnswers[index].points}
                           onChange={(e) => {
-                            const inputValue = e.target.value; 
-                            const num = question.points; 
-                            if (parseInt(inputValue) <= num && parseInt(inputValue) > 0 && inputValue === '' || !/^[0-9]+$/.test(inputValue)) { 
-                              changeScore(e, index);
-                            } else {
-                              setIsValidInput(false);
-                            }
+                            
+                            changeScore(e, index);
+                            setIsValidInput(false);
+                            // if (parseInt(inputValue) <= num && parseInt(inputValue) > 0 && inputValue === '' || !/^[0-9]+$/.test(inputValue)) {
+                            //   changeScore(e, index);
+                            // } else {
+                            //   setIsValidInput(false);
+                            // }
                           }}
                           style={{ width: "1.6em" }}
                         />
@@ -264,14 +262,16 @@ function ViewPastQuiz(props) {
                           type="text"
                           defaultValue={studentAnswers[index].points}
                           onChange={(e) => {
-                            const inputValue = e.target.value; 
-                            const num = question.points; // Replace with the actual value of num variable
-                            if (parseInt(inputValue) <= num) { // Convert input value to integer and compare with num
-                              // Input value is greater than num, do something
-                              changeScore(e, index);
-                            } else {
-                              setIsValidInput(false);
-                            }
+                            // const inputValue = e.target.value;
+                            // const num = question.points;
+                            changeScore(e, index);
+                            setIsValidInput(false);// Replace with the actual value of num variable
+                            // if (parseInt(inputValue) <= num) { // Convert input value to integer and compare with num
+                            //   // Input value is greater than num, do something
+                            //   changeScore(e, index);
+                            // } else {
+                            //   setIsValidInput(false);
+                            // }
                           }}
                           style={{ width: "1.6em" }}
                         />
