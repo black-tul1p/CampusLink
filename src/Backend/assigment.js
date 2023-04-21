@@ -1,5 +1,5 @@
 import { firestore, auth } from "./firebase";
-import { getUserIdByEmail } from "./user";
+import { getCurrentUser, getUserIdByEmail } from "./user";
 import {
   collection,
   addDoc,
@@ -131,10 +131,12 @@ export const getBookmarkedAssignments = async (role, courseDocId) => {
         );
     const userId = await getUserIdByEmail(auth.currentUser.email);
 
-    let userDoc = await getDoc(doc(firestore, "students", userId));
-    if (role === "instructor") {
-      userDoc = await getDoc(doc(firestore, "instructors", userId));
-    }
+    // let userDoc = await getDoc(doc(firestore, "students", userId));
+    // if (role === "instructor") {
+    //   userDoc = await getDoc(doc(firestore, "instructors", userId));
+    // }
+
+    let userDoc = await getCurrentUser();
 
     const userBookmarks = userDoc.data().bookmarks;
 
@@ -155,12 +157,13 @@ export const getBookmarkedAssignments = async (role, courseDocId) => {
   }
 };
 
-export const bookmarkAssignment = async (role, assignmentId) => {
-  let userDoc = await getDoc(doc(firestore, "students", userId));
-    if (role === "instructor") {
-      userDoc = await getDoc(doc(firestore, "instructors", userId));
-    }
-    
+export const bookmarkAssignment = async (assignmentId) => {
+  let userDoc = await getCurrentUser();
+    await updateDoc(userDoc, {bookmarks: arrayUnion(assignmentId)});
+};
+
+export const removeBookmark = async (userId) => {
+
 };
 
 export const isBookmarked = async (role, assignmentId) => {
