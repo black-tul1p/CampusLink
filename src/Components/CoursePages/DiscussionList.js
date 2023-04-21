@@ -105,7 +105,7 @@ function DiscussionList(props) {
             />
             {props.role === "instructor" && (
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <FormControl>
+                <FormControl style={{ width: "120px" }}>
                   <InputLabel htmlFor="privacy-select">Privacy</InputLabel>
                   <Select
                     id="privacy-select"

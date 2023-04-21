@@ -11,18 +11,18 @@ import { getUserCourses, createCourse, removeCourse } from "../Backend/course";
 import { getLoggedInUserId, getUserRole } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import {
   Dialog,
-  DialogActions, 
-  DialogContent, 
-  DialogContentText, 
-  DialogTitle
-} from '@mui/material';
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 function Homepage() {
   const [courses, setCourses] = useState([]);
@@ -34,7 +34,7 @@ function Homepage() {
   const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false);
-  const [newCourseTitle,setNewCourseTitle] = React.useState("");
+  const [newCourseTitle, setNewCourseTitle] = React.useState("");
   const [newCourseId, setNewCourseId] = React.useState("");
   const [newCourseDept, setNewCourseDept] = React.useState("");
   const [newCourseDesc, setNewCourseDesc] = React.useState("");
@@ -52,40 +52,50 @@ function Homepage() {
     }
 
     try {
-      createCourse(newCourseTitle, newCourseId, 3, newCourseDept, 150, 0, newCourseDesc, getLoggedInUserId())
-        .then(() => {fetchData();});
+      createCourse(
+        newCourseTitle,
+        newCourseId,
+        3,
+        newCourseDept,
+        150,
+        0,
+        newCourseDesc,
+        getLoggedInUserId()
+      ).then(() => {
+        fetchData();
+      });
       closeCourseDialogue();
     } catch (error) {
       setSnackbarMessage(`Failed to create course`);
       setOpenSnackbar(true);
     }
-  }
+  };
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
   async function fetchData() {
-      try {
-        // Get user role
-        const role = await getUserRole();
-        setRole(role);
-        setSnackbarMessage(`Hello, ${user.displayName}`);
-        setOpenSnackbar(true);
+    try {
+      // Get user role
+      const role = await getUserRole();
+      setRole(role);
+      setSnackbarMessage(`Hello, ${user.displayName}`);
+      setOpenSnackbar(true);
 
-        // Get courses
-        const courses = await getUserCourses(role);
-        if (courses.length === 0) {
-          setCourses([]);
-        } else {
-          setCourses(courses);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+      // Get courses
+      const courses = await getUserCourses(role);
+      if (courses.length === 0) {
+        setCourses([]);
+      } else {
+        setCourses(courses);
       }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
     }
+  }
 
   useEffect(() => {
     fetchData();
@@ -93,7 +103,6 @@ function Homepage() {
 
   return (
     <div className="homepage-student">
-      
       <div className="header-container">
         <div className="header-titles">
           <p>My Courses</p>
@@ -121,42 +130,52 @@ function Homepage() {
       ) : (
         <div className="homepage-student-container">
           {courses.length > 0 ? (
-              courses
-                .filter(
-                  (course) =>
-                    course.description && course.courseId && course.courseTitle
-                )
-                .map((course) => (
-                  <div className="course-container" forcourse={course.databaseId}
-                    onClick={() => {
-                      const courseId = course.databaseId;
-                      navigate("/announcements", { state: { courseId } });
-                    }}
-                  >
-
-                    { role === "instructor" && // Display delete button only for instructors
-                    <div className="delete-course-container" onClick={(event) => {
-                        const id = event.currentTarget.parentElement.getAttribute('forcourse');
+            courses
+              .filter(
+                (course) =>
+                  course.description && course.courseId && course.courseTitle
+              )
+              .map((course, index) => (
+                <div
+                  key={index}
+                  className="course-container"
+                  forcourse={course.databaseId}
+                  onClick={() => {
+                    const courseId = course.databaseId;
+                    navigate("/announcements", { state: { courseId } });
+                  }}
+                >
+                  {role === "instructor" && ( // Display delete button only for instructors
+                    <div
+                      className="delete-course-container"
+                      onClick={(event) => {
+                        const id =
+                          event.currentTarget.parentElement.getAttribute(
+                            "forcourse"
+                          );
                         try {
-                          removeCourse(id).then(() => {fetchData();});
+                          removeCourse(id).then(() => {
+                            fetchData();
+                          });
                         } catch (error) {
                           setSnackbarMessage(`Failed to remove course`);
                           setOpenSnackbar(true);
                         }
-                     }}>
-                       <DeleteIcon fontSize="large" />
+                      }}
+                    >
+                      <DeleteIcon fontSize="large" />
                     </div>
-                    }
+                  )}
 
-                    <div className="course-container-top">
-                      <h3>
-                        {course.courseTitle} {course.courseId} :
-                      </h3>
-                      <h3>{course.description}</h3>
-                    </div>
-                    <div className="course-container-bottom"></div>
+                  <div className="course-container-top">
+                    <h3>
+                      {course.courseTitle} {course.courseId} :
+                    </h3>
+                    <h3>{course.description}</h3>
                   </div>
-                ))
+                  <div className="course-container-bottom"></div>
+                </div>
+              ))
           ) : (
             <Typography
               style={{
@@ -220,53 +239,75 @@ function Homepage() {
         />
       </Snackbar>
 
-      <Dialog className="create-course-dialogue" open={open} onClose={closeCourseDialogue} sx={{
-        "& .MuiDialog-container": {
-          "& .MuiPaper-root": {
-            width: "100%",
-            maxWidth: "500px",  // Set your width here
+      <Dialog
+        class="create-course-dialogue"
+        open={open}
+        onClose={closeCourseDialogue}
+        sx={{
+          "& .MuiDialog-container": {
+            "& .MuiPaper-root": {
+              width: "100%",
+              maxWidth: "500px", // Set your width here
+            },
           },
-        },
-      }}>
+        }}
+      >
         <DialogTitle>Create New Course</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-          </DialogContentText>
+          <DialogContentText></DialogContentText>
           <TextField
-              label="Course Title"
-              sx={{ margin : '5px', width: "50%", 
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              onChange={e => {setNewCourseTitle(e.target.value);}}
+            label="Course Title"
+            sx={{
+              margin: "5px",
+              width: "50%",
+              "& .MuiInputBase-input": { color: "black !important" },
+              "& .MuiInputLabel-root": { color: "#000A !important" },
+            }}
+            variant="standard"
+            onChange={(e) => {
+              setNewCourseTitle(e.target.value);
+            }}
           />
           <TextField
-              label="Course ID"
-              sx={{ margin : '5px', width: "25%",
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              onChange={e => {setNewCourseId(e.target.value);}}
+            label="Course ID"
+            sx={{
+              margin: "5px",
+              width: "25%",
+              "& .MuiInputBase-input": { color: "black !important" },
+              "& .MuiInputLabel-root": { color: "#000A !important" },
+            }}
+            variant="standard"
+            onChange={(e) => {
+              setNewCourseId(e.target.value);
+            }}
           />
           <TextField
-              label="Department"
-              sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              fullWidth
-              onChange={e => {setNewCourseDept(e.target.value);}}
+            label="Department"
+            sx={{
+              margin: "5px",
+              "& .MuiInputBase-input": { color: "black !important" },
+              "& .MuiInputLabel-root": { color: "#000A !important" },
+            }}
+            variant="standard"
+            fullWidth
+            onChange={(e) => {
+              setNewCourseDept(e.target.value);
+            }}
           />
           <TextField
-              label="Description"
-              sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
-              variant="standard"
-              minRows="2"
-              fullWidth
-              multiline
-              onChange={e => {setNewCourseDesc(e.target.value);}}
+            label="Description"
+            sx={{
+              margin: "5px",
+              "& .MuiInputBase-input": { color: "black !important" },
+              "& .MuiInputLabel-root": { color: "#000A !important" },
+            }}
+            variant="standard"
+            minRows="2"
+            fullWidth
+            multiline
+            onChange={(e) => {
+              setNewCourseDesc(e.target.value);
+            }}
           />
         </DialogContent>
         <DialogActions>
@@ -274,7 +315,6 @@ function Homepage() {
           <Button onClick={submitCourseDialogue}>Create</Button>
         </DialogActions>
       </Dialog>
-
     </div>
   );
 }

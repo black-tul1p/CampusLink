@@ -7,6 +7,7 @@ import {
   AccountCircle,
   ExitToApp,
   QuestionMark,
+  CalendarToday,
 } from "@mui/icons-material";
 import {
   ClickAwayListener,
@@ -33,6 +34,7 @@ const Sidebar = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  z-index: 2;
 `;
 
 const SidebarItem = styled.div`
@@ -160,6 +162,22 @@ export default function Navbar() {
       </Tooltip>
       <SidebarDivider />
       <SidebarRow>
+        <Tooltip
+          title={
+            <Typography style={{ fontSize: "1.5em" }}>Calendar</Typography>
+          }
+          placement="right"
+        >
+          <SidebarButton
+            onClick={() => {
+              navigate("/calendar");
+            }}
+          >
+            <SidebarIcon>
+              <CalendarToday style={{ color: "#fff" }} />
+            </SidebarIcon>
+          </SidebarButton>
+        </Tooltip>
         <Tooltip
           title={<Typography style={{ fontSize: "1.5em" }}>FAQ</Typography>}
           placement="right"
