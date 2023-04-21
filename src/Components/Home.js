@@ -7,7 +7,7 @@ import {
   SnackbarContent,
   Typography,
 } from "@mui/material";
-import { getUserCourses, createCourse, removeCourse } from "../Backend/course";
+import { getUserCourses, createCourse, removeCourse, getCourseDetailsById, updateCourse } from "../Backend/course";
 import { getLoggedInUserId, getUserRole } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
@@ -115,11 +115,41 @@ function Homepage() {
   const closeEditDialogue = () => {
     setEditOpen(false);
     setEditingCourseId("");
+    setEditingTitle("");
+    setEditingId("");
+    setEditingDept("");
+    setEditingDesc("");
+
+    setNewCourseTitle("");
+    setNewCourseId("");
+    setNewCourseDept("");
+    setNewCourseDesc("");
   };
 
   const submitEditDialogue = () => {
+    console.log(newCourseTitle === "");
+    if (newCourseTitle === "") {
+      setNewCourseTitle(editingTitle);
+    }
+    if (newCourseId === "") {
+      setNewCourseId(editingId);
+    }
+    if (newCourseDept === "") {
+      setNewCourseDept(editingDept);
+    }
+    if (newCourseDesc === "") {
+      setNewCourseDesc(editingDesc);
+    }
+    let data = {
+      courseTitle: newCourseTitle,
+      courseId: newCourseId,
+      department: newCourseDept,
+      description: newCourseDesc
+    };
+    updateCourse(editingCourseId, data);
     setSnackbarMessage("Successfully Edited Course Information");
     setOpenSnackbar(true);
+    closeEditDialogue();
   };
 
   return (
@@ -161,16 +191,33 @@ function Homepage() {
                   key={index}
                   className="course-container"
                   forcourse={course.databaseId}
+                  
                   onClick={() => {
+                    /*
                     const courseId = course.databaseId;
                     navigate("/announcements", { state: { courseId } });
+                    */
+                    
+                    setEditingCourseId(course.databaseId);
+                    setEditingTitle(course.courseTitle);
+                    setEditingId(course.courseId);
+                    setEditingDept(course.department);
+                    setEditingDesc(course.description);
+                    setNewCourseTitle(editingTitle);
+                    setNewCourseId(editingId);
+                    setNewCourseDept(editingDept);
+                    setNewCourseDesc(editingDesc);
+                    openEditDialouge();
+                    
                   }}
                 >
                   {role === "instructor" && ( // Display delete button only for instructors
                     <div>
                     <div className="edit-course-container" onClick={(event) => {
                       const courseid = event.currentTarget.parentElement.getAttribute('forcourse');
+                      const courseTitle = event.currentTarget.parentElement.getAttribute('coursetitle');
                       setEditingCourseId(courseid);
+                      setEditingTitle(courseTitle);
                       openEditDialouge();
                       }} >
                         <EditIcon fontSize="large" /> 
@@ -291,8 +338,8 @@ function Homepage() {
             sx={{
               margin: "5px",
               width: "50%",
-              "& .MuiInputBase-input": { color: "black !important" },
-              "& .MuiInputLabel-root": { color: "#000A !important" },
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
             }}
             variant="standard"
             onChange={(e) => {
@@ -304,8 +351,8 @@ function Homepage() {
             sx={{
               margin: "5px",
               width: "25%",
-              "& .MuiInputBase-input": { color: "black !important" },
-              "& .MuiInputLabel-root": { color: "#000A !important" },
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
             }}
             variant="standard"
             onChange={(e) => {
@@ -316,8 +363,8 @@ function Homepage() {
             label="Department"
             sx={{
               margin: "5px",
-              "& .MuiInputBase-input": { color: "black !important" },
-              "& .MuiInputLabel-root": { color: "#000A !important" },
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
             }}
             variant="standard"
             fullWidth
@@ -329,8 +376,8 @@ function Homepage() {
             label="Description"
             sx={{
               margin: "5px",
-              "& .MuiInputBase-input": { color: "black !important" },
-              "& .MuiInputLabel-root": { color: "#000A !important" },
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
             }}
             variant="standard"
             minRows="2"
@@ -360,35 +407,39 @@ function Homepage() {
           <DialogContentText>
           </DialogContentText>
           <TextField
-              label="Course Title"
-              sx={{ margin : '5px', width: "50%", 
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+              label={editingTitle}
+              defaultValue={editingTitle}
+              sx={{ margin : '5px', width: "50%",
+                    "& .MuiInputBase-input": { color: 'white !important' },
+                    "& .MuiInputLabel-root": { color: 'white !important' } }}
               variant="standard"
               onChange={e => {setNewCourseTitle(e.target.value);}}
           />
           <TextField
-              label="Course ID"
+              label={editingId}
+              defaultValue={editingId}
               sx={{ margin : '5px', width: "25%",
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+                    "& .MuiInputBase-input": { color: 'white !important' },
+                    "& .MuiInputLabel-root": { color: 'white !important' } }}
               variant="standard"
               onChange={e => {setNewCourseId(e.target.value);}}
           />
           <TextField
-              label="Department"
+              label={editingDept}
+              defaultValue={editingDept}
               sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+                    "& .MuiInputBase-input": { color: 'white !important' },
+                    "& .MuiInputLabel-root": { color: 'white !important' } }}
               variant="standard"
               fullWidth
               onChange={e => {setNewCourseDept(e.target.value);}}
           />
           <TextField
-              label="Description"
+              label={editingDesc}
+              defaultValue={editingDesc}
               sx={{ margin : '5px',
-                    "& .MuiInputBase-input": { color: 'black !important' },
-                    "& .MuiInputLabel-root": { color: '#000A !important' } }}
+                    "& .MuiInputBase-input": { color: 'white !important' },
+                    "& .MuiInputLabel-root": { color: 'white !important' } }}
               variant="standard"
               minRows="2"
               fullWidth
@@ -398,7 +449,7 @@ function Homepage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeEditDialogue}>Cancel</Button>
-          <Button onClick={submitEditDialogue}>Create</Button>
+          <Button onClick={submitEditDialogue}>Submit Changes</Button>
         </DialogActions>
       </Dialog>
 
