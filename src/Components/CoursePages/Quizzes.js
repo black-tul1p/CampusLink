@@ -11,6 +11,7 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, DialogContentText } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { getUserRole, getLoggedInUserId } from "../../Backend/user";
 import {
@@ -19,17 +20,27 @@ import {
   deleteQuiz,
   updateQuiz,
   getQuizAttempt,
+  getEnrolledStudents,
+  getQuizAttemptById,
 } from "../../Backend/quiz";
 import { QuizCreationDialog } from "./QuizCreationDialog";
 import QuizPopup from "./QuizPopup";
+import ViewPastQuiz from "./ViewPastQuiz";
 
 function Quizzes() {
   const [open, setOpen] = useState(false);
   const [quizzes, setQuizzes] = useState([]);
   const [role, setRole] = useState("");
   const [clicked, setClicked] = useState(false);
+  const [clicked1, setClicked1] = useState(false);
   const [studentAnswers, setStudentAnswers] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [quizDetails ,setQuizDetails] = useState(null);
+  const [quizId, setQuizId] = useState("");
+  const [quizStudentId, setQuizStudentId] = useState("");
+  const [quizAttempt, setQuizAttempt] = useState(null);
+  const [attemptList, setAttemptList] = useState([]);
+  const [open1, setOpen1] = useState(false);
   // const [attemptedQuizzes, setAttemptedQuizzes] = useState({});
   // const [studentPoints, setStudentPoints] = useState("");
 
@@ -57,6 +68,77 @@ function Quizzes() {
       else setStudentAnswers({});
     });
   };
+
+  const handleOpened = () => {
+    setOpen1(true);
+  };
+
+  const handleClosed = () => {
+    setOpen1(false);
+  };
+
+  const ViewStudentAttempts= async (quiz) => {
+    try {
+      const enrolledStudents = await getEnrolledStudents(courseId);
+      const attempts = [];
+      await Promise.all(
+        enrolledStudents.map(async (student) => {
+          const takenQuiz = await getQuizAttemptById(courseId, student.id, quiz.quizId);
+          if(takenQuiz) {
+            const AttemptDetails = {
+              firstName: student.firstName,
+              lastName: student.lastName,
+              quiz: quiz,
+              studentId: student.id,
+              attempted: true,
+            }
+            attempts.push(AttemptDetails);
+          } else {
+            console.log(student.firstName + ": student did not attempt!")
+            const AttemptDetails = {
+              firstName: student.firstName,
+              lastName: student.lastName,
+              quiz: quiz,
+              studentId: student.id,
+              attempted: false,
+            } 
+            attempts.push(AttemptDetails);
+          }
+        })
+      );
+      setAttemptList(attempts);
+      handleOpened();
+      } catch (error) {
+        console.log("error in displaying quiz attempts: "+error);
+      }
+  }
+
+  const ViewAttempt = async (quiz, studentId) => {
+    try {
+      const studentDocId = studentId;
+      setQuizStudentId(studentId);
+      getQuizAttempt(courseId,studentDocId, quiz.quizId).then((attempt) => {
+        const QuizDetails = {
+          name: quiz.name,
+          description: quiz.description,
+          points: quiz.points,
+          deadline: quiz.deadline,
+          questions: quiz.questions,
+          studentAnswers: attempt.answers,
+          studentPoints: attempt.points,
+          attemptedOn: attempt.attemptedOn,
+          isGraded: attempt.isGraded,
+          attempts: quiz.attempts,
+        }
+        setQuizId(quiz.quizId);
+        setQuizDetails(QuizDetails);
+        setClicked1(true);
+      })
+      
+    } catch (error) {
+      console.log("error in getting quiz attempt." + error);
+    }
+  }
 
   useEffect(() => {
     try {
@@ -96,7 +178,7 @@ function Quizzes() {
   }, [location, courseId]);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", maxHeight:"100vh", overflow:"auto" }}>
       <CourseNavBar />
 
       <h1 className="title">Quizzes</h1>
@@ -126,10 +208,10 @@ function Quizzes() {
           <TableContainer>
             <Table sx={{ minWidth: 650 }} style={{ borderStyle: "hidden" }}>
               <colgroup>
+                <col width="20%" />
                 <col width="25%" />
-                <col width="25%" />
-                <col width="25%" />
-                <col width="25%" />
+                <col width="20%" />
+                <col width="35%" />
               </colgroup>
               <TableHead style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
                 <TableRow style={{ borderBottom: "1px solid #fff1" }}>
@@ -184,6 +266,7 @@ function Quizzes() {
                       >
                         {quiz.points + " pts"}
                       </TableCell>
+                      
                       <TableCell
                         style={{
                           textAlign: "right",
@@ -192,6 +275,15 @@ function Quizzes() {
                       >
                         {role === "instructor" && (
                           <>
+                            <Button
+                              variant="outlined"
+                              style={{ margin: "auto 20px 0 0" }}
+                              onClick={() => {
+                                ViewStudentAttempts(quiz)
+                              }}
+                            >
+                              Attempts
+                            </Button>
                             <Button
                               variant="outlined"
                               onClick={() => {
@@ -252,6 +344,43 @@ function Quizzes() {
           setEditingQuiz(null);
         }}
       />
+
+      <Dialog 
+        open={open1} 
+        onClose={handleClosed}
+        sx={{ "& .MuiPaper-root": { backgroundColor: "rgb(16, 46, 68)"} }}
+      >
+        <DialogTitle sx={{ color: "#fff", fontSize: 21, textAlign:"center" }}>Student Attempts</DialogTitle>
+        <DialogContent sx={{backgroundColor: "rgb(20, 50, 72)"}}>
+          {attemptList.map((attempt) => (
+            <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", columnGap:"10em",borderBottom: "1px solid rgb(134, 177, 207)", padding:"0.5em", marginTop:"0.4em" }}>
+              <DialogContentText sx={{ fontSize: 19 }}>
+                {attempt.firstName + ", " + attempt.lastName}
+              </DialogContentText>
+              {attempt.attempted ? (
+              <Button 
+                variant="outlined"
+                onClick={() => {
+                  ViewAttempt(attempt.quiz, attempt.studentId);
+                }}>
+                View Attempt
+              </Button>
+              ):(
+                <Button 
+                disabled="true"
+                onClick={() => {
+                  console.log("hehe clicked!");
+                }}>
+                  Not Attempted
+                </Button>
+              )}
+            </div>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClosed}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
 
       {role === "student" && (
         <div
@@ -361,6 +490,15 @@ function Quizzes() {
           }}
         />
       )}
+      <ViewPastQuiz
+        quizDetails = {quizDetails} 
+        courseId = {courseId}
+        quizId = {quizId}
+        studentId = {quizStudentId}
+        open={clicked1}
+        onClose={()=>{setClicked1(false)}}
+      />
+
     </div>
   );
 }

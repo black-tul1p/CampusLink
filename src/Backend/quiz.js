@@ -71,14 +71,40 @@ export async function getQuizAttempt(courseId, studentDocId, quizId) {
     const quizAttemptSnapshot = await getDoc(quizAttemptRef);
 
     if (quizAttemptSnapshot.exists()) {
+      console.log("found quiz attempt");
       return quizAttemptSnapshot.data();
     } else {
+      console.log("returning null");
       return null;
     }
   } catch (error) {
-    throw new Error("Error getting quiz attempt data:", error);
+    throw new Error("Error getting quiz attempt data:"+ error);
   }
 }
+export async function updateQuizGrade(courseId, studentDocId, quizId, data) {
+  try {
+    const newData = {
+      ...data,
+      isGraded: true,
+    };
+
+    const quizAttemptRef = doc(
+      firestore,
+      "courses",
+      courseId,
+      "quizAttempts",
+      studentDocId,
+      "takenQuizzes",
+      quizId
+    );
+
+    await setDoc(quizAttemptRef, newData);
+    return "Quiz attempt data updated successfully";
+  } catch (error) {
+    throw new Error("Error submitting quiz attempt", error);
+  }
+}
+
 
 export async function setQuizAttempt(courseId, studentDocId, quizId, data) {
   try {
@@ -103,19 +129,20 @@ export async function setQuizAttempt(courseId, studentDocId, quizId, data) {
     throw new Error("Error submitting quiz attempt", error);
   }
 }
-export async function getQuizAttempts(courseId, studentDocId) {
+export async function getQuizAttemptById(courseId, studentDocId, quizId) {
     try {
-        const takeQuizzes = await getDocs(collection(firestore, "courses", courseId, "quizAttempts", studentDocId, "takenQuizzes"));
-        return takeQuizzes.docs.map(doc => {
-            let attempts = {...doc.data(), quizId: doc.id};
-            return attempts;
-        });
+        const takenQuiz = await getDoc(doc(firestore, "courses", courseId, "quizAttempts", studentDocId, "takenQuizzes", quizId));
+        if (takenQuiz.exists()) {
+          console.log("data: " + takenQuiz.data().points)
+          return {...takenQuiz.data(), id:takenQuiz.id}
+        } else {
+          return null;
+        }
     } catch (error) {
-        throw new Error("Error getting quiz attempt:", error);
+        throw new Error("Error getting quiz attempt by Id:" + error);
     }
 }
 export const getEnrolledStudents = async (courseId) => {
-    
     try {
         const course = await getDoc(doc(firestore, "courses", courseId));
         const enrolledNames = [];
