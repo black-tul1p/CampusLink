@@ -12,6 +12,8 @@ import { doc, getDoc, collection } from "@firebase/firestore";
 import { storage } from "../../Backend/firebase"
 import { getCourseDetailsById } from "../../Backend/course";
 import { getCurrentUser } from "../../Backend/user";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 
 const TopbarRow = styled.div`
   height: 4.5em;
@@ -70,6 +72,7 @@ function AssignmentContent() {
     const [courseTitle, setCourseTitle] = useState("");
     const [courseId, setCourseId] = useState("");
     const [userInfo, setUserInfo] = useState("");
+    const [bookmarked, setBookmarked] = useState(false);
 
     const title = location.state?.assignmentTitle;
     const dueDate = location.state?.assignmentDueDate;
