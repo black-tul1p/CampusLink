@@ -114,7 +114,7 @@ export function verifyInput(title, description, dueDate, time, submissionLimit) 
   return true;
 } 
 
-export const getBookmarkedAssignments = async (role, courseDocId) => {
+export async function getBookmarkedAssignments(role, courseDocId)  {
   try {
     const assignments = [];
     const bookmarks = [];
@@ -156,7 +156,7 @@ export const getBookmarkedAssignments = async (role, courseDocId) => {
   }
 };
 
-export const addBookmark = async (role, assignmentId) => {
+export async function addBookmark(role, assignmentId)  {
   const userId = await getUserIdByEmail(auth.currentUser.email);
   let userDoc = (doc(firestore, "students", userId));
     if (role === "instructor") {
@@ -165,7 +165,7 @@ export const addBookmark = async (role, assignmentId) => {
     await updateDoc(userDoc, {bookmarks: arrayUnion(assignmentId)});
 };
 
-export const removeBookmark = async (role, assignmentId) => {
+export async function removeBookmark(role, assignmentId) {
   console.log(assignmentId);
   const userId = await getUserIdByEmail(auth.currentUser.email);
   let userDoc = (doc(firestore, "students", userId));
@@ -176,7 +176,7 @@ export const removeBookmark = async (role, assignmentId) => {
   await updateDoc(userDoc, {bookmarks: arrayRemove(assignmentId)});
 };
 
-export const isBookmarked = async (assignmentId) => {
+export async function isBookmarked(assignmentId) {
   try {
   let userDoc = await getCurrentUser();
 
