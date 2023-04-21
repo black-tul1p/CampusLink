@@ -72,6 +72,15 @@ export default function NavBar() {
       </TopbarButton>
       <TopbarButton
         onClick={() => {
+          navigate("/bookmarks", { state: { courseId } });
+        }}
+      >
+        <TopbarText>
+          <Typography>Bookmarks</Typography>
+        </TopbarText>
+      </TopbarButton>
+      <TopbarButton
+        onClick={() => {
           navigate("/syllabus", { state: { courseId } });
         }}
       >

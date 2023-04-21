@@ -63,6 +63,7 @@ export async function createUser(email, password, firstName, lastName, role) {
       email: email,
       preferredName: "",
       courses: [],
+      bookmarks: [],
       accepted: false,
     });
   } else {
@@ -72,6 +73,7 @@ export async function createUser(email, password, firstName, lastName, role) {
       email: email,
       preferredName: "",
       courses: [],
+      bookmarks: [],
     });
   }
 }
