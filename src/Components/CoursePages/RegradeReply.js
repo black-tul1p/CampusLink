@@ -226,7 +226,7 @@ function RegradeReply() {
             </div>
             <div className="assignments-bar"  onClick={firstToggle}>
               <p style={{fontSize:"1.3em"}}>
-                All Regrade Requests for This Assignment
+                All Regrade Requests
               </p>
               {open1 ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
             </div>
