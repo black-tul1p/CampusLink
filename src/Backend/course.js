@@ -10,6 +10,7 @@ import {
   where,
   FieldValue,
   arrayUnion,
+  arrayRemove,
 } from "@firebase/firestore";
 import { auth, firestore } from "./firebase";
 
@@ -58,15 +59,19 @@ export async function createCourse(
   capacity,
   registeredStudents,
   description,
-  instructorId
+  instructorId,
+  weight = { quiz: 50, assignment: 50 }
 ) {
   let data = {
     courseTitle: title,
+    courseId: id,
     credit: credit,
     department: department,
     capacity: capacity,
     registeredStudents: registeredStudents,
     description: description,
+    assignments: [],
+    weight: weight
   };
 
   try {
@@ -145,7 +150,11 @@ export const getUserCourses = async (role) => {
           coursesData.map(async (course) => {
             const courseIDF = course.path.split("/")[1].trim();
             const res = await getCourseDetailsById(courseIDF);
-            if (res) courses.push(res);
+            if (res && role === "student" && Object.keys(res).length > 1) {
+              courses.push(res);
+            } else if (res && role === "instructor") {
+              courses.push(res);
+            }
           })
         );
       })
@@ -158,3 +167,41 @@ export const getUserCourses = async (role) => {
     throw new Error("Error fetching courses:", error);
   }
 };
+
+export async function createAnnouncement(
+  title,
+  description,
+  courseDocId
+) {
+  let data = {
+    title: title,
+    description: description,
+    timestamp: new Date,
+  };
+
+  try {
+    const userRef = doc(firestore, "courses", courseDocId);
+    await updateDoc(userRef, {announcements: arrayUnion(data)});
+    console.log("Announcement added successfully!");
+  } catch (e) {
+    console.error("Error adding announcements: "+e);
+  }
+}
+
+
+export async function deleteAnnouncement(announcement, courseDocId) {
+  try {
+    const courseRef = doc(firestore, "courses", courseDocId);
+    updateDoc(courseRef, {
+      announcements: arrayRemove(announcement),
+    }).then(() => {
+      console.log("returning true");
+      return true;
+    });
+  } catch(error) {
+    console.log("error in deleting announcement" + error);
+    return false;
+  }
+  
+}
+

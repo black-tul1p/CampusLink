@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "./Home";
 import FAQ from "./FAQ";
+import Calendar from "./Calendar";
 import SettingsPage from "./Settings";
 import styled from "@emotion/styled";
 import Profile from "./Profile";
@@ -14,8 +15,10 @@ import ClasslistStudent from "./CoursePages/ClasslistStudent";
 import Classlist from "./CoursePages/Classlist";
 import Admin from "./Admin";
 import AssignmentContent from "./CoursePages/AssignmentContent";
+import RegradeRequest from "./CoursePages/RegradeRequest";
 import Navbar from "./Navbar";
 import Bookmarks from "./CoursePages/Bookmarks"
+import RegradeReply from "./CoursePages/RegradeReply";
 
 const Container = styled.div`
   display: flex;
@@ -36,9 +39,12 @@ export const PageList = {
   Quiz: "/quizzes",
   Classlist: "/classlist",
   ClasslistStud: "/classlistStudent",
+  Calendar: "/calendar",
   Admin: "/adminHome",
   AssignmentContent: "/assignmentContent",
   Bookmarks : "/bookmarks",
+  RegradeRequest: "/regradeRequest",
+  RegradeReply: "/regradeReply",
 };
 
 export default function Landing(props) {
@@ -65,6 +71,8 @@ export default function Landing(props) {
     content = <Syllabus theme={props} />;
   } else if (props.page === PageList.Quiz) {
     content = <Quizzes theme={props} />;
+  } else if (props.page === PageList.Calendar) {
+    content = <Calendar theme={props} />;
   } else if (props.page === PageList.Classlist) {
     content = <Classlist theme={props} />;
   } else if (props.page === PageList.ClasslistStud) {
@@ -73,7 +81,11 @@ export default function Landing(props) {
     content = <AssignmentContent theme={props} />;
   } else if (props.page === PageList.Bookmarks) {
     content = <Bookmarks theme={props} />;
-  }else {
+  } else if (props.page === PageList.RegradeRequest) {
+    content = <RegradeRequest theme={props} />
+  } else if (props.page == PageList.RegradeReply) {
+    content = <RegradeReply theme={props} />
+  } else {
     content = <p>Invalid page.</p>;
   }
 

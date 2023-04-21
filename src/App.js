@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Reset from "./Components/Reset";
@@ -15,17 +16,13 @@ import { AuthContext } from "./Contexts/AuthContext";
 import { CircularProgress } from "@mui/material";
 import { isAdmin } from "./Backend/user";
 
-import { logoutUser } from "./Backend/user";
+const theme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
- //function App() {
-   // return (<FileUpload/>)
-    //return(<VidUpload/>)
- //}
- //export default App;
-
-
-
- function AuthorizedRoute(props) {
+function AuthorizedRoute(props) {
   const { user } = useContext(AuthContext);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
@@ -64,32 +61,32 @@ import { logoutUser } from "./Backend/user";
   return props.children;
 }
 
-logoutUser();
-
 function App() {
   const [isDark, setIsDark] = useState(false); // For future Dark Mode implementation
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/join" element={<Register />} />
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/forgot" element={<Reset />} />
-        {Object.values(PageList).map((path) => (
-          <Route
-            key={path}
-            path={path}
-            element={
-              <AuthorizedRoute>
-                <Landing page={path} theme={isDark} />
-              </AuthorizedRoute>
-            }
-          />
-        ))}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/join" element={<Register />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/forgot" element={<Reset />} />
+          {Object.values(PageList).map((path) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <AuthorizedRoute>
+                  <Landing page={path} theme={isDark} />
+                </AuthorizedRoute>
+              }
+            />
+          ))}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 

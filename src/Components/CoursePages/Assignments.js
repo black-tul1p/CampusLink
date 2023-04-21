@@ -1,5 +1,5 @@
 import CourseNavBar from "../CourseNavBar";
-import { addAssignment, verifyInput, getAssigmentsByCourse } from "../../Backend/assigment";
+import { addAssignment, verifyInput, getAssigmentsByCourse, editAssignment, getAssignmentById } from "../../Backend/assigment";
 import "../../Styles/Assignments.css";
 import "../../Styles/App.css";
 import { useState, useEffect} from "react";
@@ -12,7 +12,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getUserRole } from "../../Backend/user";
 import ErrorBox from "../Error";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, TextField, TextareaAutosize, Container, Box, Typography, Stack } from "@mui/material";
 import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "../../Backend/firebase";
 
@@ -23,6 +23,7 @@ function Assignments() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
+  const [points, setPoints] = useState("");
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(true);
   const [role, setRole] = useState("");
@@ -31,10 +32,11 @@ function Assignments() {
   const [assignments, setAssignments] = useState([]);
   const [submissionLimit, setSubmissionLimit] = useState("");
   const [fileUpload, setFileUpload] = useState(null);
+  const [originalFileUrl, setOriginalFileUrl] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-
-
+  const [editingAssignment, setEditingAssignment] = useState(null);
+  
 
   useEffect(() => {
     async function fetchData() {
@@ -53,7 +55,7 @@ function Assignments() {
       }
     }
     fetchData();
-  }, [location]);
+  }, [location, assignments.length]);
 
   const toggle = () => {
     setOpen(!open);
@@ -63,7 +65,9 @@ function Assignments() {
       setTime("");
       setDescription("");
       setSubmissionLimit("");
+      setPoints("");
       setOpen1(false);
+      setEditingAssignment(null);
     }
   }
 
@@ -73,7 +77,7 @@ function Assignments() {
       handleCancel();
     }
   }
-  const UploadFile = () => {
+  const UploadFile = async () => {
     const fileLocation =    "STAT40200/" + "Assignments/" + title + "/pdfs";
     const fileListRef = ref(storage, fileLocation + '/');
     if (fileUpload == null) {
@@ -91,6 +95,11 @@ function Assignments() {
         return;
 			return;
 		}
+
+    if (editingAssignment && originalFileUrl) {
+      const fileToDelete = ref(storage, originalFileUrl);
+      await deleteObject(fileToDelete);
+    }
  
 
 		const fileRef = ref(storage, fileLocation + '/' + fileUpload.name);
@@ -98,34 +107,51 @@ function Assignments() {
 		uploadBytes(fileRef, fileUpload).then(() => {
 			console.log("File Uploaded!");
       setFileUpload(null);
+      setOriginalFileUrl(null);
 			//console.log(fileUpload)
 		})
   }
   
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!verifyInput(title, description, date, time, submissionLimit)) {
-      console.log("verify: " + verifyInput(title, description, date, time, submissionLimit));
+      console.log("verify: " + verifyInput(title, description, date, time));
       setError("Incorrect input format.");
       setTimeout(() => {
         setError("");
       }, 1500);
-        return;
+      return;
     } else {
       const due = date + " " + time;
-      addAssignment(title, description, due, submissionLimit, courseDocId);
+      if (editingAssignment) {
+        const updatedAssignment = await editAssignment(editingAssignment.id, title, description, due, submissionLimit, courseDocId);
+        setAssignments(assignments.map(a => a.id === updatedAssignment.id ? updatedAssignment : a));
+      } else {
+        await addAssignment(title, description, due, submissionLimit, courseDocId);
+        const assgnts = await getAssigmentsByCourse(courseDocId);
+        setAssignments(assgnts);
+      }
       UploadFile();
-      alert("New Assignment Added!");
+      if (editingAssignment) {
+        alert("Assignment Updated!");
+      } else {
+        alert("New Assignment Added!");
+      }
+  
       handleCancel();
+      const assgnts = await getAssigmentsByCourse(courseDocId);
+      setAssignments(assgnts);
     }
-    
-  }
+  };
+  
+
   const handleCancel = () => {
     setTitle("");
     setDate("");
     setTime("");
     setDescription("");
     setSubmissionLimit("");
+    setPoints("");
     setOpen(false);
   }
 
@@ -143,8 +169,48 @@ function Assignments() {
     navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId}});
   }
 
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    return year + "-" + month + "-" + day;
+  }
+
+  function formatTime(date) {
+    const hours = ("0" + date.getHours()).slice(-2);
+    const minutes = ("0" + date.getMinutes()).slice(-2);
+    const seconds = ("0" + date.getSeconds()).slice(-2);
+    return hours + ":" + minutes + ":" + seconds;
+  }
+
+  const handleEdit = async (assignment) => {
+    console.log(assignment.id);
+    try {
+      setTitle(assignment.title);
+      const due = assignment.dueDate.toDate();
+      setDate(formatDate(due));
+      setTime(formatTime(due));
+      setDescription(assignment.description);
+      setSubmissionLimit(assignment.submissionLimit.toString());
+      setEditingAssignment(assignment);
+      const fileLocation = "STAT40200/" + "Assignments/" + assignment.title + "/pdfs";
+      const fileListRef = ref(storage, fileLocation + '/');
+      const fileList = await list(fileListRef);
+      if (fileList.items.length > 0) {
+        const originalFileRef = fileList.items[0];
+        const url = await getDownloadURL(originalFileRef);
+        setOriginalFileUrl(url);
+      } else {
+        setOriginalFileUrl(null);
+      }
+      setOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <div className = "main-box" style={{ width: "100%" }}>
+    <div style={{ width: "100%", maxHeight:"100vh", overflow:"auto" }}>
       <CourseNavBar />
       {error && <ErrorBox text={error} />}
       <div className = "assignment-box">
@@ -209,10 +275,11 @@ function Assignments() {
                 {assignments.length > 0 ? (
                     assignments
                       .map((assignment) => (
-                        <div className = 'assignment-list-box' 
+                        <div className = 'assignment-list-box'
                           assignmenttitle={assignment.title}
                           assignmentdescript={assignment.description}
-                          assignmentduedate={assignment.dueDate.toDate()}
+                          assignmentduedate={new Date(assignment.dueDate.seconds * 1000)}
+                          //assignmentduedate={assignment.dueDate.toDate()}
                           assignmentsublim={assignment.submissionLimit}
                           >
                           <Button
@@ -220,6 +287,12 @@ function Assignments() {
                             onClick={displayContent}
                           >
                             {assignment.title}
+                          </Button>
+                          <Button
+                            className="Mini-button edit-button"
+                            onClick={() => handleEdit(assignment)}
+                          >
+                            Edit
                           </Button>
                         </div>
                       ))
@@ -231,7 +304,7 @@ function Assignments() {
             )}
             <div className="create-assignment-bar" onClick={toggle}>
               <p style={{fontSize:"1.3em"}}>
-                Create An Assignment
+                Create or Edit An Assignment
               </p>
               {open ? <RemoveCircleIcon/> : <AddCircleIcon />}
             </div>
@@ -272,6 +345,13 @@ function Assignments() {
                   onChange={(e) => {
                     setSubmissionLimit(e.target.value)
                   }}/>
+                <label> Total Points </label>
+                <input placeholder="100"
+                  value={points}
+                  onChange={(e) => {
+                    setPoints(e.target.value);
+                  }}
+                />  
                 <label> Upload PDFs/Images </label> 
                 <input type="file"
                 onChange={(event) => {setFileUpload(event.target.files[0]);}}
@@ -279,7 +359,7 @@ function Assignments() {
                 />
                 <div className="button-box">
                   <button onClick={handleSubmit}>
-                    Submit
+                    {editingAssignment ? "Update" : "Submit"}
                   </button>
                   <button onClick={handleCancel}>Cancel</button>
                 </div>
