@@ -222,18 +222,20 @@ body {
   opacity: 0.3;
 }
 
+.course-container:hover > .edit-course-container {
+  opacity: 0.3;
+}
+
 .delete-course-container {
   position: absolute;
   top: 5px;
   right: 5px;
-  opacity: 0;
-  transform: scale(0.8);
-  transition-duration: 0.15s;
 }
 
-.delete-course-container:hover {
-  transform: scale(1);
-  opacity: 0.8 !important;
+.edit-course-container {
+  position: absolute;
+  margin-left: auto;
+  right: 0;
 }
 
 .course-container-top {
@@ -252,6 +254,7 @@ body {
   min-height: 40px;
   max-height: -moz-fit-content;
   max-height: fit-content;
+  z-index: 0;
 }
 
 .add-course-container {
