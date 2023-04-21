@@ -1,7 +1,9 @@
 import { Timer } from "@mui/icons-material";
+import { Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 const Countdown = ({ timestamp, minutes, onEnd }) => {
+  const isUnlimited = !minutes;
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   function calculateTimeLeft() {
@@ -35,7 +37,7 @@ const Countdown = ({ timestamp, minutes, onEnd }) => {
       : timeLeft.minutes;
 
   useEffect(() => {
-    if (minutesLeft === 0) onEnd(true);
+    if (minutesLeft === 0 && !isUnlimited) onEnd(true);
   }, [minutesLeft]);
 
   return (
@@ -50,7 +52,9 @@ const Countdown = ({ timestamp, minutes, onEnd }) => {
       }}
     >
       <Timer color="warning" />
-      {minutesLeft < 10 ? (
+      {isUnlimited ? (
+        <Typography>Unlimited</Typography>
+      ) : minutesLeft < 10 ? (
         <div>{`${minutesLeft}m ${timeLeft.seconds}s`}</div>
       ) : (
         <div>{`${timeLeft.hours}h ${timeLeft.minutes}m`}</div>
