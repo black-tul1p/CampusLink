@@ -2,10 +2,15 @@ import { getUserCourses } from "./course";
 import { fetchQuizzes } from "./quiz";
 import { getUserRole } from "./user";
 import { getAssigmentsByCourse } from "./assigment";
-import {collection, addDoc, getDocs, deleteDoc, doc} from "@firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+} from "@firebase/firestore";
 
 import { firestore } from "./firebase";
-
 
 /**
  * Gets all assignment due dates for all courses for the current user.
@@ -89,7 +94,9 @@ export async function getAllEvents() {
     // Get all events for each course and map course name to each event
     const eventPromises = courses.map(async (course) => {
       //const events = await fetchQuizzes(course.databaseId);
-      const events = await getDocs(collection(firestore, "courses", course.databaseId, "calendarEvents"));
+      const events = await getDocs(
+        collection(firestore, "courses", course.databaseId, "calendarEvents")
+      );
       return events.docs.map((event) => {
         return {
           courseName: `${course.courseTitle} ${course.courseId}`,
@@ -97,7 +104,7 @@ export async function getAllEvents() {
           id: event.id,
           name: event.data().title,
           date: event.data().date.toDate(),
-          desc: event.data().description
+          desc: event.data().description,
         };
       });
     });
@@ -123,8 +130,8 @@ export async function createEvent(courseId, date, title, description) {
     const event = {
       date: date,
       title: title,
-      description: description
-    }
+      description: description,
+    };
     const doc = await addDoc(eventCollection, event);
     return doc.id;
   } catch (error) {
