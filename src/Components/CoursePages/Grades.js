@@ -36,6 +36,36 @@ function Grades() {
   const [gradeTitle, setGradeTitle] = useState("");
   const [gradePoints, setGradePoints] = useState("");
 
+  const [showWhatIfGradeInput, setShowWhatIfGradeInput] = useState(false);
+  const [assignmentGradesState, setAssignmentGradesState] = useState([]);
+  const [warningMessage, setWarningMessage] = useState("");
+
+  useEffect(() => {
+    setAssignmentGradesState(assignmentGrades);
+  }, [assignmentGrades]);
+
+  const handleGradeInputChange = (assignmentId, newValue) => {
+  const assignment = assignmentGrades.find((grade) => grade.id === assignmentId);
+
+  if (parseFloat(newValue) > assignment.totalPoints) {
+    setWarningMessage("Score can't be larger than the total score");
+  } else {
+    setWarningMessage("");
+    setAssignmentGradesState((prevGrades) =>
+      prevGrades.map((grade) =>
+        grade.id === assignmentId
+          ? { ...grade, earnedPoints: parseFloat(newValue) }
+          : grade
+      )
+    );
+  }
+};
+
+  const handleCancel = () => {
+    setAssignmentGradesState(assignmentGrades);
+    setShowWhatIfGradeInput(false);
+    setWarningMessage("");
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -77,6 +107,11 @@ function Grades() {
       }
     });
   };
+
+  const totalPoints = assignmentGradesState.reduce(
+    (total, grade) => total + (grade.earnedPoints / grade.totalPoints) * 100,
+    0
+  );
 
   const handleOpen = () => {
     setOpen(true);
@@ -129,6 +164,35 @@ function Grades() {
         </div>
         {role === "student" && 
         <>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setShowWhatIfGradeInput(!showWhatIfGradeInput);
+            }}
+            style={{
+              marginBottom: "1em",
+            }}
+          >
+            What if Grade
+          </Button>
+          {showWhatIfGradeInput && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleCancel}
+              style={{
+                marginLeft: "1em",
+                marginBottom: "1em",
+              }}
+            >
+              Cancel
+            </Button>
+          )}
+          {warningMessage !== "" && (
+            <p style={{ color: "red", marginTop: "1em" }}>{warningMessage}</p>
+          )}
+
           <TableContainer style={{marginBottom:"2em"}}>
             <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
             <colgroup>
@@ -153,10 +217,27 @@ function Grades() {
                     {assignment.title}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {assignment.earnedPoints + " / " + assignment.totalPoints}
+                    {showWhatIfGradeInput ? (
+                      <TextField
+                        type="number"
+                        defaultValue={assignment.earnedPoints}
+                        onChange={(e) => {
+                          handleGradeInputChange(assignment.id, e.target.value);
+                        }}
+                        inputProps={{ style: { color: "white" } }}
+                      />
+                    ) : (
+                      `${assignment.earnedPoints} / ${assignment.totalPoints}`
+                    )}
                   </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {Number((assignment.earnedPoints / assignment.totalPoints) * 100).toFixed(1) + "%"}
+                  <TableCell style={{ color: "white", borderBottom: "1px solid #fff1" }}>
+                    {warningMessage !== "" && assignment.id === assignmentGradesState.find((grade) => grade.id === assignment.id)?.id
+                      ? "N/A"
+                      : Number(
+                          (assignmentGradesState.find((grade) => grade.id === assignment.id)?.earnedPoints || assignment.earnedPoints) /
+                            assignment.totalPoints *
+                            100
+                        ).toFixed(1) + "%"}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                     {assignment.comments !== null &&  assignment.comments !== undefined ? assignment.comments : "No Comments"}
@@ -172,7 +253,7 @@ function Grades() {
                     {assignment.earnedPoints + " / " + assignment.totalPoints}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {Number((assignment.earnedPoints / assignment.totalPoints) * 100).toFixed(1) + "%"}
+                  {Number((assignmentGradesState.find((grade) => grade.id === assignment.id)?.earnedPoints || assignment.earnedPoints) / assignment.totalPoints * 100).toFixed(1) + "%"}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                     {assignment.comments !== null &&  assignment.comments !== undefined ? assignment.comments : "No Comments"}
