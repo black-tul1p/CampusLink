@@ -12,6 +12,9 @@ import { doc, getDoc, collection } from "@firebase/firestore";
 import { storage } from "../../Backend/firebase"
 import { getCourseDetailsById } from "../../Backend/course";
 import { getCurrentUser, getUserRole } from "../../Backend/user";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { isBookmarked, removeBookmark, addBookmark } from "../../Backend/assigment";
 
 const TopbarRow = styled.div`
   height: 4.5em;
@@ -71,13 +74,17 @@ function AssignmentContent() {
     const [courseId, setCourseId] = useState("");
     const [userInfo, setUserInfo] = useState("");
     const [userType, setUserType] = useState("");
+    const [assignmentId, setAssignmentId] = useState("");
+    const [bookmarked, setBookmarked] = useState(false);
 
     const title = location.state?.assignmentTitle;
     const dueDate = location.state?.assignmentDueDate;
     const description = location.state?.assignmentDescript;
     const submissionLimit = location.state?.assignmentSubLim;
     const courseDocId = location.state?.courseDocId;
-    console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit);
+    const assignmentID = location.state?.assgnmtId;
+    
+    console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit + " " + assignmentId);
 
     //Get courseTitle and courseId from courseDocId
     const getCourseDetails = async () => {
@@ -86,7 +93,7 @@ function AssignmentContent() {
         setCourseTitle(courseTitleT);
         const courseIdT = course.courseId;
         setCourseId(courseIdT);
-    }
+    };
     getCourseDetails();
 
     //Get user info
@@ -94,21 +101,17 @@ function AssignmentContent() {
         const thisUser = await getCurrentUser();
         const thisUserRole = await getUserRole();
         setUserInfo(thisUser.email);
-        setUserType(thisUserRole)
-
-
-    }
+        setUserType(thisUserRole);
+        setAssignmentId(assignmentID);
+    };
     getUserInfo();
 
-
-
-    
 
     //file location and set up states
     const fileLocation =  courseTitle + courseId + "/" + "Assignments/" + title + "/studentEmail:" + userInfo;
     const fileListRef = ref(storage, fileLocation + '/');
     const [fileUpload, setFileUpload] = useState(null);
-	const [fileList, setFileList] = useState([])
+	const [fileList, setFileList] = useState([]);
 
 
 
@@ -117,9 +120,8 @@ function AssignmentContent() {
    
     const getCurrentSubmissions  = async () => {
         const allFiles = await list(fileListRef);
-        console.log(allFiles.items.length)
         setSubCount(allFiles.items.length);
-     }
+     };
      getCurrentSubmissions();
 
      
@@ -155,7 +157,6 @@ function AssignmentContent() {
 		uploadBytes(fileRef, fileUpload).then(() => {
 			alert("File Uploaded!");
             setFileUpload(null);
-			//console.log(fileUpload)
 		})
 
 	};
@@ -180,7 +181,7 @@ function AssignmentContent() {
 		    </label> 
 		    <button onClick={uploadFile}>Submit</button>  
 		    </div>
-	} 
+	};
 
     //Temp test for navigation to regrade request page
     function Regrade() {
@@ -190,13 +191,13 @@ function AssignmentContent() {
             </button>
 
         </div>
-    }
+    };
     
     const toRegrade = (e) => {
-        const assignmentTitle = title
-        const assignmentDueDate = dueDate
-        const assignmentDescript = description
-        const assignmentSubLim = submissionLimit
+        const assignmentTitle = title;
+        const assignmentDueDate = dueDate;
+        const assignmentDescript = description;
+        const assignmentSubLim = submissionLimit;
       //  console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim); 
         if (userType == "instructor") {
             navigate("/regradeReply", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseTitle, courseId, userInfo}});
@@ -205,14 +206,30 @@ function AssignmentContent() {
         }
         
        //redirecting("/grades");
-    }
+    };
 
-    
+    const add = async () => {
+        console.log(bookmarked);
+        console.log(assignmentId);
+        await addBookmark(userType, assignmentId);
+        await setBookmarked(isBookmarked());
+    };
+
+    const remove = async () => {
+        console.log(bookmarked);
+        console.log(assignmentId);
+        await removeBookmark(userType, assignmentId);
+        await setBookmarked(isBookmarked());
+    };
+
+    useEffect(()=> {}, [bookmarked]);
+
     return(
         <div className = "main-box" style={{ width: "100%" }}>
             {error && <ErrorBox text={error} />}
             <div className="top-row">
-                <TopbarRow>
+                {bookmarked ? (
+                    <TopbarRow>
                     <TopbarButton
                         onClick={() => {
                             navigate(-1);
@@ -222,7 +239,32 @@ function AssignmentContent() {
                         <Typography>Back</Typography>
                     </TopbarText>
                     </TopbarButton>
+                    <TopbarButton 
+                        onClick={remove}
+                    >
+                        <BookmarkIcon />
+                    </TopbarButton>
                 </TopbarRow>
+                ) : (
+                    <TopbarRow>
+                    <TopbarButton
+                        onClick={() => {
+                            navigate(-1);
+                        }}
+                    >
+                    <TopbarText>
+                        <Typography>Back</Typography>
+                    </TopbarText>
+                    </TopbarButton>
+                    <TopbarButton
+                        onClick={add}
+                    >
+                        <BookmarkBorderIcon />
+                    </TopbarButton>
+                </TopbarRow>
+                )
+                }
+                
             </div>
             <h1 className="title">
                 {title}
