@@ -139,8 +139,9 @@ function Bookmarks() {
     const assignmentDueDate = e.currentTarget.parentElement.getAttribute("assignmentduedate");
     const assignmentDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
     const assignmentSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
+    const assgnmtId = e.currentTarget.parentElement.getAttribute("assignmentid");
     console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim);
-    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId}});
+    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId, assgnmtId}});
   }
 
   return (
@@ -173,6 +174,7 @@ function Bookmarks() {
                         assignmentdescript={assignment.description}
                         assignmentduedate={assignment.dueDate.toDate()}
                         assignmentsublim={assignment.submissionLimit}
+                        assignmentid={assignment.id}
                         >
                         <Button
                           className="Mini-button"
@@ -214,6 +216,7 @@ function Bookmarks() {
                           assignmentdescript={assignment.description}
                           assignmentduedate={assignment.dueDate.toDate()}
                           assignmentsublim={assignment.submissionLimit}
+                          assignmentid={assignment.id}
                           >
                           <Button
                             className="Mini-button"

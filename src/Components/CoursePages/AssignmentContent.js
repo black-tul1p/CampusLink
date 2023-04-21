@@ -14,6 +14,7 @@ import { getCourseDetailsById } from "../../Backend/course";
 import { getCurrentUser, getUserRole } from "../../Backend/user";
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { isBookmarked, removeBookmark, addBookmark } from "../../Backend/assigment";
 
 const TopbarRow = styled.div`
   height: 4.5em;
@@ -72,15 +73,17 @@ function AssignmentContent() {
     const [courseTitle, setCourseTitle] = useState("");
     const [courseId, setCourseId] = useState("");
     const [userInfo, setUserInfo] = useState("");
-    const [bookmarked, setBookmarked] = useState(false);
     const [userType, setUserType] = useState("");
+    const [assignmentId, setAssignmentId] = useState("");
+    const [bookmarked, setBookmarked] = useState(false);
 
     const title = location.state?.assignmentTitle;
     const dueDate = location.state?.assignmentDueDate;
     const description = location.state?.assignmentDescript;
     const submissionLimit = location.state?.assignmentSubLim;
     const courseDocId = location.state?.courseDocId;
-    const assignmentId = location.state?.assgnmtId;
+    const assignmentID = location.state?.assgnmtId;
+    
     console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit + " " + assignmentId);
 
     //Get courseTitle and courseId from courseDocId
@@ -99,20 +102,10 @@ function AssignmentContent() {
         const thisUserRole = await getUserRole();
         setUserInfo(thisUser.email);
         setUserType(thisUserRole);
+        setAssignmentId(assignmentID);
     };
     getUserInfo();
 
-    /*
-    const isBookmarked = () => {
-        try {
-        if (user.bookmarks.includes(assignmentId)) setBookmarked(true);
-        console.log("Bookmarked: " + bookmarked);
-        } catch (error) {
-            setBookmarked(false);
-        }
-    };
-    isBookmarked();
-    */
 
     //file location and set up states
     const fileLocation =  courseTitle + courseId + "/" + "Assignments/" + title + "/studentEmail:" + userInfo;
@@ -127,7 +120,6 @@ function AssignmentContent() {
    
     const getCurrentSubmissions  = async () => {
         const allFiles = await list(fileListRef);
-        console.log(allFiles.items.length);
         setSubCount(allFiles.items.length);
      };
      getCurrentSubmissions();
@@ -165,7 +157,6 @@ function AssignmentContent() {
 		uploadBytes(fileRef, fileUpload).then(() => {
 			alert("File Uploaded!");
             setFileUpload(null);
-			//console.log(fileUpload)
 		})
 
 	};
@@ -217,12 +208,28 @@ function AssignmentContent() {
        //redirecting("/grades");
     };
 
-    
+    const add = async () => {
+        console.log(bookmarked);
+        console.log(assignmentId);
+        await addBookmark(userType, assignmentId);
+        await setBookmarked(isBookmarked());
+    };
+
+    const remove = async () => {
+        console.log(bookmarked);
+        console.log(assignmentId);
+        await removeBookmark(userType, assignmentId);
+        await setBookmarked(isBookmarked());
+    };
+
+    useEffect(()=> {}, [bookmarked]);
+
     return(
         <div className = "main-box" style={{ width: "100%" }}>
             {error && <ErrorBox text={error} />}
             <div className="top-row">
-                <TopbarRow>
+                {bookmarked ? (
+                    <TopbarRow>
                     <TopbarButton
                         onClick={() => {
                             navigate(-1);
@@ -232,7 +239,32 @@ function AssignmentContent() {
                         <Typography>Back</Typography>
                     </TopbarText>
                     </TopbarButton>
+                    <TopbarButton 
+                        onClick={remove}
+                    >
+                        <BookmarkIcon />
+                    </TopbarButton>
                 </TopbarRow>
+                ) : (
+                    <TopbarRow>
+                    <TopbarButton
+                        onClick={() => {
+                            navigate(-1);
+                        }}
+                    >
+                    <TopbarText>
+                        <Typography>Back</Typography>
+                    </TopbarText>
+                    </TopbarButton>
+                    <TopbarButton
+                        onClick={add}
+                    >
+                        <BookmarkBorderIcon />
+                    </TopbarButton>
+                </TopbarRow>
+                )
+                }
+                
             </div>
             <h1 className="title">
                 {title}

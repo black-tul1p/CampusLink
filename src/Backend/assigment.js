@@ -10,7 +10,8 @@ import {
   Timestamp,
   getDocs,
   query, 
-  where, 
+  where,
+  arrayRemove, 
 } from "@firebase/firestore";
 
 
@@ -129,14 +130,12 @@ export const getBookmarkedAssignments = async (role, courseDocId) => {
             if (res) assignments.push(res);
           })
         );
-    const userId = await getUserIdByEmail(auth.currentUser.email);
 
-    // let userDoc = await getDoc(doc(firestore, "students", userId));
-    // if (role === "instructor") {
-    //   userDoc = await getDoc(doc(firestore, "instructors", userId));
-    // }
-
-    let userDoc = await getCurrentUser();
+        const userId = await getUserIdByEmail(auth.currentUser.email);
+        let userDoc = await getDoc(doc(firestore, "students", userId));
+          if (role === "instructor") {
+            userDoc = await getDoc(doc(firestore, "instructors", userId));
+          }
 
     const userBookmarks = userDoc.data().bookmarks;
 
@@ -157,27 +156,31 @@ export const getBookmarkedAssignments = async (role, courseDocId) => {
   }
 };
 
-export const bookmarkAssignment = async (assignmentId) => {
-  let userDoc = await getCurrentUser();
+export const addBookmark = async (role, assignmentId) => {
+  const userId = await getUserIdByEmail(auth.currentUser.email);
+  let userDoc = (doc(firestore, "students", userId));
+    if (role === "instructor") {
+      userDoc = (doc(firestore, "instructors", userId));
+    }
     await updateDoc(userDoc, {bookmarks: arrayUnion(assignmentId)});
 };
 
-export const removeBookmark = async (userId) => {
-
+export const removeBookmark = async (role, assignmentId) => {
+  console.log(assignmentId);
+  const userId = await getUserIdByEmail(auth.currentUser.email);
+  let userDoc = (doc(firestore, "students", userId));
+    if (role === "instructor") {
+      userDoc = (doc(firestore, "instructors", userId));
+    }
+  console.log(userDoc);
+  await updateDoc(userDoc, {bookmarks: arrayRemove(assignmentId)});
 };
 
-export const isBookmarked = async (role, assignmentId) => {
+export const isBookmarked = async (assignmentId) => {
   try {
-  let userData = collection(firestore, "students");
-      if (role === "instructor") {
-        userData = collection(firestore, "instructors");
-      }
-    
-    const snapshot = await getDocs(
-      query(userData, where("email", "==", auth.currentUser.email))
-    );
+  let userDoc = await getCurrentUser();
 
-    const userBookmarks = snapshot.bookmarks;
+    const userBookmarks = userDoc.bookmarks;
 
     if (userBookmarks.includes(assignmentId)) {
       return true;
