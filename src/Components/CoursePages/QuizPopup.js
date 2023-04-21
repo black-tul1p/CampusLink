@@ -72,14 +72,16 @@ const QuizPopup = (props) => {
   const [submitted, setSubmitted] = useState(false);
   // const [clicked, setClicked] = useState(false);
   const [error, setError] = useState(null);
-  const [viewOnly, setViewOnly] = useState(true);
   const newAttempt = attempt.answers?.length > 0 ? false : true;
+  const usedAllAttempts =
+    !quiz.attempts || attempt.attemptNumber >= quiz.attempts;
   const late =
     props.quiz.deadline !== null
       ? props.quiz.deadline < new Date()
         ? true
         : false
       : false;
+  const [viewOnly, setViewOnly] = useState(late || usedAllAttempts);
   const startTime = new Date();
 
   const handleAttemptStart = () => {
@@ -109,12 +111,8 @@ const QuizPopup = (props) => {
       !late
     ) {
       console.log("Continuing quiz");
-      setViewOnly(false);
-    } else if (
-      !late &&
-      (!quiz.attempts || attempt.attemptNumber <= quiz.attempts)
-    ) {
-      attempt.attemptNumber += 1;
+    } else if (!late && !usedAllAttempts) {
+      // attempt.attemptNumber += 1;
       console.log(
         `Starting new attempt: ${attempt.attemptNumber}/${
           quiz.attempts || "Unlimited"
@@ -122,7 +120,6 @@ const QuizPopup = (props) => {
       );
       attempt.answers = {};
       attempt.attemptedOn = startTime;
-      setViewOnly(false);
     }
 
     setStarted(true);
@@ -403,7 +400,7 @@ const QuizPopup = (props) => {
                 aria-label="close"
                 id="general-Button"
               >
-                {late ? "View" : "Start"}
+                {late || usedAllAttempts ? "View" : "Start"}
               </Button>
             </Toolbar>
           </AppBar>
