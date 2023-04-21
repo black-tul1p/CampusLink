@@ -321,8 +321,7 @@ function Grades() {
                             borderBottom: "1px solid #fff1",
                           }}
                         >
-                          {assignment.comments !== null &&
-                          assignment.comments !== undefined
+                          {assignment.comments
                             ? assignment.comments
                             : "No Comments"}
                         </TableCell>
@@ -391,6 +390,7 @@ function Grades() {
                   >
                     {Number(totalGrade).toFixed(1) + "%"}
                   </TableCell>
+                  <TableCell />
                 </TableBody>
               </Table>
             </TableContainer>
