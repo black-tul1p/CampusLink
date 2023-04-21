@@ -212,9 +212,25 @@ export const sendUpdateEmail = async (discussionId) => {
     const discussionRef = doc(firestore, "discussions", discussionId);
     const discussionSnapshot = await getDoc(discussionRef);
     const replyList = discussionSnapshot.data().replies;
-    const postStudents = collection(firestore, "students");
-    const studentQuerySnapshot = await getDocs(postStudents);
+    console.log(replyList);
+    let updateEmails = [];
+    for (let i = 0; i < replyList.length; i++) {
+      console.log(replyList[i].creator_id);
+      updateEmails.push(getDoc(doc(firestore, "students", replyList[i].creator_id)))  
+      console.log(updateEmails);
+    }
+    
     let emailList = "mailto:";
+    for (let i = 0; i < updateEmails.length; i++) {
+      emailList = emailList + updateEmails[i].data().email;
+    }
+
+    console.log(emailList);
+
+    /*
+    const studentQuerySnapshot = await getDocs(postStudents);
+    console.log(studentQuerySnapshot);
+    
     for (let i = 0; i < replyList.length; i++) {
       let stdnt = doc(studentQuerySnapshot, replyList[i].creator_id);
       const email = stdnt.data().email;
@@ -229,6 +245,7 @@ export const sendUpdateEmail = async (discussionId) => {
       }      
     }
     console.log(emailList);
+   */
   } catch (error) {
     console.error("Error sending update email: ", error);
     throw error;
