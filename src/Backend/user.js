@@ -292,11 +292,17 @@ export async function logoutUser() {
  * @returns {string|null} - The ID of the currently logged-in user, or null if no user is logged in.
  */
 export function getLoggedInUserId() {
-  const user = auth.currentUser;
-  if (!user) {
-    return null;
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      return null;
+    }
+    return user.uid;
+  } catch(error) {
+    console.error("Error getting signed in user: " + error);
+    throw error;
   }
-  return user.uid;
+  
 }
 
 /**

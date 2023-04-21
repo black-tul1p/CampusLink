@@ -23,6 +23,7 @@ function Assignments() {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
+  const [points, setPoints] = useState("");
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(true);
   const [role, setRole] = useState("");
@@ -64,6 +65,7 @@ function Assignments() {
       setTime("");
       setDescription("");
       setSubmissionLimit("");
+      setPoints("");
       setOpen1(false);
       setEditingAssignment(null);
     }
@@ -113,7 +115,7 @@ function Assignments() {
 
   const handleSubmit = async () => {
     if (!verifyInput(title, description, date, time, submissionLimit)) {
-      console.log("verify: " + verifyInput(title, description, date, time, submissionLimit));
+      console.log("verify: " + verifyInput(title, description, date, time));
       setError("Incorrect input format.");
       setTimeout(() => {
         setError("");
@@ -149,6 +151,7 @@ function Assignments() {
     setTime("");
     setDescription("");
     setSubmissionLimit("");
+    setPoints("");
     setOpen(false);
   }
 
@@ -207,7 +210,7 @@ function Assignments() {
   };
 
   return (
-    <div className = "main-box" style={{ width: "100%" }}>
+    <div style={{ width: "100%", maxHeight:"100vh", overflow:"auto" }}>
       <CourseNavBar />
       {error && <ErrorBox text={error} />}
       <div className = "assignment-box">
@@ -342,6 +345,13 @@ function Assignments() {
                   onChange={(e) => {
                     setSubmissionLimit(e.target.value)
                   }}/>
+                <label> Total Points </label>
+                <input placeholder="100"
+                  value={points}
+                  onChange={(e) => {
+                    setPoints(e.target.value);
+                  }}
+                />  
                 <label> Upload PDFs/Images </label> 
                 <input type="file"
                 onChange={(event) => {setFileUpload(event.target.files[0]);}}
