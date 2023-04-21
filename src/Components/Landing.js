@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "./Home";
 import FAQ from "./FAQ";
+import Calendar from "./Calendar";
 import SettingsPage from "./Settings";
 import styled from "@emotion/styled";
 import Profile from "./Profile";
@@ -37,6 +38,7 @@ export const PageList = {
   Quiz: "/quizzes",
   Classlist: "/classlist",
   ClasslistStud: "/classlistStudent",
+  Calendar: "/calendar",
   Admin: "/adminHome",
   AssignmentContent: "/assignmentContent",
   RegradeRequest: "/regradeRequest",
@@ -67,6 +69,8 @@ export default function Landing(props) {
     content = <Syllabus theme={props} />;
   } else if (props.page === PageList.Quiz) {
     content = <Quizzes theme={props} />;
+  } else if (props.page === PageList.Calendar) {
+    content = <Calendar theme={props} />;
   } else if (props.page === PageList.Classlist) {
     content = <Classlist theme={props} />;
   } else if (props.page === PageList.ClasslistStud) {

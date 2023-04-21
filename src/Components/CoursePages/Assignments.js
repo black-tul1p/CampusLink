@@ -12,7 +12,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getUserRole } from "../../Backend/user";
 import ErrorBox from "../Error";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, TextField, TextareaAutosize, Container, Box, Typography, Stack } from "@mui/material";
 import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "firebase/storage";
 import { storage } from "../../Backend/firebase";
 
@@ -31,9 +31,11 @@ function Assignments() {
   const [assignments, setAssignments] = useState([]);
   const [submissionLimit, setSubmissionLimit] = useState("");
   const [fileUpload, setFileUpload] = useState(null);
+  const [originalFileUrl, setOriginalFileUrl] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
   const [editingAssignment, setEditingAssignment] = useState(null);
+  
 
   useEffect(() => {
     async function fetchData() {
@@ -73,7 +75,7 @@ function Assignments() {
       handleCancel();
     }
   }
-  const UploadFile = () => {
+  const UploadFile = async () => {
     const fileLocation =    "STAT40200/" + "Assignments/" + title + "/pdfs";
     const fileListRef = ref(storage, fileLocation + '/');
     if (fileUpload == null) {
@@ -91,6 +93,11 @@ function Assignments() {
         return;
 			return;
 		}
+
+    if (editingAssignment && originalFileUrl) {
+      const fileToDelete = ref(storage, originalFileUrl);
+      await deleteObject(fileToDelete);
+    }
  
 
 		const fileRef = ref(storage, fileLocation + '/' + fileUpload.name);
@@ -98,6 +105,7 @@ function Assignments() {
 		uploadBytes(fileRef, fileUpload).then(() => {
 			console.log("File Uploaded!");
       setFileUpload(null);
+      setOriginalFileUrl(null);
 			//console.log(fileUpload)
 		})
   }
@@ -182,6 +190,16 @@ function Assignments() {
       setDescription(assignment.description);
       setSubmissionLimit(assignment.submissionLimit.toString());
       setEditingAssignment(assignment);
+      const fileLocation = "STAT40200/" + "Assignments/" + assignment.title + "/pdfs";
+      const fileListRef = ref(storage, fileLocation + '/');
+      const fileList = await list(fileListRef);
+      if (fileList.items.length > 0) {
+        const originalFileRef = fileList.items[0];
+        const url = await getDownloadURL(originalFileRef);
+        setOriginalFileUrl(url);
+      } else {
+        setOriginalFileUrl(null);
+      }
       setOpen(true);
     } catch (error) {
       console.error(error);
