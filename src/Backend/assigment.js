@@ -1,5 +1,5 @@
 import { firestore, auth } from "./firebase";
-
+import { getUserIdByEmail } from "./user";
 import {
   collection,
   addDoc,
@@ -118,13 +118,9 @@ export const getBookmarkedAssignments = async (role, courseDocId) => {
     const assignments = [];
     const bookmarks = [];
 
-    let getData = collection(firestore, "courses");
-
-    const ref = await getDoc(doc(getData, courseDocId));
+    const ref = await getDoc(doc(firestore, "courses", courseDocId));
  
-    if (ref === null) {
-      throw new Error(`No course found with ID: ${courseDocId}`);
-    }
+    console.log(ref);
     const coursesData = ref.data().assignments;
         await Promise.all(
           coursesData.map(async (assignment) => {
@@ -133,8 +129,43 @@ export const getBookmarkedAssignments = async (role, courseDocId) => {
             if (res) assignments.push(res);
           })
         );
+    const userId = await getUserIdByEmail(auth.currentUser.email);
 
-    let userData = collection(firestore, "students");
+    let userDoc = await getDoc(doc(firestore, "students", userId));
+    if (role === "instructor") {
+      userDoc = await getDoc(doc(firestore, "instructors", userId));
+    }
+
+    const userBookmarks = userDoc.data().bookmarks;
+
+    console.log(userBookmarks);
+    
+    await Promise.all(
+      assignments.map(async (assignment) => {
+        console.log(assignment.id);
+        if (userBookmarks.includes(assignment.id)) bookmarks.push(assignment);
+      })
+    );
+
+    console.log("All assignments fetched:", bookmarks);
+    return bookmarks;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error fetching bookmarks:", error);
+  }
+};
+
+export const bookmarkAssignment = async (role, assignmentId) => {
+  let userDoc = await getDoc(doc(firestore, "students", userId));
+    if (role === "instructor") {
+      userDoc = await getDoc(doc(firestore, "instructors", userId));
+    }
+    
+};
+
+export const isBookmarked = async (role, assignmentId) => {
+  try {
+  let userData = collection(firestore, "students");
       if (role === "instructor") {
         userData = collection(firestore, "instructors");
       }
@@ -145,39 +176,33 @@ export const getBookmarkedAssignments = async (role, courseDocId) => {
 
     const userBookmarks = snapshot.bookmarks;
 
-    await Promise.all(
-      assignments.map(async (assignment) => {
-        if (userBookmarks.includes(assignment.id)) bookmarks.push(assignment);
-      })
-    )
-
-    // console.log("All assignments fetched:", assignments.length);
-    return bookmarks;
+    if (userBookmarks.includes(assignmentId)) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     console.log(error);
-    throw new Error("Error fetching assignments:", error);
+    throw new Error("Error checking if bookmarked:", error);
   }
 };
 
-export const bookmarkAssignment = async (role) => {
+export async function editAssignment(assignmentId, title, description, due, submissionLimit, courseId) {
+  const assignmentsRef = collection(firestore, "assignments");
+  const assignmentRef = doc(assignmentsRef, assignmentId);
+  const dueDate = new Date(due);
+  const updatedData = {
+    title: title,
+    description: description,
+    dueDate: Timestamp.fromDate(dueDate),
+    submissionLimit: parseInt(submissionLimit),
+    courseId: courseId
+  };
   
+  await updateDoc(assignmentRef, updatedData);
+  return {
+    id: assignmentId,
+    ...updatedData,
+    dueDate: dueDate
+  };
 };
-  export async function editAssignment(assignmentId, title, description, due, submissionLimit, courseId) {
-    const assignmentsRef = collection(firestore, "assignments");
-    const assignmentRef = doc(assignmentsRef, assignmentId);
-    const dueDate = new Date(due);
-    const updatedData = {
-      title: title,
-      description: description,
-      dueDate: Timestamp.fromDate(dueDate),
-      submissionLimit: parseInt(submissionLimit),
-      courseId: courseId
-    };
-  
-    await updateDoc(assignmentRef, updatedData);
-    return {
-      id: assignmentId,
-      ...updatedData,
-      dueDate: dueDate
-    };
-  }
