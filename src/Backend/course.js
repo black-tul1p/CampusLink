@@ -13,6 +13,11 @@ import {
   arrayRemove,
 } from "@firebase/firestore";
 import { auth, firestore } from "./firebase";
+import emailjs from '@emailjs/browser';
+
+const serviceId = "service_8auridc";
+const templateId = "template_w1w42nk";
+const publicKey = "Of10TcfLMvXkg7r62";
 
 export const getAllCourses = async () => {
   try {
@@ -83,6 +88,15 @@ export async function createCourse(
     console.log("Course added with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding course: ", data);
+  }
+}
+
+export async function updateCourse(courseId, data) {
+  try {
+    const course = doc(firestore, "courses", courseId);
+    await updateDoc(course, data);
+  } catch (error) {
+    throw new Error("Error updating course:", error);
   }
 }
 
@@ -205,3 +219,19 @@ export async function deleteAnnouncement(announcement, courseDocId) {
   
 }
 
+export async function sendUpdateEmail(title, description, courseId) {
+    const courseDetails = await getCourseDetailsById(courseId);
+    const students = await Promise.all(courseDetails.enrolledStudents.map(getDoc));
+    const recipientEmails = students.map((s) => s.data().email);
+    //console.log(recipientEmails);
+
+    recipientEmails.forEach(email => {
+        const templateParams = {
+            recipient: email,
+            title: title,
+            course: courseDetails.courseTitle + " " + courseDetails.courseId,
+            message: description
+        };
+        emailjs.send(serviceId, templateId, templateParams, publicKey)
+    })
+};

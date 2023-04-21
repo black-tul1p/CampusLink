@@ -3,17 +3,25 @@ import { useState, useEffect } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {
   CircularProgress,
+  IconButton,
   Snackbar,
   SnackbarContent,
   Typography,
 } from "@mui/material";
-import { getUserCourses, createCourse, removeCourse } from "../Backend/course";
+import {
+  getUserCourses,
+  createCourse,
+  removeCourse,
+  getCourseDetailsById,
+  updateCourse,
+  sendUpdateEmail,
+} from "../Backend/course";
 import { getLoggedInUserId, getUserRole } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
 import { TagFaces } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
-
+import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import {
@@ -101,6 +109,54 @@ function Homepage() {
     fetchData();
   }, []);
 
+  const [editingCourseId, setEditingCourseId] = useState("");
+  const [editingTitle, setEditingTitle] = useState("");
+  const [editingId, setEditingId] = useState("");
+  const [editingDept, setEditingDept] = useState("");
+  const [editingDesc, setEditingDesc] = useState("");
+  const [editOpen, setEditOpen] = useState(false);
+
+  const openEditDialogue = () => {
+    setEditOpen(true);
+  };
+
+  const closeEditDialogue = () => {
+    setEditOpen(false);
+    setEditingCourseId("");
+    setEditingTitle("");
+    setEditingId("");
+    setEditingDept("");
+    setEditingDesc("");
+
+    setNewCourseTitle("");
+    setNewCourseId("");
+    setNewCourseDept("");
+    setNewCourseDesc("");
+  };
+
+  const submitEditDialogue = () => {
+    // console.log(newCourseTitle === "");
+    setNewCourseTitle(editingTitle);
+    setNewCourseId(editingId);
+    setNewCourseDept(editingDept);
+    setNewCourseDesc(editingDesc);
+    let data = {
+      courseTitle: editingTitle,
+      courseId: editingId,
+      department: editingDept,
+      description: editingDesc,
+    };
+    console.log(data);
+
+    updateCourse(editingCourseId, data);
+    setSnackbarMessage("Successfully Edited Course Information");
+    setOpenSnackbar(true);
+    closeEditDialogue();
+    const title = editingTitle + " " + editingId;
+    const message = editingDept + "\n" + editingDesc;
+    sendUpdateEmail(title, message, editingCourseId);
+  };
+
   return (
     <div className="homepage-student">
       <div className="header-container">
@@ -143,27 +199,42 @@ function Homepage() {
                   onClick={() => {
                     const courseId = course.databaseId;
                     navigate("/announcements", { state: { courseId } });
+
+                    /*
+                    setEditingCourseId(course.databaseId);
+                    setEditingTitle(course.courseTitle);
+                    setEditingId(course.courseId);
+                    setEditingDept(course.department);
+                    setEditingDesc(course.description);
+                    setNewCourseTitle(editingTitle);
+                    setNewCourseId(editingId);
+                    setNewCourseDept(editingDept);
+                    setNewCourseDesc(editingDesc);
+                    openEditDialogue();
+                    */
                   }}
                 >
                   {role === "instructor" && ( // Display delete button only for instructors
-                    <div
-                      className="delete-course-container"
-                      onClick={(event) => {
-                        const id =
-                          event.currentTarget.parentElement.getAttribute(
-                            "forcourse"
-                          );
-                        try {
-                          removeCourse(id).then(() => {
-                            fetchData();
-                          });
-                        } catch (error) {
-                          setSnackbarMessage(`Failed to remove course`);
-                          setOpenSnackbar(true);
-                        }
-                      }}
-                    >
-                      <DeleteIcon fontSize="large" />
+                    <div>
+                      <div
+                        className="delete-course-container"
+                        onClick={(event) => {
+                          const id =
+                            event.currentTarget.parentElement.getAttribute(
+                              "forcourse"
+                            );
+                          try {
+                            removeCourse(id).then(() => {
+                              fetchData();
+                            });
+                          } catch (error) {
+                            setSnackbarMessage(`Failed to remove course`);
+                            setOpenSnackbar(true);
+                          }
+                        }}
+                      >
+                        <DeleteIcon fontSize="large" />
+                      </div>
                     </div>
                   )}
 
@@ -173,7 +244,30 @@ function Homepage() {
                     </h3>
                     <h3>{course.description}</h3>
                   </div>
-                  <div className="course-container-bottom"></div>
+                  <div className="course-container-bottom">
+                    <Button
+                      className="edit-course-container"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setEditingCourseId(course.databaseId);
+                        setEditingTitle(course.courseTitle);
+                        setEditingId(course.courseId);
+                        setEditingDept(course.department);
+                        setEditingDesc(course.description);
+                        setNewCourseTitle(editingTitle);
+                        setNewCourseId(editingId);
+                        setNewCourseDept(editingDept);
+                        setNewCourseDesc(editingDesc);
+                        openEditDialogue();
+                      }}
+                    >
+                      <EditIcon
+                        sx={{ zIndex: 2 }}
+                        color="warning"
+                        fontSize="large"
+                      />
+                    </Button>
+                  </div>
                 </div>
               ))
           ) : (
@@ -240,7 +334,7 @@ function Homepage() {
       </Snackbar>
 
       <Dialog
-        class="create-course-dialogue"
+        className="create-course-dialogue"
         open={open}
         onClose={closeCourseDialogue}
         sx={{
@@ -260,8 +354,8 @@ function Homepage() {
             sx={{
               margin: "5px",
               width: "50%",
-              "& .MuiInputBase-input": { color: "black !important" },
-              "& .MuiInputLabel-root": { color: "#000A !important" },
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
             }}
             variant="standard"
             onChange={(e) => {
@@ -273,8 +367,8 @@ function Homepage() {
             sx={{
               margin: "5px",
               width: "25%",
-              "& .MuiInputBase-input": { color: "black !important" },
-              "& .MuiInputLabel-root": { color: "#000A !important" },
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
             }}
             variant="standard"
             onChange={(e) => {
@@ -285,8 +379,8 @@ function Homepage() {
             label="Department"
             sx={{
               margin: "5px",
-              "& .MuiInputBase-input": { color: "black !important" },
-              "& .MuiInputLabel-root": { color: "#000A !important" },
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
             }}
             variant="standard"
             fullWidth
@@ -298,8 +392,8 @@ function Homepage() {
             label="Description"
             sx={{
               margin: "5px",
-              "& .MuiInputBase-input": { color: "black !important" },
-              "& .MuiInputLabel-root": { color: "#000A !important" },
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
             }}
             variant="standard"
             minRows="2"
@@ -313,6 +407,87 @@ function Homepage() {
         <DialogActions>
           <Button onClick={closeCourseDialogue}>Cancel</Button>
           <Button onClick={submitCourseDialogue}>Create</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        className="create-course-dialogue"
+        open={editOpen}
+        onClose={closeEditDialogue}
+        sx={{
+          "& .MuiDialog-container": {
+            "& .MuiPaper-root": {
+              width: "100%",
+              maxWidth: "500px", // Set your width here
+            },
+          },
+        }}
+      >
+        <DialogTitle>Edit Course</DialogTitle>
+        <DialogContent>
+          <DialogContentText></DialogContentText>
+          <TextField
+            label={editingTitle}
+            defaultValue={editingTitle}
+            sx={{
+              margin: "5px",
+              width: "50%",
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
+            }}
+            variant="standard"
+            onChange={(e) => {
+              setEditingTitle(e.target.value);
+            }}
+          />
+          <TextField
+            label={editingId}
+            defaultValue={editingId}
+            sx={{
+              margin: "5px",
+              width: "25%",
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
+            }}
+            variant="standard"
+            onChange={(e) => {
+              setEditingId(e.target.value);
+            }}
+          />
+          <TextField
+            label={editingDept}
+            defaultValue={editingDept}
+            sx={{
+              margin: "5px",
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
+            }}
+            variant="standard"
+            fullWidth
+            onChange={(e) => {
+              setEditingDept(e.target.value);
+            }}
+          />
+          <TextField
+            label={editingDesc}
+            defaultValue={editingDesc}
+            sx={{
+              margin: "5px",
+              "& .MuiInputBase-input": { color: "white !important" },
+              "& .MuiInputLabel-root": { color: "white !important" },
+            }}
+            variant="standard"
+            minRows="2"
+            fullWidth
+            multiline
+            onChange={(e) => {
+              setEditingDesc(e.target.value);
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeEditDialogue}>Cancel</Button>
+          <Button onClick={submitEditDialogue}>Submit Changes</Button>
         </DialogActions>
       </Dialog>
     </div>

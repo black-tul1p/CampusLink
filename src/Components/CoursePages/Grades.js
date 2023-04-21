@@ -1,27 +1,43 @@
 import React from "react";
 import CourseNavBar from "../CourseNavBar";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import Table from '@mui/material/Table';
-import TableContainer from '@mui/material/TableContainer';
-import { getAssigmentsByCourse, getAssigmentSubmission, updateCourseWeight,getAssigmentSubmissions, getAdditionalGradesForStudent, getAssignmentGradesForStudent } from "../../Backend/grades";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import Table from "@mui/material/Table";
+import TableContainer from "@mui/material/TableContainer";
+import {
+  getAssigmentsByCourse,
+  getAssigmentSubmission,
+  updateCourseWeight,
+  getAssigmentSubmissions,
+  getAdditionalGradesForStudent,
+  getAssignmentGradesForStudent,
+  getAssignmentWeight,
+  getQuizWeight,
+} from "../../Backend/grades";
 import { getLoggedInUserId } from "../../Backend/user";
 import "../../Styles/Assignments.css";
 import { getUserRole } from "../../Backend/user";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+} from "@mui/material";
 import "../../Styles/App.css";
 import { getQuizAttempt } from "../../Backend/quiz";
-
 
 function Grades() {
   const location = useLocation();
   const navigate = useNavigate();
   const courseId = location.state?.courseId;
-  const [assignments, setAssignments] = useState([]);
   const [courseAssignments, setCourseAssignments] = useState([]);
   const [allSubmissions, setAllSubmissions] = useState([]);
   const [assignmentGrades, setAssignmentGrades] = useState([]);
@@ -31,7 +47,7 @@ function Grades() {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [role, setRole] = useState("");
-  const [courseDocId, setCourseDocId] = useState("")
+  const [courseDocId, setCourseDocId] = useState("");
 
   const [gradeTitle, setGradeTitle] = useState("");
   const [gradePoints, setGradePoints] = useState("");
@@ -39,27 +55,31 @@ function Grades() {
   const [showWhatIfGradeInput, setShowWhatIfGradeInput] = useState(false);
   const [assignmentGradesState, setAssignmentGradesState] = useState([]);
   const [warningMessage, setWarningMessage] = useState("");
+  const [warningSnackbarOpen, setWarningSnackbarOpen] = useState(false);
+  const [assignmentWeight, setAssignmentWeight] = useState(1);
 
   useEffect(() => {
     setAssignmentGradesState(assignmentGrades);
   }, [assignmentGrades]);
 
   const handleGradeInputChange = (assignmentId, newValue) => {
-  const assignment = assignmentGrades.find((grade) => grade.id === assignmentId);
-
-  if (parseFloat(newValue) > assignment.totalPoints) {
-    setWarningMessage("Score can't be larger than the total score");
-  } else {
-    setWarningMessage("");
-    setAssignmentGradesState((prevGrades) =>
-      prevGrades.map((grade) =>
-        grade.id === assignmentId
-          ? { ...grade, earnedPoints: parseFloat(newValue) }
-          : grade
-      )
+    const assignment = assignmentGrades.find(
+      (grade) => grade.id === assignmentId
     );
-  }
-};
+
+    if (parseFloat(newValue) > assignment.totalPoints) {
+      setWarningMessage("Score can't be larger than the total score");
+    } else {
+      setWarningMessage("");
+      setAssignmentGradesState((prevGrades) =>
+        prevGrades.map((grade) =>
+          grade.id === assignmentId
+            ? { ...grade, earnedPoints: parseFloat(newValue) }
+            : grade
+        )
+      );
+    }
+  };
 
   const handleCancel = () => {
     setAssignmentGradesState(assignmentGrades);
@@ -75,12 +95,22 @@ function Grades() {
       setCourseDocId(courseID);
       const role = await getUserRole();
       setRole(role);
-      const assgnGrades = await getAssignmentGradesForStudent(courseId, getLoggedInUserId());
-      const addGrades = await getAdditionalGradesForStudent(courseId, getLoggedInUserId())
+      const assgnGrades = await getAssignmentGradesForStudent(
+        courseId,
+        getLoggedInUserId()
+      );
+      const addGrades = await getAdditionalGradesForStudent(
+        courseId,
+        getLoggedInUserId()
+      );
       setAdditionalGrades(addGrades);
       setAssignmentGrades(assgnGrades);
       const assgns = await getAssigmentsByCourse(courseId);
       setCourseAssignments(assgns);
+      const assignmentWeightValue = await getAssignmentWeight(courseId);
+      setAssignmentWeight(
+        assignmentWeightValue ? assignmentWeightValue / 100 : 1
+      );
       await Promise.all(
         assgns.map(async (assignment) => {
           const submissions = await getAssigmentSubmissions(assignment.id);
@@ -90,7 +120,6 @@ function Grades() {
       setAllSubmissions(allSubs);
     }
     fetchData();
-
   }, [location]);
 
   const handleWeightsChange = (type, value) => {
@@ -113,6 +142,9 @@ function Grades() {
     0
   );
 
+  const averagePoints = totalPoints / assignmentGrades.length;
+  const totalGrade = averagePoints * assignmentWeight;
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -132,12 +164,12 @@ function Grades() {
   const handleUpdate = async () => {
     const totalWeight = weights.reduce((acc, w) => acc + Number(w.weight), 0);
     if (totalWeight !== 100) {
-      alert('total weight must be 100');
+      setWarningSnackbarOpen(true);
       return;
     }
     await updateCourseWeight(courseDocId, weights);
     handleClose();
-    alert('Weight update successful!');
+    alert("Weight update successful!");
   };
 
   const handleAdd = () => {
@@ -147,202 +179,331 @@ function Grades() {
   const clickView = () => {
     console.log("clicked view!");
   };
-  const clickAddGrade = () => {
-  };
-  
+
   return (
-    <div style={{ width: "100%", color: "white", maxHeight:"100vh", overflow:"auto"}}>
+    <div
+      style={{
+        width: "100%",
+        color: "white",
+        maxHeight: "100vh",
+        overflow: "auto",
+      }}
+    >
       <CourseNavBar />
 
-      <div style={{padding: "1.5em"}}>
-        <div className ="header-box" style={{paddingBottom: "2em"}}>
+      <div style={{ padding: "1.5em" }}>
+        <div className="header-box" style={{ paddingBottom: "2em" }}>
           <div className="header-titles">
             <p>Grades</p>
-            {role === "instructor" && <p style={{ fontStyle: "italic" }}>Instructor View</p>}
+            {role === "instructor" && (
+              <p style={{ fontStyle: "italic" }}>Instructor View</p>
+            )}
           </div>
           <div className="header-divider"></div>
         </div>
-        {role === "student" && 
-        <>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              setShowWhatIfGradeInput(!showWhatIfGradeInput);
-            }}
-            style={{
-              marginBottom: "1em",
-            }}
-          >
-            What if Grade
-          </Button>
-          {showWhatIfGradeInput && (
+        {role === "student" && (
+          <>
             <Button
               variant="contained"
-              color="secondary"
-              onClick={handleCancel}
+              color="primary"
+              onClick={() => {
+                setShowWhatIfGradeInput(!showWhatIfGradeInput);
+              }}
               style={{
-                marginLeft: "1em",
                 marginBottom: "1em",
               }}
             >
-              Cancel
+              What if Grade
             </Button>
-          )}
-          {warningMessage !== "" && (
-            <p style={{ color: "red", marginTop: "1em" }}>{warningMessage}</p>
-          )}
+            {showWhatIfGradeInput && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleCancel}
+                style={{
+                  marginLeft: "1em",
+                  marginBottom: "1em",
+                }}
+              >
+                Cancel
+              </Button>
+            )}
+            {warningMessage !== "" && (
+              <p style={{ color: "red", marginTop: "1em" }}>{warningMessage}</p>
+            )}
 
-          <TableContainer style={{marginBottom:"2em"}}>
-            <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
-            <colgroup>
-              <col width="25%" />
-              <col width="25%" />
-              <col width="25%" />
-              <col width="25%" />
-            </colgroup>
-            <TableHead style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}>
-              <TableRow style={{borderBottom: "1px solid #fff1"}}>
-                <TableCell style={{color: "white", fontSize: "1em"}}>Grade Item</TableCell>
-                <TableCell style={{color: "white", fontSize: "1em"}}>Points Earned</TableCell>
-                <TableCell style={{color: "white", fontSize: "1em"}}>Grade</TableCell>
-                <TableCell style={{color: "white", fontSize: "1em"}}>Comments</TableCell>
-                <TableCell/>
-              </TableRow>
-            </TableHead>
-            <TableBody style={{width: "100%", backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              {assignmentGrades.map((assignment)=><>
-                <TableRow>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {assignment.title}
+            <TableContainer style={{ marginBottom: "2em" }}>
+              <Table sx={{ minWidth: 650 }} style={{ borderStyle: "hidden" }}>
+                <colgroup>
+                  <col width="25%" />
+                  <col width="25%" />
+                  <col width="25%" />
+                  <col width="25%" />
+                </colgroup>
+                <TableHead style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+                  <TableRow style={{ borderBottom: "1px solid #fff1" }}>
+                    <TableCell style={{ color: "white", fontSize: "1em" }}>
+                      Grade Item
+                    </TableCell>
+                    <TableCell style={{ color: "white", fontSize: "1em" }}>
+                      Points Earned
+                    </TableCell>
+                    <TableCell style={{ color: "white", fontSize: "1em" }}>
+                      Grade
+                    </TableCell>
+                    <TableCell style={{ color: "white", fontSize: "1em" }}>
+                      Comments
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody
+                  style={{
+                    width: "100%",
+                    backgroundColor: "rgba(255, 255, 255, 0.05)",
+                  }}
+                >
+                  {assignmentGrades.map((assignment) => (
+                    <>
+                      <TableRow>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {assignment.title}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {showWhatIfGradeInput ? (
+                            <TextField
+                              type="number"
+                              defaultValue={assignment.earnedPoints}
+                              onChange={(e) => {
+                                handleGradeInputChange(
+                                  assignment.id,
+                                  e.target.value
+                                );
+                              }}
+                              inputProps={{ style: { color: "white" } }}
+                            />
+                          ) : (
+                            `${assignment.earnedPoints} / ${assignment.totalPoints}`
+                          )}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {warningMessage !== "" &&
+                          assignment.id ===
+                            assignmentGradesState.find(
+                              (grade) => grade.id === assignment.id
+                            )?.id
+                            ? "N/A"
+                            : Number(
+                                ((assignmentGradesState.find(
+                                  (grade) => grade.id === assignment.id
+                                )?.earnedPoints || assignment.earnedPoints) /
+                                  assignment.totalPoints) *
+                                  100
+                              ).toFixed(1) + "%"}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {assignment.comments
+                            ? assignment.comments
+                            : "No Comments"}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ))}
+                  {additionalGrades.map((assignment) => (
+                    <>
+                      <TableRow>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {assignment.title}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {assignment.earnedPoints +
+                            " / " +
+                            assignment.totalPoints}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {Number(
+                            ((assignmentGradesState.find(
+                              (grade) => grade.id === assignment.id
+                            )?.earnedPoints || assignment.earnedPoints) /
+                              assignment.totalPoints) *
+                              100
+                          ).toFixed(1) + "%"}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {assignment.comments !== null &&
+                          assignment.comments !== undefined
+                            ? assignment.comments
+                            : "No Comments"}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ))}
+                  <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                    Total Grade
                   </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {showWhatIfGradeInput ? (
-                      <TextField
-                        type="number"
-                        defaultValue={assignment.earnedPoints}
-                        onChange={(e) => {
-                          handleGradeInputChange(assignment.id, e.target.value);
-                        }}
-                        inputProps={{ style: { color: "white" } }}
-                      />
-                    ) : (
-                      `${assignment.earnedPoints} / ${assignment.totalPoints}`
-                    )}
+                  <TableCell />
+                  <TableCell
+                    style={{
+                      color: "white",
+                      borderBottom: "1px solid #fff1",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {Number(totalGrade).toFixed(1) + "%"}
                   </TableCell>
-                  <TableCell style={{ color: "white", borderBottom: "1px solid #fff1" }}>
-                    {warningMessage !== "" && assignment.id === assignmentGradesState.find((grade) => grade.id === assignment.id)?.id
-                      ? "N/A"
-                      : Number(
-                          (assignmentGradesState.find((grade) => grade.id === assignment.id)?.earnedPoints || assignment.earnedPoints) /
-                            assignment.totalPoints *
-                            100
-                        ).toFixed(1) + "%"}
-                  </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {assignment.comments !== null &&  assignment.comments !== undefined ? assignment.comments : "No Comments"}
-                  </TableCell>
-                </TableRow>
-              </>)}
-              {additionalGrades.map((assignment)=><>
-                <TableRow>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {assignment.title}
-                  </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {assignment.earnedPoints + " / " + assignment.totalPoints}
-                  </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                  {Number((assignmentGradesState.find((grade) => grade.id === assignment.id)?.earnedPoints || assignment.earnedPoints) / assignment.totalPoints * 100).toFixed(1) + "%"}
-                  </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {assignment.comments !== null &&  assignment.comments !== undefined ? assignment.comments : "No Comments"}
-                  </TableCell>
-                </TableRow>
-              </>)}
-            </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-        }
-        {role === "instructor" && 
-        <div>
-          <Button variant="contained" color="primary" onClick={handleOpen}>
-            Change Weights
-          </Button>
-          <Dialog 
-          open={open} 
-          onClose={handleClose}
-          sx={{ "& .MuiPaper-root": { backgroundColor: "rgb(16, 46, 68)" } }}
-          >
-            <DialogTitle sx={{ color: "#fff" }}>Change Weights</DialogTitle>
-            <DialogContent>
-              <TextField
-              autoFocus
-              margin="dense"
-              id="quiz"
-              label="Quiz weight"
-              type="number"
-              defaultValue={weights.find((w) => w.type === 'quiz')?.weight || ''}
-              onChange={(e) => handleWeightsChange('quiz', e.target.value)}
-              fullWidth
-            />
-            <TextField
-              margin="dense"
-              id="assignment"
-              label="Assignment weight"
-              type="number"
-              defaultValue={weights.find((w) => w.type === 'assignment')?.weight || ''}
-              onChange={(e) => handleWeightsChange('assignment', e.target.value)}
-              fullWidth
-            />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleUpdate}>Update</Button>
-              <Button onClick={handleClose}>Cancel</Button>
-            </DialogActions>
-          </Dialog>
-          <TableContainer style={{marginBottom:"2em"}}>
-            <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
-            {/* <colgroup>
-              <col width="25%" />
-              <col width="25%" />
-              <col width="25%" />
-              <col width="25%" />
-            </colgroup> */}
-            <TableHead style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}>
-              <TableRow style={{borderBottom: "1px solid #fff1"}}>
-                <TableCell style={{color: "white", fontSize: "1em"}}>Grade Item</TableCell>
-                <TableCell style={{color: "white", fontSize: "1em"}}>Grade Average</TableCell>
-                <TableCell style={{color: "white", fontSize: "1em"}}>View Student Grades</TableCell>
-                <TableCell/>
-              </TableRow>
-            </TableHead>
-            <TableBody style={{width: "100%", backgroundColor: "rgba(255, 255, 255, 0.05)"}}>
-              {courseAssignments.map((courseAssignment)=><>
-                <TableRow>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {courseAssignment.title}
-                  </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {"100%"}
-                  </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    <Button
-                      variant="outlined"
-                      onClick={() => {
-                        clickView();
-                      }}
-                    >
-                      VIEW
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              </>)} 
-            </TableBody>
-            </Table>
-          </TableContainer>
-          <Button
+                  <TableCell />
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        )}
+        {role === "instructor" && (
+          <div>
+            <Button variant="contained" color="primary" onClick={handleOpen}>
+              Change Weights
+            </Button>
+            <Dialog
+              open={open}
+              onClose={handleClose}
+              sx={{
+                "& .MuiPaper-root": { backgroundColor: "rgb(16, 46, 68)" },
+              }}
+            >
+              <DialogTitle sx={{ color: "#fff" }}>Change Weights</DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="quiz"
+                  label="Quiz weight"
+                  type="number"
+                  defaultValue={
+                    weights.find((w) => w.type === "quiz")?.weight || ""
+                  }
+                  onChange={(e) => handleWeightsChange("quiz", e.target.value)}
+                  fullWidth
+                />
+                <TextField
+                  margin="dense"
+                  id="assignment"
+                  label="Assignment weight"
+                  type="number"
+                  defaultValue={
+                    weights.find((w) => w.type === "assignment")?.weight || ""
+                  }
+                  onChange={(e) =>
+                    handleWeightsChange("assignment", e.target.value)
+                  }
+                  fullWidth
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleUpdate}>Update</Button>
+                <Button onClick={handleClose}>Cancel</Button>
+              </DialogActions>
+            </Dialog>
+            <TableContainer style={{ marginBottom: "2em" }}>
+              <Table sx={{ minWidth: 650 }} style={{ borderStyle: "hidden" }}>
+                <TableHead style={{ backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
+                  <TableRow style={{ borderBottom: "1px solid #fff1" }}>
+                    <TableCell style={{ color: "white", fontSize: "1em" }}>
+                      Grade Item
+                    </TableCell>
+                    <TableCell style={{ color: "white", fontSize: "1em" }}>
+                      Grade Average
+                    </TableCell>
+                    <TableCell style={{ color: "white", fontSize: "1em" }}>
+                      View Student Grades
+                    </TableCell>
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody
+                  style={{
+                    width: "100%",
+                    backgroundColor: "rgba(255, 255, 255, 0.05)",
+                  }}
+                >
+                  {courseAssignments.map((courseAssignment) => (
+                    <>
+                      <TableRow>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {courseAssignment.title}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          {"100%"}
+                        </TableCell>
+                        <TableCell
+                          style={{
+                            color: "white",
+                            borderBottom: "1px solid #fff1",
+                          }}
+                        >
+                          <Button
+                            variant="outlined"
+                            onClick={() => {
+                              clickView();
+                            }}
+                          >
+                            VIEW
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Button
               onClick={handleOpened}
               variant="contained"
               color="primary"
@@ -351,47 +512,63 @@ function Grades() {
                 borderRadius: "1em",
               }}
             >
-            Add Grade Item
-          </Button> 
-          <Dialog 
-          open={open1} 
-          onClose={handleClosed}
-          sx={{ "& .MuiPaper-root": { backgroundColor: "rgb(16, 46, 68)" } }}
-          >
-            <DialogTitle sx={{ color: "#fff" }}>Add Grade Item</DialogTitle>
-            <DialogContent>
-              <TextField
-              autoFocus
-              margin="dense"
-              id="title"
-              label="Title"
-              type="string"
-              defaultValue={gradeTitle}
-              onChange={(e) => {
-                setGradeTitle(e.target.value);
+              Add Grade Item
+            </Button>
+            <Dialog
+              open={open1}
+              onClose={handleClosed}
+              sx={{
+                "& .MuiPaper-root": { backgroundColor: "rgb(16, 46, 68)" },
               }}
-              fullWidth
-            />
-            <TextField
-              margin="dense"
-              id="totalPoints"
-              label="Total Points"
-              type="number"
-              defaultValue={gradePoints}
-              onChange={(e) => {
-                setGradePoints(e.target.value);
-              }}
-              fullWidth
-            />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleAdd}>Update</Button>
-              <Button onClick={handleClosed}>Cancel</Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-        } 
+            >
+              <DialogTitle sx={{ color: "#fff" }}>Add Grade Item</DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="title"
+                  label="Title"
+                  type="string"
+                  defaultValue={gradeTitle}
+                  onChange={(e) => {
+                    setGradeTitle(e.target.value);
+                  }}
+                  fullWidth
+                />
+                <TextField
+                  margin="dense"
+                  id="totalPoints"
+                  label="Total Points"
+                  type="number"
+                  defaultValue={gradePoints}
+                  onChange={(e) => {
+                    setGradePoints(e.target.value);
+                  }}
+                  fullWidth
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleAdd}>Update</Button>
+                <Button onClick={handleClosed}>Cancel</Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+        )}
       </div>
+      <Snackbar
+        open={warningSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setWarningSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setWarningSnackbarOpen(false)}
+          severity="warning"
+          sx={{ width: "100%" }}
+        >
+          Total weight must be 100.
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

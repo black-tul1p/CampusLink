@@ -131,3 +131,30 @@ import {
         throw new Error("Error getting additional grades:" + error);
       }
     }
+
+    export async function getAssignmentWeight(courseId) {
+        try {
+          const courseRef = doc(collection(firestore, "courses"), courseId);
+          const courseSnapshot = await getDoc(courseRef);
+      
+          const assignments = courseSnapshot.data().weight.filter(item => item.type === "assignment");
+          if (assignments.length === 0) throw new Error("No assignment found for this course");
+      
+          return assignments[0].weight;
+        } catch (error) {
+          console.error("Error getting assignment weight for course with ID ", courseId, ": ", error);
+          throw new Error("Error getting assignment weight: " + error);
+        }
+      }
+      
+      export async function getQuizWeight(quizDocId) {
+        try {
+          const quizRef = doc(collection(firestore, "quizzes"), quizDocId);
+          const quizSnapshot = await getDoc(quizRef);
+          const quizWeight = quizSnapshot.data().weight;
+          return quizWeight;
+        } catch (error) {
+          console.error("Error getting quiz weight with ID ", quizDocId, ": ", error);
+          throw new Error("Error getting quiz weight: " + error);
+        }
+      }

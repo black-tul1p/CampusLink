@@ -70,15 +70,18 @@ const QuizPopup = (props) => {
   const [attempt, setAttempt] = useState({ ...props.answers });
   const [started, setStarted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  // const [clicked, setClicked] = useState(false);
   const [error, setError] = useState(null);
-  const [viewOnly, setViewOnly] = useState(true);
-  const newAttempt = Object.keys(attempt).length > 0 ? false : true;
+  const newAttempt = attempt.answers?.length > 0 ? false : true;
+  const usedAllAttempts =
+    !quiz.attempts || attempt.attemptNumber >= quiz.attempts;
   const late =
     props.quiz.deadline !== null
       ? props.quiz.deadline < new Date()
         ? true
         : false
       : false;
+  const [viewOnly, setViewOnly] = useState(late || usedAllAttempts);
   const startTime = new Date();
 
   const handleAttemptStart = () => {
@@ -86,6 +89,11 @@ const QuizPopup = (props) => {
     if (!attempt.attemptNumber) {
       attempt.attemptNumber = 1;
       attempt.attemptedOn = startTime;
+      // attempt.answers = new Array(quiz.questions.length).fill("");
+      attempt.answers = Array.from(quiz.questions, (x) => ({
+        answer: "",
+        points: 0,
+      }));
     }
 
     // Calculate time since last attempt
@@ -98,40 +106,53 @@ const QuizPopup = (props) => {
     );
 
     // Allow attempt if deadline has not passed and there are remaining attempts
-    if (minutesSinceLastAttempt < quiz.timeLimit && !late) {
+    if (
+      (minutesSinceLastAttempt < quiz.timeLimit || !quiz.timeLimit) &&
+      !late
+    ) {
       console.log("Continuing quiz");
-      setViewOnly(false);
-    } else if (!late && attempt.attemptNumber <= quiz.attempts) {
-      attempt.attemptNumber += 1;
+    } else if (!late && !usedAllAttempts) {
+      // attempt.attemptNumber += 1;
       console.log(
-        `Starting new attempt: ${attempt.attemptNumber}/${quiz.attempts}`
+        `Starting new attempt: ${attempt.attemptNumber}/${
+          quiz.attempts || "Unlimited"
+        }`
       );
       attempt.answers = {};
       attempt.attemptedOn = startTime;
-      setViewOnly(false);
     }
 
     setStarted(true);
   };
 
   const handleAnswerUpdate = (index, answer) => {
-    console.log("BEFORE:", attempt);
+    // console.log("BEFORE:", attempt);
     const newAnswers = { ...attempt };
     newAnswers.answers[index] = {
       answer: answer,
-      points: quiz.questions[index].points,
+      points:
+        quiz.questions[index].answers[0] === answer &&
+        !quiz.questions[index].manual
+          ? parseInt(quiz.questions[index].points)
+          : 0,
     };
     setAttempt(newAnswers);
-    console.log("AFTER:", attempt);
 
     handleSubmit();
   };
 
-  const handleSubmit = (quit) => {
+  const handleSubmit = (quit, clicked) => {
+    // Update attempt count if submitted
+    if (clicked) {
+      attempt.attemptNumber = attempt.attemptNumber + 1;
+    }
+
     // logic to handle quiz submission
     const attemptQuiz = async () => {
       await setQuizAttempt(props.courseId, props.userId, quiz.quizId, attempt);
     };
+
+    console.log(attempt);
 
     attemptQuiz().catch((error) => {
       console.error(error);
@@ -140,6 +161,9 @@ const QuizPopup = (props) => {
 
     if (quit) props.onClose();
   };
+
+  // console.log(attempt);
+  // console.log(`New? ${newAttempt ? "yes" : "no"}`);
 
   return (
     <Dialog
@@ -174,6 +198,24 @@ const QuizPopup = (props) => {
               minutes={quiz.timeLimit}
               onEnd={setSubmitted}
             />
+          )}
+          {viewOnly && attempt.isGraded && started && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                alignItems: "center",
+                width: "8rem",
+                gap: "0.5rem",
+                marginRight: "1rem",
+              }}
+            >
+              <Typography variant="h6">Grade: </Typography>
+              <Typography
+                variant="h6"
+                color="lightgreen"
+              >{`${attempt.points}/${quiz.points}`}</Typography>
+            </div>
           )}
           <IconButton
             edge="start"
@@ -284,7 +326,9 @@ const QuizPopup = (props) => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  handleSubmit();
+                  // setClicked(true);
+                  // console.log(clicked);
+                  handleSubmit(false, true);
                   setSubmitted(true);
                 }}
               >
@@ -324,11 +368,19 @@ const QuizPopup = (props) => {
                   </Typography>
                 </div>
                 <div>
+                  <Typography variant="h5">Description</Typography>
+                  <Typography variant="h6" color="lightgray">
+                    {quiz.description || "None"}
+                  </Typography>
+                </div>
+                <div>
                   <Typography variant="h5">Maximum Attempts</Typography>
                   <Typography variant="h6" color="lightgray">
-                    {`Allowed - ${quiz.attempts || "Unlimited"}, Completed - ${
-                      attempt.attemptNumber || 0
-                    }`}
+                    {quiz.attempts
+                      ? `Allowed - ${quiz.attempts}, Completed - ${
+                          attempt.attemptNumber || 0
+                        }`
+                      : `Allowed - ${quiz.attempts || "Unlimited"}`}
                   </Typography>
                 </div>
               </QuizInfoBox>
@@ -340,8 +392,8 @@ const QuizPopup = (props) => {
                   <Typography paragraph>
                     Before you submit the quiz, you can modify the answers to
                     any question. If you close the quiz without submitting, you
-                    can return to the quiz any time before the deadline.
-                    <br />
+                    can return to the quiz any time before the deadline. &nbsp;
+                    <br /> <br />
                     Once the deadline has passed or if you click the submit
                     button, the quiz will be submitted and you may attempt it
                     again (if you have remaining attempts).
@@ -366,7 +418,7 @@ const QuizPopup = (props) => {
                 aria-label="close"
                 id="general-Button"
               >
-                {late ? "View" : "Start"}
+                {late || usedAllAttempts ? "View" : "Start"}
               </Button>
             </Toolbar>
           </AppBar>
