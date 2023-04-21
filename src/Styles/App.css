@@ -5,14 +5,13 @@
   --white: rgba(255, 255, 255);
 
   --font-fancy: "Times New Roman";
-
-  background-color: var(--dark-blue);
   font-family: "Times New Roman", Times, serif;
 }
 
 html,
 body {
   scroll-behavior: smooth;
+  background-color: var(--dark-blue);
 }
 
 #general-Button {
@@ -51,10 +50,8 @@ body {
   gap: 1em;
 }
 
-/********************************** Login Page **********************************/
-
 .Banner-logo {
-  max-width: 50vw;
+  max-width: clamp(18rem, 35vw, 30rem);
 }
 
 .Default-card {
@@ -70,7 +67,7 @@ body {
 .Default-card .Login-form {
   display: flex;
   flex-direction: column;
-  width: 50vw;
+  width: clamp(25rem, 35vw, 40rem);
   gap: 1em;
 }
 

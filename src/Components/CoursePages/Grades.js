@@ -1,5 +1,7 @@
 import React from "react";
 import CourseNavBar from "../CourseNavBar";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import TableCell from '@mui/material/TableCell';
@@ -8,7 +10,7 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import Table from '@mui/material/Table';
 import TableContainer from '@mui/material/TableContainer';
-import { getAssigmentsByCourse, getAssigmentSubmission, updateCourseWeight,getAssigmentSubmissions, getAdditionalGradesForStudent, getAssignmentGradesForStudent } from "../../Backend/grades";
+import { getAssigmentsByCourse, getAssigmentSubmission, updateCourseWeight, getAssigmentSubmissions, getAdditionalGradesForStudent, getAssignmentGradesForStudent, getAssignmentWeight, getQuizWeight } from "../../Backend/grades";
 import { getLoggedInUserId } from "../../Backend/user";
 import "../../Styles/Assignments.css";
 import { getUserRole } from "../../Backend/user";
@@ -21,7 +23,6 @@ function Grades() {
   const location = useLocation();
   const navigate = useNavigate();
   const courseId = location.state?.courseId;
-  const [assignments, setAssignments] = useState([]);
   const [courseAssignments, setCourseAssignments] = useState([]);
   const [allSubmissions, setAllSubmissions] = useState([]);
   const [assignmentGrades, setAssignmentGrades] = useState([]);
@@ -36,6 +37,38 @@ function Grades() {
   const [gradeTitle, setGradeTitle] = useState("");
   const [gradePoints, setGradePoints] = useState("");
 
+  const [showWhatIfGradeInput, setShowWhatIfGradeInput] = useState(false);
+  const [assignmentGradesState, setAssignmentGradesState] = useState([]);
+  const [warningMessage, setWarningMessage] = useState("");
+  const [warningSnackbarOpen, setWarningSnackbarOpen] = useState(false);
+  const [assignmentWeight, setAssignmentWeight] = useState(1);
+
+  useEffect(() => {
+    setAssignmentGradesState(assignmentGrades);
+  }, [assignmentGrades]);
+
+  const handleGradeInputChange = (assignmentId, newValue) => {
+  const assignment = assignmentGrades.find((grade) => grade.id === assignmentId);
+
+  if (parseFloat(newValue) > assignment.totalPoints) {
+    setWarningMessage("Score can't be larger than the total score");
+  } else {
+    setWarningMessage("");
+    setAssignmentGradesState((prevGrades) =>
+      prevGrades.map((grade) =>
+        grade.id === assignmentId
+          ? { ...grade, earnedPoints: parseFloat(newValue) }
+          : grade
+      )
+    );
+  }
+};
+
+  const handleCancel = () => {
+    setAssignmentGradesState(assignmentGrades);
+    setShowWhatIfGradeInput(false);
+    setWarningMessage("");
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -51,6 +84,8 @@ function Grades() {
       setAssignmentGrades(assgnGrades);
       const assgns = await getAssigmentsByCourse(courseId);
       setCourseAssignments(assgns);
+      const assignmentWeightValue = await getAssignmentWeight(courseId);
+      setAssignmentWeight(assignmentWeightValue ? assignmentWeightValue / 100 : 1);
       await Promise.all(
         assgns.map(async (assignment) => {
           const submissions = await getAssigmentSubmissions(assignment.id);
@@ -78,6 +113,14 @@ function Grades() {
     });
   };
 
+  const totalPoints = assignmentGradesState.reduce(
+    (total, grade) => total + (grade.earnedPoints / grade.totalPoints) * 100,
+    0
+  );
+
+  const averagePoints = totalPoints / assignmentGrades.length;
+  const totalGrade = averagePoints * assignmentWeight;
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -94,14 +137,15 @@ function Grades() {
     setOpen1(false);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     const totalWeight = weights.reduce((acc, w) => acc + Number(w.weight), 0);
     if (totalWeight !== 100) {
-      alert('total weight must be 100');
+      setWarningSnackbarOpen(true);
       return;
     }
-    updateCourseWeight(courseDocId, weights);
+    await updateCourseWeight(courseDocId, weights);
     handleClose();
+    alert('Weight update successful!');
   };
 
   const handleAdd = () => {
@@ -111,9 +155,7 @@ function Grades() {
   const clickView = () => {
     console.log("clicked view!");
   };
-  const clickAddGrade = () => {
-  };
-  
+
   return (
     <div style={{ width: "100%", color: "white", maxHeight:"100vh", overflow:"auto"}}>
       <CourseNavBar />
@@ -128,6 +170,35 @@ function Grades() {
         </div>
         {role === "student" && 
         <>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setShowWhatIfGradeInput(!showWhatIfGradeInput);
+            }}
+            style={{
+              marginBottom: "1em",
+            }}
+          >
+            What if Grade
+          </Button>
+          {showWhatIfGradeInput && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleCancel}
+              style={{
+                marginLeft: "1em",
+                marginBottom: "1em",
+              }}
+            >
+              Cancel
+            </Button>
+          )}
+          {warningMessage !== "" && (
+            <p style={{ color: "red", marginTop: "1em" }}>{warningMessage}</p>
+          )}
+
           <TableContainer style={{marginBottom:"2em"}}>
             <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
             <colgroup>
@@ -152,10 +223,27 @@ function Grades() {
                     {assignment.title}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {assignment.earnedPoints + " / " + assignment.totalPoints}
+                    {showWhatIfGradeInput ? (
+                      <TextField
+                        type="number"
+                        defaultValue={assignment.earnedPoints}
+                        onChange={(e) => {
+                          handleGradeInputChange(assignment.id, e.target.value);
+                        }}
+                        inputProps={{ style: { color: "white" } }}
+                      />
+                    ) : (
+                      `${assignment.earnedPoints} / ${assignment.totalPoints}`
+                    )}
                   </TableCell>
-                  <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {Number((assignment.earnedPoints / assignment.totalPoints) * 100).toFixed(1) + "%"}
+                  <TableCell style={{ color: "white", borderBottom: "1px solid #fff1" }}>
+                    {warningMessage !== "" && assignment.id === assignmentGradesState.find((grade) => grade.id === assignment.id)?.id
+                      ? "N/A"
+                      : Number(
+                          (assignmentGradesState.find((grade) => grade.id === assignment.id)?.earnedPoints || assignment.earnedPoints) /
+                            assignment.totalPoints *
+                            100
+                        ).toFixed(1) + "%"}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                     {assignment.comments !== null &&  assignment.comments !== undefined ? assignment.comments : "No Comments"}
@@ -171,16 +259,25 @@ function Grades() {
                     {assignment.earnedPoints + " / " + assignment.totalPoints}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
-                    {Number((assignment.earnedPoints / assignment.totalPoints) * 100).toFixed(1) + "%"}
+                  {Number((assignmentGradesState.find((grade) => grade.id === assignment.id)?.earnedPoints || assignment.earnedPoints) / assignment.totalPoints * 100).toFixed(1) + "%"}
                   </TableCell>
                   <TableCell style={{color: "white", borderBottom: "1px solid #fff1"}}>
                     {assignment.comments !== null &&  assignment.comments !== undefined ? assignment.comments : "No Comments"}
                   </TableCell>
                 </TableRow>
               </>)}
+              <TableCell style={{color: "white", fontWeight: "bold"}}>Total Grade</TableCell>
+              <TableCell/>
+              <TableCell style={{ color: "white", borderBottom: "1px solid #fff1", fontWeight: "bold" }}>
+              {Number(totalGrade).toFixed(1) + "%"}
+              </TableCell>
             </TableBody>
             </Table>
           </TableContainer>
+        </>
+        }
+        {role === "instructor" && 
+        <div>
           <Button variant="contained" color="primary" onClick={handleOpen}>
             Change Weights
           </Button>
@@ -216,18 +313,9 @@ function Grades() {
               <Button onClick={handleClose}>Cancel</Button>
             </DialogActions>
           </Dialog>
-        </>
-        }
-        {role === "instructor" && 
-        <div>
           <TableContainer style={{marginBottom:"2em"}}>
             <Table sx={{ minWidth: 650 }} style={{borderStyle: "hidden"}} >
-            {/* <colgroup>
-              <col width="25%" />
-              <col width="25%" />
-              <col width="25%" />
-              <col width="25%" />
-            </colgroup> */}
+
             <TableHead style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}>
               <TableRow style={{borderBottom: "1px solid #fff1"}}>
                 <TableCell style={{color: "white", fontSize: "1em"}}>Grade Item</TableCell>
@@ -310,6 +398,16 @@ function Grades() {
         </div>
         } 
       </div>
+      <Snackbar
+        open={warningSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setWarningSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={() => setWarningSnackbarOpen(false)} severity="warning" sx={{ width: "100%" }}>
+          Total weight must be 100.
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

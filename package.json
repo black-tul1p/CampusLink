@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emailjs/browser": "^3.11.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.9",
@@ -13,9 +14,11 @@
     "@testing-library/user-event": "^13.5.0",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
+    "emailjs": "^4.0.1",
     "firebase": "^9.17.1",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
     "react-big-calendar": "^1.6.9",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
@@ -24,6 +27,7 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "react-switch": "^7.0.0",
+    "stream": "0.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

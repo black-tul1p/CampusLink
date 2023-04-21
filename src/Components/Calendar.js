@@ -2,13 +2,29 @@ import React, { useEffect, useState } from "react";
 import {
   getAssignmentsWithDueDates,
   getAllQuizDeadlines,
+  createEvent,
+  getAllEvents,
+  removeEvent
 } from "../Backend/calendar";
 import moment from "moment";
 import styled from "@emotion/styled";
-import { CircularProgress, Dialog, Typography } from "@mui/material";
+import { CircularProgress, Dialog, Typography, DialogTitle, DialogActions } from "@mui/material";
 import { format } from "date-fns";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import {CustomListView} from "./ListView";
+import TextField from '@mui/material/TextField';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Button from '@mui/material/Button';
+import { getUserRole } from "../Backend/user";
+import { getCourseDetailsById, getUserCourses } from "../Backend/course";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const localizer = momentLocalizer(moment);
 
@@ -69,10 +85,8 @@ const groupBy = (array, key) =>
     return result;
   }, {});
 
-const renderPopupContent = (date, assignments, quizzes) => {
+const renderPopupContent = (date, assignments, quizzes, customEvents) => {
   const PopupContainer = styled.div``;
-
-  console.log(date);
 
   const assignmentsDue = assignments.filter(
     (a) =>
@@ -82,9 +96,14 @@ const renderPopupContent = (date, assignments, quizzes) => {
     (q) =>
       format(new Date(q.deadline), "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
   );
+  const upcomingCustoms = customEvents.filter(
+    (c) =>
+      format(new Date(c.date), "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
+  );
 
   const groupedAssignments = groupBy(assignmentsDue, "courseName");
   const groupedQuizzes = groupBy(quizzesDue, "courseName");
+  const groupedCustomEvents = groupBy(upcomingCustoms, "courseName");
 
   return (
     <PopupContainer>
@@ -117,6 +136,19 @@ const renderPopupContent = (date, assignments, quizzes) => {
           ))}
         </div>
       ))}
+      {Object.entries(groupedCustomEvents).map(([courseName, customEvents]) => (
+        <div key={courseName}>
+          <Typography variant="subtitle1">{courseName}</Typography>
+          {customEvents.map((c) => (
+            <div key={c.name}>
+              <Typography variant="body1">{c.name}</Typography>
+              <Typography variant="caption">
+                {c.desc}
+              </Typography>
+            </div>
+          ))}
+        </div>
+      ))}
     </PopupContainer>
   );
 };
@@ -124,18 +156,37 @@ const renderPopupContent = (date, assignments, quizzes) => {
 const CalendarPage = () => {
   const [assignments, setAssignments] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
+  const [customEvents, setCustomEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [showEventCreator, setShowEventCreator] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const [role, setRole] = useState("");
+  const [courses, setCourses] = useState([]);
+  const [newEventCourse, setNewEventCourse] = useState("");
+  const [newEventDate, setNewEventDate] = useState("");
+  const [newEventName, setNewEventName] = useState("");
+  const [newEventDesc, setNewEventDesc] = useState("");
+  const [events, setEvents] = useState([]);
+
   useEffect(() => {
+    getUserRole().then((role)=>{
+      setRole(role);
+      getUserCourses(role).then(courses => {
+        setCourses(courses);
+        setNewEventCourse(courses[0].databaseId);
+      });
+    });
     const fetchAssignmentsAndQuizzes = async () => {
       try {
         const assignmentsData = await getAssignmentsWithDueDates();
         const quizzesData = await getAllQuizDeadlines();
+        const eventsData = await getAllEvents();
         setLoading(true);
         setAssignments(assignmentsData);
         setQuizzes(quizzesData);
+        setCustomEvents(eventsData);
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -144,26 +195,47 @@ const CalendarPage = () => {
     fetchAssignmentsAndQuizzes();
   }, []);
 
-  const events = [
-    ...assignments.map((a) => ({
-      title: a.assignmentTitle,
-      start: new Date(a.dueDate),
-      end: new Date(a.dueDate),
-      allDay: true,
-      resource: { type: "assignment", courseName: a.courseName },
-    })),
-    ...quizzes.map((q) => ({
-      title: q.quizName,
-      start: new Date(q.deadline),
-      end: new Date(q.deadline),
-      allDay: true,
-      resource: { type: "quiz", courseName: q.courseName },
-    })),
-  ];
+  useEffect(() => {
+    setEvents([
+      ...assignments.map((a) => ({
+        title: a.assignmentTitle,
+        start: new Date(a.dueDate),
+        end: new Date(a.dueDate),
+        allDay: true,
+        resource: { type: "assignment", courseName: a.courseName },
+      })),
+      ...quizzes.map((q) => ({
+        title: q.quizName,
+        start: new Date(q.deadline),
+        end: new Date(q.deadline),
+        allDay: true,
+        resource: { type: "quiz", courseName: q.courseName },
+      })),
+      ...customEvents.map((e) => ({
+        title: e.name,
+        start: new Date(e.date),
+        end: new Date(e.date),
+        allDay: true,
+        resource: { type: "custom", courseName: e.courseName },
+        course: e.courseId,
+        id: e.id
+      })),
+    ]);
+  }, [assignments, quizzes, customEvents])
 
   const eventStyleGetter = (event) => {
-    const backgroundColor =
-      event.resource.type === "assignment" ? "#ffbb33" : "#0099ff";
+    let backgroundColor = "#ffbb33";
+    switch (event.resource.type) {
+      case "quiz":
+        backgroundColor = "#0099ff";
+        break;
+      case "assignment":
+        backgroundColor = "#ffbb33";
+        break;
+      case "custom":
+        backgroundColor = "#339900";
+        break;
+    }
     const style = {
       backgroundColor,
       borderRadius: "0.25rem",
@@ -185,6 +257,7 @@ const CalendarPage = () => {
           <StyledTitle variant="h4" gutterBottom>
             Calendar
           </StyledTitle>
+
           <StyledDialog
             fullScreen
             open={showPopup}
@@ -204,7 +277,84 @@ const CalendarPage = () => {
             }}
           >
             {selectedDate &&
-              renderPopupContent(selectedDate, assignments, quizzes)}
+              renderPopupContent(selectedDate, assignments, quizzes, customEvents)}
+          </StyledDialog>
+
+          <StyledDialog
+            open={showEventCreator}
+            onClose={() => {
+              setSelectedDate(null);
+              setShowEventCreator(false);
+            }}
+            PaperProps={{
+              style: {
+                padding: "10px 50px",
+              },
+            }}
+            style={{height: "50%"}}
+
+          >
+            {selectedDate && <>
+              <DialogTitle style={{padding: "10px"}}>Create New Event</DialogTitle>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="Date"
+                slotProps={{ textField: { variant: 'standard', } }}
+                defaultValue={dayjs(selectedDate)}
+                onChange={(date) => setNewEventDate(date.toDate())}
+              />
+              </LocalizationProvider>
+              <FormControl style={{margin: "10px 0"}}>
+                <InputLabel id="course-select-label">Course</InputLabel>
+                <Select
+                  labelId="course-select-label"
+                  label="Age"
+                  variant="standard"
+                  value={newEventCourse}
+                  onChange={event => {
+                    setNewEventCourse(event.target.value)
+                  }}
+                >
+                  {courses.map(course => (
+                    <MenuItem value={course.databaseId}>
+                      {course.courseTitle} {course.courseId}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <TextField
+                label="Name"
+                variant="standard"
+                onChange={e => {setNewEventName(e.target.value)}}
+              />
+              <TextField
+                label="Description"
+                variant="standard"
+                multiline
+                minRows="3"
+                onChange={e => {setNewEventDesc(e.target.value)}}
+              />
+              <DialogActions>
+                <Button style={{width: "50%"}} onClick={()=>{
+                  createEvent(newEventCourse, newEventDate, newEventName, newEventDesc).then(eventId=>{
+                    getCourseDetailsById(newEventCourse).then(courseDetails => {
+                      const newEvent = {
+                        name: newEventName,
+                        desc: newEventDesc,
+                        date: newEventDate,
+                        courseName: courseDetails.courseTitle + " " + courseDetails.courseId,
+                        courseId: newEventCourse,
+                        id: eventId
+                      }
+                      //setEvents([newEvent, ...events])
+                      setCustomEvents([newEvent, ...customEvents])
+                    });
+                  });
+                  setShowEventCreator(false)}}
+                >Add Event</Button>
+                <Button style={{width: "50%"}} onClick={()=>{setShowEventCreator(false)}}>Cancel</Button>
+              </DialogActions>
+            </>}
           </StyledDialog>
           <StyledCalendar
             localizer={localizer}
@@ -212,10 +362,21 @@ const CalendarPage = () => {
             startAccessor="start"
             endAccessor="end"
             eventPropGetter={eventStyleGetter}
+            views={{month: true, week: true, agenda: CustomListView}}
+            messages={{agenda: 'List'}}
             onSelectEvent={(event) => {
               setShowPopup(true);
               setSelectedDate(event.start);
-              console.log(selectedDate);
+            }}
+            selectable={role==="instructor"}
+            onSelectSlot={(slot)=>{
+              setSelectedDate(slot.start);
+              setNewEventDate(slot.start);
+              setShowEventCreator(true);
+            }}
+            onDelete={(event)=>{
+              setCustomEvents(customEvents.filter(e => event.id !== e.id));
+              removeEvent(event.course, event.id)
             }}
             tooltipAccessor={(event) => {
               const date = format(event.start, "h:mm a");

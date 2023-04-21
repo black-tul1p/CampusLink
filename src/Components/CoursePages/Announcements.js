@@ -7,6 +7,7 @@ import "../../Styles/Assignments.css";
 import { getUserRole } from "../../Backend/user";
 import CourseNavBar from "../CourseNavBar";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { sendAnnouncementNotification } from "../../Backend/email";
 import {
   Modal,
   TextField,
@@ -14,6 +15,8 @@ import {
   Select,
   MenuItem,
   FormControl,
+  FormControlLabel,
+  Switch,
   InputLabel,
 } from "@mui/material";
 
@@ -26,6 +29,7 @@ function Announcements() {
   const [announcements, setAnnouncements] = useState([]);
   const [title, setTitle] = useState("");
   const [role, setRole] = useState("");
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,7 +48,10 @@ function Announcements() {
   const clickPost = async () => {
     try {
       await createAnnouncement(title, description, courseID);
-      alert("Announcement Successfully Posted!");
+      if (notificationsEnabled) {
+        await sendAnnouncementNotification(title, description, courseID);
+      }
+      //alert("Announcement Successfully Posted!");
       setTitle("");
       setDescription("");
       fetchData();
@@ -107,6 +114,17 @@ function Announcements() {
                 }}
               />
             </div>
+            <FormControlLabel 
+              control={
+                <Switch
+                  defaultChecked 
+                  onChange={event=>{
+                    setNotificationsEnabled(event.target.checked);
+                  }}
+                />
+              }
+              label="Send email notification to students"
+            />
             <Button
               onClick={clickPost}
               variant="contained"
@@ -128,7 +146,7 @@ function Announcements() {
         <div className="header-divider"></div>
         </>
         }
-        {announcements.map((announcement)=>
+        {announcements !== undefined && announcements.map((announcement)=>
         <div style={{backgroundColor:"#132b3d", borderRadius:"1em",border: "1px solid #fff", paddingLeft:"0.9em",paddingRight:"0.9em", marginBottom:"1em"}}>
           <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
             <p style={{fontSize:"1.4em", paddingBottom:"0.2em"}}>{announcement.title}</p>

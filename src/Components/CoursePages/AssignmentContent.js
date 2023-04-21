@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import CourseNavBar from "../CourseNavBar";
 import ErrorBox from "../Error";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, redirect } from "react-router-dom";
 import { Button, Typography} from "@mui/material";
 import styled from "@emotion/styled";
 import { Timestamp } from "@firebase/firestore";
@@ -11,7 +11,7 @@ import { ref, uploadBytes, listAll, list,  getDownloadURL, deleteObject } from "
 import { doc, getDoc, collection } from "@firebase/firestore";
 import { storage } from "../../Backend/firebase"
 import { getCourseDetailsById } from "../../Backend/course";
-import { getCurrentUser } from "../../Backend/user";
+import { getCurrentUser, getUserRole } from "../../Backend/user";
 
 const TopbarRow = styled.div`
   height: 4.5em;
@@ -70,6 +70,7 @@ function AssignmentContent() {
     const [courseTitle, setCourseTitle] = useState("");
     const [courseId, setCourseId] = useState("");
     const [userInfo, setUserInfo] = useState("");
+    const [userType, setUserType] = useState("");
 
     const title = location.state?.assignmentTitle;
     const dueDate = location.state?.assignmentDueDate;
@@ -91,7 +92,10 @@ function AssignmentContent() {
     //Get user info
     const getUserInfo = async () => {
         const thisUser = await getCurrentUser();
+        const thisUserRole = await getUserRole();
         setUserInfo(thisUser.email);
+        setUserType(thisUserRole)
+
 
     }
     getUserInfo();
@@ -178,6 +182,31 @@ function AssignmentContent() {
 		    </div>
 	} 
 
+    //Temp test for navigation to regrade request page
+    function Regrade() {
+       return <div>
+            <button onClick={toRegrade}>
+                Regrade  
+            </button>
+
+        </div>
+    }
+    
+    const toRegrade = (e) => {
+        const assignmentTitle = title
+        const assignmentDueDate = dueDate
+        const assignmentDescript = description
+        const assignmentSubLim = submissionLimit
+      //  console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim); 
+        if (userType == "instructor") {
+            navigate("/regradeReply", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseTitle, courseId, userInfo}});
+        } else {
+            navigate("/regradeRequest", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseTitle, courseId, userInfo}});
+        }
+        
+       //redirecting("/grades");
+    }
+
     
     return(
         <div className = "main-box" style={{ width: "100%" }}>
@@ -209,6 +238,7 @@ function AssignmentContent() {
             </SubLimitText>
             <p className="title">
                 <UploadPrompts />
+                <Regrade/>
             </p>
             
         </div>
