@@ -3,7 +3,8 @@ import {
   getAssignmentsWithDueDates,
   getAllQuizDeadlines,
   createEvent,
-  getAllEvents
+  getAllEvents,
+  removeEvent
 } from "../Backend/calendar";
 import moment from "moment";
 import styled from "@emotion/styled";
@@ -216,6 +217,8 @@ const CalendarPage = () => {
         end: new Date(e.date),
         allDay: true,
         resource: { type: "custom", courseName: e.courseName },
+        course: e.courseId,
+        id: e.id
       })),
     ]);
   }, [assignments, quizzes, customEvents])
@@ -333,17 +336,20 @@ const CalendarPage = () => {
               />
               <DialogActions>
                 <Button style={{width: "50%"}} onClick={()=>{
-                  getCourseDetailsById(newEventCourse).then(courseDetails => {
-                    const newEvent = {
-                      name: newEventName,
-                      desc: newEventDesc,
-                      date: newEventDate,
-                      courseName: courseDetails.courseTitle + " " + courseDetails.courseId,
-                    }
-                    //setEvents([newEvent, ...events])
-                    setCustomEvents([newEvent, ...customEvents])
+                  createEvent(newEventCourse, newEventDate, newEventName, newEventDesc).then(eventId=>{
+                    getCourseDetailsById(newEventCourse).then(courseDetails => {
+                      const newEvent = {
+                        name: newEventName,
+                        desc: newEventDesc,
+                        date: newEventDate,
+                        courseName: courseDetails.courseTitle + " " + courseDetails.courseId,
+                        courseId: newEventCourse,
+                        id: eventId
+                      }
+                      //setEvents([newEvent, ...events])
+                      setCustomEvents([newEvent, ...customEvents])
+                    });
                   });
-                  createEvent(newEventCourse, newEventDate, newEventName, newEventDesc);
                   setShowEventCreator(false)}}
                 >Add Event</Button>
                 <Button style={{width: "50%"}} onClick={()=>{setShowEventCreator(false)}}>Cancel</Button>
@@ -362,11 +368,15 @@ const CalendarPage = () => {
               setShowPopup(true);
               setSelectedDate(event.start);
             }}
-            selectable
+            selectable={role==="instructor"}
             onSelectSlot={(slot)=>{
               setSelectedDate(slot.start);
               setNewEventDate(slot.start);
               setShowEventCreator(true);
+            }}
+            onDelete={(event)=>{
+              setCustomEvents(customEvents.filter(e => event.id !== e.id));
+              removeEvent(event.course, event.id)
             }}
             tooltipAccessor={(event) => {
               const date = format(event.start, "h:mm a");

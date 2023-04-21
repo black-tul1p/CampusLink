@@ -1,7 +1,7 @@
 import React from 'react'
 import * as dates from 'date-arithmetic'
 import PropTypes from 'prop-types'
-import { ListItemText } from '@mui/material';
+import { Icon, ListItemText } from '@mui/material';
 import dayjs from 'dayjs'
 import Divider from '@mui/material/Divider';
 import TableBody from '@mui/material/TableBody';
@@ -9,7 +9,8 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableContainer from '@mui/material/TableContainer';
-import { Typography } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {IconButton, Typography } from "@mui/material";
 
 function rangeFunc(start, end, unit = 'day') {
   let current = start
@@ -64,6 +65,20 @@ export const CustomListView = ({ accessors, localizer, length, date, events, ...
                         secondary={event.resource.courseName}
                     />
                 </TableCell>
+
+                { event.resource.type === "custom" && props.selectable &&
+                <TableCell>
+                    <IconButton
+                        style={{height: "auto"}}
+                        onClick={(e)=>{
+                            props.onDelete(event);
+                            e.stopPropagation();
+                        }}
+                    >
+                        <DeleteIcon style={{color: "gray"}}/>
+                    </IconButton>
+                </TableCell>
+                }
             <Divider /> 
           </>)}
         </TableRow>
