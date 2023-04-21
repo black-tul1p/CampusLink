@@ -14,6 +14,7 @@ import {
   removeCourse,
   getCourseDetailsById,
   updateCourse,
+  sendUpdateEmail,
 } from "../Backend/course";
 import { getLoggedInUserId, getUserRole } from "../Backend/user";
 import { AuthContext } from "../Contexts/AuthContext";
@@ -140,17 +141,20 @@ function Homepage() {
     setNewCourseDept(editingDept);
     setNewCourseDesc(editingDesc);
     let data = {
-      courseTitle: newCourseTitle,
-      courseId: newCourseId,
-      department: newCourseDept,
-      description: newCourseDesc,
+      courseTitle: editingTitle,
+      courseId: editingId,
+      department: editingDept,
+      description: editingDesc,
     };
     console.log(data);
 
-    // updateCourse(editingCourseId, data);
+    updateCourse(editingCourseId, data);
     setSnackbarMessage("Successfully Edited Course Information");
     setOpenSnackbar(true);
     closeEditDialogue();
+    const title = editingTitle + " " + editingId;
+    const message = editingDept + "\n" + editingDesc;
+    sendUpdateEmail(title, message, editingCourseId);
   };
 
   return (
@@ -433,7 +437,7 @@ function Homepage() {
             }}
             variant="standard"
             onChange={(e) => {
-              setNewCourseTitle(e.target.value);
+              setEditingTitle(e.target.value);
             }}
           />
           <TextField
@@ -447,7 +451,7 @@ function Homepage() {
             }}
             variant="standard"
             onChange={(e) => {
-              setNewCourseId(e.target.value);
+              setEditingId(e.target.value);
             }}
           />
           <TextField
@@ -461,7 +465,7 @@ function Homepage() {
             variant="standard"
             fullWidth
             onChange={(e) => {
-              setNewCourseDept(e.target.value);
+              setEditingDept(e.target.value);
             }}
           />
           <TextField
@@ -477,7 +481,7 @@ function Homepage() {
             fullWidth
             multiline
             onChange={(e) => {
-              setNewCourseDesc(e.target.value);
+              setEditingDesc(e.target.value);
             }}
           />
         </DialogContent>
