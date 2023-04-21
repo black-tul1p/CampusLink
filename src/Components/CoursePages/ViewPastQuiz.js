@@ -40,6 +40,7 @@ function ViewPastQuiz(props) {
   const [isGraded, setIsGraded] = useState(false);
   const [opened, setOpened] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [isValidInput, setIsValidInput] = useState(true);
 
   const setFields = () => {
     setStudentAnswers(props.quizDetails.studentAnswers);
@@ -161,8 +162,13 @@ function ViewPastQuiz(props) {
                   className="add-button"
                   style={{ backgroundColor: "green" }}
                   onClick={() => {
-                    setIsEdit(false);
-                    UpdateAttempt();
+                    if (isValidInput) {
+                      setIsEdit(false);
+                      UpdateAttempt();
+                    } else {
+                      alert("invalid input!");
+                    }
+                    
                   }}
                   variant="contained"
                 >
@@ -222,7 +228,13 @@ function ViewPastQuiz(props) {
                           type="text"
                           defaultValue={studentAnswers[index].points}
                           onChange={(e) => {
-                            changeScore(e, index);
+                            const inputValue = e.target.value; 
+                            const num = question.points; 
+                            if (parseInt(inputValue) <= num && parseInt(inputValue) > 0 && inputValue === '' || !/^[0-9]+$/.test(inputValue)) { 
+                              changeScore(e, index);
+                            } else {
+                              setIsValidInput(false);
+                            }
                           }}
                           style={{ width: "1.6em" }}
                         />
@@ -252,7 +264,14 @@ function ViewPastQuiz(props) {
                           type="text"
                           defaultValue={studentAnswers[index].points}
                           onChange={(e) => {
-                            changeScore(e, index);
+                            const inputValue = e.target.value; 
+                            const num = question.points; // Replace with the actual value of num variable
+                            if (parseInt(inputValue) <= num) { // Convert input value to integer and compare with num
+                              // Input value is greater than num, do something
+                              changeScore(e, index);
+                            } else {
+                              setIsValidInput(false);
+                            }
                           }}
                           style={{ width: "1.6em" }}
                         />
