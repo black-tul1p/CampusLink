@@ -10,7 +10,7 @@ export async function sendAnnouncementNotification(title, description, courseId)
     const courseDetails = await getCourseDetailsById(courseId);
     const students = await Promise.all(courseDetails.enrolledStudents.map(getDoc));
     const recipientEmails = students.map((s) => s.data().email);
-    console.log(recipientEmails);
+    //console.log(recipientEmails);
 
     recipientEmails.forEach(email => {
         const templateParams = {

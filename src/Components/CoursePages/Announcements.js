@@ -15,6 +15,8 @@ import {
   Select,
   MenuItem,
   FormControl,
+  FormControlLabel,
+  Switch,
   InputLabel,
 } from "@mui/material";
 
@@ -27,6 +29,7 @@ function Announcements() {
   const [announcements, setAnnouncements] = useState([]);
   const [title, setTitle] = useState("");
   const [role, setRole] = useState("");
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +48,9 @@ function Announcements() {
   const clickPost = async () => {
     try {
       await createAnnouncement(title, description, courseID);
-      await sendAnnouncementNotification(title, description, courseID);
+      if (notificationsEnabled) {
+        await sendAnnouncementNotification(title, description, courseID);
+      }
       //alert("Announcement Successfully Posted!");
       setTitle("");
       setDescription("");
@@ -109,6 +114,17 @@ function Announcements() {
                 }}
               />
             </div>
+            <FormControlLabel 
+              control={
+                <Switch
+                  defaultChecked 
+                  onChange={event=>{
+                    setNotificationsEnabled(event.target.checked);
+                  }}
+                />
+              }
+              label="Send email notification to students"
+            />
             <Button
               onClick={clickPost}
               variant="contained"
