@@ -80,7 +80,8 @@ function AssignmentContent() {
     const description = location.state?.assignmentDescript;
     const submissionLimit = location.state?.assignmentSubLim;
     const courseDocId = location.state?.courseDocId;
-    console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit);
+    const assignmentId = location.state?.assgnmtId;
+    console.log("Stuff should display here " + title + " " + dueDate + " " + description + " " + submissionLimit + " " + assignmentId);
 
     //Get courseTitle and courseId from courseDocId
     const getCourseDetails = async () => {
@@ -89,7 +90,7 @@ function AssignmentContent() {
         setCourseTitle(courseTitleT);
         const courseIdT = course.courseId;
         setCourseId(courseIdT);
-    }
+    };
     getCourseDetails();
 
     //Get user info
@@ -97,21 +98,27 @@ function AssignmentContent() {
         const thisUser = await getCurrentUser();
         const thisUserRole = await getUserRole();
         setUserInfo(thisUser.email);
-        setUserType(thisUserRole)
-
-
-    }
+        setUserType(thisUserRole);
+    };
     getUserInfo();
 
-
-
-    
+    /*
+    const isBookmarked = () => {
+        try {
+        if (user.bookmarks.includes(assignmentId)) setBookmarked(true);
+        console.log("Bookmarked: " + bookmarked);
+        } catch (error) {
+            setBookmarked(false);
+        }
+    };
+    isBookmarked();
+    */
 
     //file location and set up states
     const fileLocation =  courseTitle + courseId + "/" + "Assignments/" + title + "/studentEmail:" + userInfo;
     const fileListRef = ref(storage, fileLocation + '/');
     const [fileUpload, setFileUpload] = useState(null);
-	const [fileList, setFileList] = useState([])
+	const [fileList, setFileList] = useState([]);
 
 
 
@@ -120,9 +127,9 @@ function AssignmentContent() {
    
     const getCurrentSubmissions  = async () => {
         const allFiles = await list(fileListRef);
-        console.log(allFiles.items.length)
+        console.log(allFiles.items.length);
         setSubCount(allFiles.items.length);
-     }
+     };
      getCurrentSubmissions();
 
      
@@ -183,7 +190,7 @@ function AssignmentContent() {
 		    </label> 
 		    <button onClick={uploadFile}>Submit</button>  
 		    </div>
-	} 
+	};
 
     //Temp test for navigation to regrade request page
     function Regrade() {
@@ -193,13 +200,13 @@ function AssignmentContent() {
             </button>
 
         </div>
-    }
+    };
     
     const toRegrade = (e) => {
-        const assignmentTitle = title
-        const assignmentDueDate = dueDate
-        const assignmentDescript = description
-        const assignmentSubLim = submissionLimit
+        const assignmentTitle = title;
+        const assignmentDueDate = dueDate;
+        const assignmentDescript = description;
+        const assignmentSubLim = submissionLimit;
       //  console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim); 
         if (userType == "instructor") {
             navigate("/regradeReply", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseTitle, courseId, userInfo}});
@@ -208,7 +215,7 @@ function AssignmentContent() {
         }
         
        //redirecting("/grades");
-    }
+    };
 
     
     return(

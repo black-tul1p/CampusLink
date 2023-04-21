@@ -165,8 +165,9 @@ function Assignments() {
     const assignmentDueDate = e.currentTarget.parentElement.getAttribute("assignmentduedate");
     const assignmentDescript = e.currentTarget.parentElement.getAttribute("assignmentdescript");
     const assignmentSubLim = e.currentTarget.parentElement.getAttribute("assignmentsublim");
-    console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim);
-    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId}});
+    const assgnmtId = e.currentTarget.parentElement.getAttribute("assignmentid");
+    console.log(assignmentTitle + " " + assignmentDueDate + " " + assignmentDescript + " " + assignmentSubLim + " " + assgnmtId);
+    navigate("/assignmentContent", { state: {assignmentTitle, assignmentDueDate, assignmentDescript, assignmentSubLim, courseDocId, assgnmtId}});
   }
 
   function formatDate(date) {
@@ -239,6 +240,7 @@ function Assignments() {
                         assignmentdescript={assignment.description}
                         assignmentduedate={assignment.dueDate.toDate()}
                         assignmentsublim={assignment.submissionLimit}
+                        assignmentid={assignment.id}
                         >
                         <Button
                           className="Mini-button"
@@ -281,6 +283,7 @@ function Assignments() {
                           assignmentduedate={new Date(assignment.dueDate.seconds * 1000)}
                           //assignmentduedate={assignment.dueDate.toDate()}
                           assignmentsublim={assignment.submissionLimit}
+                          assignmentid={assignment.id}
                           >
                           <Button
                             className="Mini-button"
