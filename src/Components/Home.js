@@ -193,11 +193,11 @@ function Homepage() {
                   forcourse={course.databaseId}
                   
                   onClick={() => {
-                    /*
+                    
                     const courseId = course.databaseId;
                     navigate("/announcements", { state: { courseId } });
-                    */
                     
+                    /*
                     setEditingCourseId(course.databaseId);
                     setEditingTitle(course.courseTitle);
                     setEditingId(course.courseId);
@@ -208,16 +208,21 @@ function Homepage() {
                     setNewCourseDept(editingDept);
                     setNewCourseDesc(editingDesc);
                     openEditDialouge();
-                    
+                    */
                   }}
                 >
                   {role === "instructor" && ( // Display delete button only for instructors
                     <div>
                     <div className="edit-course-container" onClick={(event) => {
-                      const courseid = event.currentTarget.parentElement.getAttribute('forcourse');
-                      const courseTitle = event.currentTarget.parentElement.getAttribute('coursetitle');
-                      setEditingCourseId(courseid);
-                      setEditingTitle(courseTitle);
+                      setEditingCourseId(course.databaseId);
+                      setEditingTitle(course.courseTitle);
+                      setEditingId(course.courseId);
+                      setEditingDept(course.department);
+                      setEditingDesc(course.description);
+                      setNewCourseTitle(editingTitle);
+                      setNewCourseId(editingId);
+                      setNewCourseDept(editingDept);
+                      setNewCourseDesc(editingDesc);
                       openEditDialouge();
                       }} >
                         <EditIcon fontSize="large" /> 
