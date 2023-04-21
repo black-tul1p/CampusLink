@@ -67,6 +67,7 @@ function Quizzes() {
       if (res !== null) setStudentAnswers(res);
       else setStudentAnswers({});
     });
+    console.log("Quiz:", quiz);
   };
 
   const handleOpened = () => {
