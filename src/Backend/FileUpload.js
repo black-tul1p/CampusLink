@@ -6,7 +6,7 @@ import {v4} from 'uuid'
 import { getUserRole } from "./user";
 import "./TempFile.css";
 import "../Styles/App.css"
-import { Button } from "@mui/material";
+import { Button, Snackbar } from "@mui/material";
 import { useLocation} from "react-router-dom";
 import { getCourseDetailsById } from "./course";
 
@@ -37,7 +37,9 @@ function FileUpload() {
 	//upload file to firebase
 	const uploadFile = () => {
 		if (fileUpload == null) {
-			alert("No file selected");
+			//alert("No file selected");
+			setSnackbarMessage("No file selected!");
+            setOpenSnackbar(true);
 			LoadFiles();
 			return;
 		}
@@ -45,14 +47,18 @@ function FileUpload() {
 		//very rough but temp file type checker
 		var fileCheck = "" + fileUpload.type;
 		if (!fileCheck.includes("pdf")) {
-			alert("Error: Only PDF files are accepted. Please try again with a pdf file");
+			//alert("Error: Only PDF files are accepted. Please try again with a pdf file");
+			setSnackbarMessage("Error: Only PDF files are accepted! Please try again with a pdf file.");
+            setOpenSnackbar(true);
 			return;
 		}
 
 		//use + v4() for random chars
 		const fileRef = ref(storage, fileLocation + '/' + fileUpload.name);		
 		uploadBytes(fileRef, fileUpload).then(() => {
-			alert("File Uploaded!");
+			//alert("File Uploaded!");
+			setSnackbarMessage("File Uploaded!");
+            setOpenSnackbar(true);
 			setFileUpload(null);
 			LoadFiles();
 			//console.log(fileUpload)
@@ -85,14 +91,18 @@ function FileUpload() {
 	const [mp4FileList, setMp4FileList] = useState([]);
 	const uploadMP4 = () => {
 		if (mp4File == null) {
-			alert("No MP4 selected");
+			//alert("No MP4 selected");
+			setSnackbarMessage("No MP4 selected!");
+            setOpenSnackbar(true);
 			return;
 		}
 
 		//very rough but temp file type checker
 		var fileCheck = "" + mp4File.type;
 		if (!fileCheck.includes("mp4")) {
-			alert("Error: Only mp4 files are accepted. Please try again with a mp4 file");
+			//alert("Error: Only mp4 files are accepted. Please try again with a mp4 file");
+			setSnackbarMessage("Error: Only mp4 files are accepted! Please try again with a mp4 file");
+            setOpenSnackbar(true);
 			console.log(mp4File);
 			return;
 		}
@@ -100,7 +110,9 @@ function FileUpload() {
 		//use + v4() for random chars
 		const fileRef = ref(storage, fileLocation + '/mp4Videos/' + mp4File.name);
 		uploadBytes(fileRef, mp4File).then(() => {
-			alert("MP4 Uploaded!");
+			//alert("MP4 Uploaded!");
+			setSnackbarMessage("MP4 Uploaded!");
+            setOpenSnackbar(true);
 			LoadMp4();
 			setMP4Upload(null);
 		})
@@ -183,6 +195,13 @@ function FileUpload() {
 		LoadMp4();
 	}, []); 
 
+	const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
+
 	
 	//main return on page
 	return(
@@ -201,7 +220,14 @@ function FileUpload() {
 				//return <iframe className="Newimg" src={newFile} alt="this one is a pdf" width="5000" height="500" name="Test Name" allowFullScreen={true} />;
 				//return <p>Open a PDF file <a href={newFile}>example</a>.</p>;
 				return <embed src={newFile} height="300" display="grid" />	
-			})} 
+			})}
+
+				<Snackbar
+                  open={openSnackbar}
+                  autoHideDuration={2000}
+                  onClose={handleCloseSnackbar}
+                  message={snackbarMessage}
+                />
 
    		</div>
 	);

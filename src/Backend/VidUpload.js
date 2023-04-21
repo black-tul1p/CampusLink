@@ -8,7 +8,7 @@ import ReactPlayer from "react-player"
 import { getUserRole } from "./user";
 import "./TempFile.css";
 import "../Styles/App.css"
-import { Button } from "@mui/material";
+import { Button, Snackbar } from "@mui/material";
 import { color } from "@mui/system";
 import "../Styles/Announcements.css";
 
@@ -30,20 +30,26 @@ function VidUpload() {
         
         
         if (buffer == null) {
-            alert("No video selected")
+            //alert("No video selected")
+            setSnackbarMessage("No video selected!");
+            setOpenSnackbar(true);
             return;
         }
 
         const bufferTest = buffer + "";
 
         if (!bufferTest.includes("youtube")) {
-            alert("Error please enter a url containing a video");
+            //alert("Error please enter a url containing a video");
+            setSnackbarMessage("Error please enter a url containing a video!");
+            setOpenSnackbar(true);
             return;
         }
 
         setNewVid(buffer);
         buffer = null
-        alert("Video uploaded!")
+        //alert("Video uploaded!")
+        setSnackbarMessage("Video Uploaded!");
+        setOpenSnackbar(true);
         
        
     }
@@ -71,7 +77,12 @@ function VidUpload() {
 
 	} 
 
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
 
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
 
     return(
         <div className="classInfo">
@@ -79,6 +90,13 @@ function VidUpload() {
            
 
             <ReactPlayer url={newVid} />
+
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={2000}
+                onClose={handleCloseSnackbar}
+                message={snackbarMessage}
+            />
             
         </div>
     );

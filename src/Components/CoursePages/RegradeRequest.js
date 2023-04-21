@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CourseNavBar from "../CourseNavBar";
 import ErrorBox from "../Error";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button, Typography, TextField, InputAdornment} from "@mui/material";
+import { Button, Typography, TextField, InputAdornment, Snackbar} from "@mui/material";
 import styled from "@emotion/styled";
 import { Timestamp } from "@firebase/firestore";
 import "../../Styles/Assignments.css";
@@ -98,14 +98,24 @@ function RegradeRequest() {
     </div>
     }
 
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+      };
+  
+
     
 
     const submitRequest = async () => {
       
         //stop request if reason is empty or full of only spaces
         if (reason === ""  ||  reason === null || reason.replace(" ", null).length === 0)  {
-            alert("Please provide a reason before submitting the request!");
-            console.log(reason.length)
+            //alert("Please provide a reason before submitting the request!");
+            setSnackbarMessage("Please provide a reason before submitting the request!");
+            setOpenSnackbar(true);
+            console.log(reason.length);
             return;
         } 
         console.log(reason.replace(" ", null).length)
@@ -123,17 +133,22 @@ function RegradeRequest() {
         try {
             const docRef = await addDoc(collection(firestore, "regrade_requests"), data);
             //console.log("Regrade: ", docRef.id);            
-            alert("Regrade Request successfully submitted!")
+            //alert("Regrade Request successfully submitted!")
+            setSnackbarMessage("Request successfully submitted!");
+            setOpenSnackbar(true);
 
         } catch (e) {
             console.error("Error creating regrade request")
-            alert("There was a problem completing the regrade request!")
+            //alert("There was a problem completing the regrade request!")
+            setSnackbarMessage("There was a problem completing the regrade request!");
+            setOpenSnackbar(true);
         }
 
 
 
     }
 
+    
 
 
 
@@ -178,7 +193,12 @@ function RegradeRequest() {
             </p>
 
             
-
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={2000}
+                onClose={handleCloseSnackbar}
+                message={snackbarMessage}
+            />
             
         
                 

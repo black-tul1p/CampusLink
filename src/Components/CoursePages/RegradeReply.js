@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, createRef } from "react";
 import CourseNavBar from "../CourseNavBar";
 import ErrorBox from "../Error";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button, Typography, TextField, InputAdornment} from "@mui/material";
+import { Button, Typography, TextField, InputAdornment, Snackbar} from "@mui/material";
 import styled from "@emotion/styled";
 import { Timestamp } from "@firebase/firestore";
 import "../../Styles/Assignments.css";
@@ -131,6 +131,13 @@ function RegradeReply() {
   const [rStudent, setRStudent] = useState("");
   const [rReason, setRReason] = useState("");
   const [rRef, setRRef] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
 
     const displayRequest = (e) => {
@@ -155,13 +162,17 @@ function RegradeReply() {
       try {
 
         if (rAssign == "") {
-          alert("Error: Please select a request to reply to first!");
+          //alert("Error: Please select a request to reply to first!");
+          setSnackbarMessage("Please select a request to reply to first!");
+          setOpenSnackbar(true);
           return;
         }
 
         if (reply2 === ""  ||  reply2 === null || reply2.replace(" ", "").length === 0)  {
-          alert("Error: Please provide a reason before submitting the request!");
+          //alert("Error: Please provide a reason before submitting the request!");
           //console.log(reply2.length)
+          setSnackbarMessage("Please provide a reason before submitting the request!");
+          setOpenSnackbar(true);
           return;
         } 
 
@@ -173,7 +184,9 @@ function RegradeReply() {
           reply: reply2,
           completed: true,
         });
-        alert("Reply Successfully Submitted!!");
+        //alert("Reply Successfully Submitted!!");
+        setSnackbarMessage("Reply Sucessfully Submitted!");
+        setOpenSnackbar(true);
         setRAssign("");
         setRStudent("");
         setRReason("");
@@ -269,9 +282,15 @@ function RegradeReply() {
                 }}
                 />
                 <Button onClick={submitReply}>Submit Reply</Button>
+                <Snackbar
+                  open={openSnackbar}
+                  autoHideDuration={2000}
+                  onClose={handleCloseSnackbar}
+                  message={snackbarMessage}
+                />
             </p>
 
-           
+            
 
             
 
