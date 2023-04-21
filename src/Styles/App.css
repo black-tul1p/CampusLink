@@ -50,8 +50,6 @@ body {
   gap: 1em;
 }
 
-/********************************** Login Page **********************************/
-
 .Banner-logo {
   max-width: 50vw;
 }
@@ -69,7 +67,7 @@ body {
 .Default-card .Login-form {
   display: flex;
   flex-direction: column;
-  width: 50vw;
+  width: clamp(25rem, 35vw, 40rem);
   gap: 1em;
 }
 
