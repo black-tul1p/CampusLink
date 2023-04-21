@@ -1,11 +1,15 @@
 import React from 'react'
 import * as dates from 'date-arithmetic'
 import PropTypes from 'prop-types'
-import { List, ListItem, ListItemText } from '@mui/material';
+import { ListItemText } from '@mui/material';
 import dayjs from 'dayjs'
 import Divider from '@mui/material/Divider';
-import ListItemButton from '@mui/material/ListItemButton';
-import { PropaneSharp } from '@mui/icons-material';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableContainer from '@mui/material/TableContainer';
+import { Typography } from "@mui/material";
 
 function rangeFunc(start, end, unit = 'day') {
   let current = start
@@ -34,26 +38,35 @@ export const CustomListView = ({ accessors, localizer, length, date, events, ...
     )
     return events.map((event, idx) => {
       return (
-        <div key={idx}>
-          {idx === 0 && (<>
-            <ListItem disablePadding>
-            <ListItemButton onClick={()=>{
+        <TableRow key={idx} 
+            hover
+            onClick={()=>{
                 props.onSelectEvent(event);
-            }}>
-                <ListItemText 
-                    style={{color: "white"}}
-                    primary={localizer.format(day, 'MMMM DD')}
-                />
-                <ListItemText
-                    style={{color: "white"}}
-                    primary={event.title}
-                    secondary={event.resource.courseName}
-                />
-            </ListItemButton>
-            </ListItem>
+            }}
+        >
+          {idx === 0 && (<>
+                <TableCell style={{color: "white"}}>
+                    {localizer.format(day, 'MMMM DD')}
+                </TableCell>
+
+                <TableCell style={{color: "white"}}> {(()=>{
+                    switch (event.resource.type) {
+                        case "quiz": return "Quiz";
+                        case "assignment": return "Assignment";
+                        case "custom": return "Event";
+                    }
+                })()} </TableCell>
+
+                <TableCell>
+                    <ListItemText
+                        style={{color: "white"}}
+                        primary={event.title}
+                        secondary={event.resource.courseName}
+                    />
+                </TableCell>
             <Divider /> 
           </>)}
-        </div>
+        </TableRow>
       )
     }, [])
   }
@@ -63,15 +76,32 @@ export const CustomListView = ({ accessors, localizer, length, date, events, ...
   events = events.filter((event) => inRange(event, date, end, accessors))
   events.sort((a, b) => +accessors.start(a) - +accessors.start(b))
 
-  return (
-    <div>
-    <List style={{color: "white"}}>
-      {events.length !== 0
-        ? range.map((day, idx) => renderDay(day, events, idx))
-        : 'No events this month'}
-    </List>
-    </div>
-  )
+  if (events.length !== 0) {
+    return (
+        <TableContainer style={{width: "100%"}}>
+            <colgroup>
+                <col width="33%" />
+                <col width="33%" />
+                <col width="33%" />
+            </colgroup>
+            <TableHead>
+                <TableRow>
+                    <TableCell><Typography variant="h5">Date</Typography></TableCell>
+                    <TableCell><Typography variant="h5">Type</Typography></TableCell>
+                    <TableCell><Typography variant="h5">Name</Typography></TableCell>
+                    <TableCell/>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+            {range.map((day, idx) => renderDay(day, events, idx))}
+            </TableBody>
+        </TableContainer>
+    )
+  } else {
+      return (
+        <Typography variant="h5" style={{color: "white"}}>No events this month</Typography>
+      )
+  }
 }
 
 CustomListView.title = (start, { localizer }) => {
