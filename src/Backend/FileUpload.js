@@ -41,6 +41,7 @@ function FileUpload() {
 			setSnackbarMessage("No file selected!");
             setOpenSnackbar(true);
 			LoadFiles();
+			LoadMp4();
 			return;
 		}
 
@@ -50,6 +51,8 @@ function FileUpload() {
 			//alert("Error: Only PDF files are accepted. Please try again with a pdf file");
 			setSnackbarMessage("Error: Only PDF files are accepted! Please try again with a pdf file.");
             setOpenSnackbar(true);
+			LoadMp4();
+			LoadFiles();
 			return;
 		}
 
@@ -61,6 +64,7 @@ function FileUpload() {
             setOpenSnackbar(true);
 			setFileUpload(null);
 			LoadFiles();
+			LoadMp4();
 			//console.log(fileUpload)
 		})
 
@@ -90,10 +94,19 @@ function FileUpload() {
 	const [mp4File, setMP4Upload] = useState([]);
 	const [mp4FileList, setMp4FileList] = useState([]);
 	const uploadMP4 = () => {
+
+		if (userRole === "student") {
+			LoadMp4();
+			LoadFiles();
+			return;
+		}
+
 		if (mp4File == null) {
 			//alert("No MP4 selected");
 			setSnackbarMessage("No MP4 selected!");
             setOpenSnackbar(true);
+			LoadMp4();
+			LoadFiles();
 			return;
 		}
 
@@ -104,6 +117,8 @@ function FileUpload() {
 			setSnackbarMessage("Error: Only mp4 files are accepted! Please try again with a mp4 file");
             setOpenSnackbar(true);
 			console.log(mp4File);
+			LoadMp4();
+			LoadFiles();
 			return;
 		}
 
@@ -114,6 +129,7 @@ function FileUpload() {
 			setSnackbarMessage("MP4 Uploaded!");
             setOpenSnackbar(true);
 			LoadMp4();
+			LoadFiles();
 			setMP4Upload(null);
 		})
 
@@ -149,6 +165,7 @@ function FileUpload() {
 	//display upload buttons if the user is not a student
 	function ModifyFileDisplay() {
 		checkUserRoles();
+		
 		if (userRole != "student") {
 			return <div>
 
@@ -186,6 +203,11 @@ function FileUpload() {
 				<button onClick={uploadMP4}>Upload MP4</button>
 		
 			</div>
+			} else {
+				return <div>
+					
+				<button onClick={uploadMP4}>Load Info</button>
+				</div>
 			}
 	} 
 
@@ -207,6 +229,7 @@ function FileUpload() {
 	return(
    		<div>
 			<ModifyFileDisplay /> 
+			
 
 			{/*Display uploaded pdfs*/}
 			{fileList.map((newFile) => {
@@ -228,6 +251,8 @@ function FileUpload() {
                   onClose={handleCloseSnackbar}
                   message={snackbarMessage}
                 />
+
+			
 
    		</div>
 	);
