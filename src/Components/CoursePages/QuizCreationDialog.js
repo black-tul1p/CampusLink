@@ -318,7 +318,7 @@ export function QuizCreationDialog(props) {
           {/* Questions List */}
 
           <div style = {{padding: '1% 5%'}}>
-          <TableContainer>
+          <TableContainer style={{color: "black"}}>
             <Table sx={{ minWidth: 650 }} >
             <colgroup>
               <col width="33%" />
@@ -327,9 +327,9 @@ export function QuizCreationDialog(props) {
             </colgroup>
             <TableHead>
               <TableRow>
-                <TableCell>Question</TableCell>
-                <TableCell>Accepted Answers</TableCell>
-                <TableCell>Points</TableCell>
+                <TableCell style={{color: "black"}}>Question</TableCell>
+                <TableCell style={{color: "black"}}>Accepted Answers</TableCell>
+                <TableCell style={{color: "black"}}>Points</TableCell>
                 <TableCell/>
               </TableRow>
             </TableHead>
@@ -337,10 +337,10 @@ export function QuizCreationDialog(props) {
 
               {quizQuestions.map((question, index)=><>
                 <TableRow>
-                  <TableCell>
+                  <TableCell style={{color: "black"}}>
                     <div style={{display: "flex", flexDirection: "row"}}>
                       <IconButton
-                      sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
+                      sx={{"& .MuiSvgIcon-root": { color: "gray" }}}
                       style={{margin: "auto 10px auto 0"}}
                       onClick={()=>{
                         setQuizQuestions(quizQuestions.filter(quizQuestion => quizQuestion !== question))
@@ -348,16 +348,16 @@ export function QuizCreationDialog(props) {
                       >
                         <RemoveCircleIcon/> 
                       </IconButton>
-                      <ListItemText primary={question.text} secondary={question.type}/>
+                      <ListItemText primary={question.text} secondary={<Typography style={{color: "#555"}}>{question.type}</Typography>}/>
                     </div>
                   </TableCell>
-                  <TableCell>{
+                  <TableCell style={{color: "black"}}>{
                     question.manual ? 
                       "Graded Manually" : 
                       question.answers.map(answr => {return '"' + answr + '"'}).join(", ")
                   }</TableCell>
-                  <TableCell>{question.points + " pts"}</TableCell>
-                  <TableCell>
+                  <TableCell style={{color: "black"}}>{question.points + " pts"}</TableCell>
+                  <TableCell style={{color: "black"}}>
                     <Button onClick={()=>{
                       setDefaultQuestion(question);
                       setEditingIndex(index);
@@ -375,6 +375,7 @@ export function QuizCreationDialog(props) {
         open={Boolean(questionType)}
         onCancel={()=>{setQuestionType(null);}}
         onSave={(question)=>{
+          if (question.answers === null) question.answers = [];
           setQuizQuestions([...quizQuestions, question])
           setQuestionType(null)
         }}
@@ -434,21 +435,21 @@ function QuestionCreationDialog(props) {
     switch (props.type) {
       case "True or False": return (
         !gradeManually && <>
-          <DialogTitle>Answer</DialogTitle>
+          <DialogTitle style={{color: "#333"}}>Answer</DialogTitle>
           <ToggleButtonGroup
             color="primary"
-            value={answers[0]}
+            value={answers !== null ? answers[0] : 'false'}
             exclusive
             onChange={(event, string) => {setAnswers([string]);}}
             aria-label="Platform"
           >
-            <ToggleButton disableRipple value="true" >True</ToggleButton>
-            <ToggleButton disableRipple value="false">False</ToggleButton>
+            <ToggleButton style={{color: "#333"}} disableRipple value="true" >True</ToggleButton>
+            <ToggleButton style={{color: "#333"}} disableRipple value="false">False</ToggleButton>
           </ToggleButtonGroup>
         </>
       );
       case "Multiple Choice": return (<>
-          <DialogTitle>Answers</DialogTitle>
+          <DialogTitle style={{color: "#333"}}>Answers</DialogTitle>
           {choices.map((choice, index) => <>
             <div style={{display: "flex"}}>
               {!gradeManually &&
@@ -503,11 +504,12 @@ function QuestionCreationDialog(props) {
           "& .MuiPaper-root": {
             width: "100%",
             maxWidth: "750px",
-            padding: "10px"
+            padding: "10px",
+            backgroundColor: "#EEE"
           },
         },
       }}>
-        <DialogTitle>{props.title}</DialogTitle>
+        <DialogTitle sx={{color: "#333"}}>{props.title}</DialogTitle>
         <TextField
           label="Question Text"
           sx={{ margin : '5px', width: "50%", 
@@ -536,7 +538,7 @@ function QuestionCreationDialog(props) {
           />
 
           <FormControlLabel
-            style={{alignSelf: "flex-end", marginLeft: '10%', color: "#333"}}
+            style={{alignSelf: "flex-end", marginLeft: '10%', color: "#000"}}
             control={
               <Checkbox
                 sx={{"& .MuiSvgIcon-root": { color: "unset" }}}
