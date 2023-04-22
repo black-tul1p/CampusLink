@@ -70,18 +70,17 @@ const QuizPopup = (props) => {
   const [attempt, setAttempt] = useState({ ...props.answers });
   const [started, setStarted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  // const [clicked, setClicked] = useState(false);
   const [error, setError] = useState(null);
   const newAttempt = attempt.answers?.length > 0 ? false : true;
   const usedAllAttempts =
-    !quiz.attempts || attempt.attemptNumber >= quiz.attempts;
+    quiz.attempts && attempt.attemptNumber >= quiz.attempts;
   const late =
     props.quiz.deadline !== null
       ? props.quiz.deadline < new Date()
         ? true
         : false
       : false;
-  const [viewOnly, setViewOnly] = useState(late || usedAllAttempts);
+  const [viewOnly, setViewOnly] = useState(late && usedAllAttempts);
   const startTime = new Date();
 
   const handleAttemptStart = () => {
@@ -187,14 +186,9 @@ const QuizPopup = (props) => {
           <Typography sx={{ ml: 2, flex: 1 }} variant="h4" component="div">
             {props.quiz ? props.quiz.name : ""}
           </Typography>
-          {!viewOnly && !submitted && (
+          {started && !submitted && (
             <Countdown
-              timestamp={
-                new Date(
-                  attempt.attemptedOn.seconds * 1000 +
-                    attempt.attemptedOn.nanoseconds / 1000000
-                )
-              }
+              timestamp={attempt.attemptedOn}
               minutes={quiz.timeLimit}
               onEnd={setSubmitted}
             />
