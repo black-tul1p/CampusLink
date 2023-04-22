@@ -4,27 +4,33 @@ import {
   getAllQuizDeadlines,
   createEvent,
   getAllEvents,
-  removeEvent
+  removeEvent,
 } from "../Backend/calendar";
 import moment from "moment";
 import styled from "@emotion/styled";
-import { CircularProgress, Dialog, Typography, DialogTitle, DialogActions } from "@mui/material";
+import {
+  CircularProgress,
+  Dialog,
+  Typography,
+  DialogTitle,
+  DialogActions,
+} from "@mui/material";
 import { format } from "date-fns";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import {CustomListView} from "./ListView";
-import TextField from '@mui/material/TextField';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { CustomListView } from "./ListView";
+import TextField from "@mui/material/TextField";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import dayjs from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Button from '@mui/material/Button';
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Button from "@mui/material/Button";
 import { getUserRole } from "../Backend/user";
 import { getCourseDetailsById, getUserCourses } from "../Backend/course";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const localizer = momentLocalizer(moment);
 
@@ -58,9 +64,24 @@ const StyledCalendar = styled(Calendar)`
   border-radius: 2rem;
   padding: 2rem;
   background: rgb(255, 255, 255, 0.15);
+  color: white;
 
-  & .rbc-btn-group {
+  & .rbc-event-content {
+    color: black;
+  }
+
+  & .rbc-btn-group button {
+    color: white;
     border-radius: 1rem;
+  }
+
+  & .rbc-btn-group button {
+    color: white;
+    border-radius: 1rem;
+
+    & .rbc-active {
+      color: black;
+    }
   }
 
   & .rbc-month-view {
@@ -74,6 +95,10 @@ const StyledCalendar = styled(Calendar)`
 
   & .rbc-off-range-bg {
     background: rgba(0, 0, 0, 0.5);
+  }
+
+  & .rbc-header {
+    color: white;
   }
 `;
 
@@ -97,8 +122,7 @@ const renderPopupContent = (date, assignments, quizzes, customEvents) => {
       format(new Date(q.deadline), "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
   );
   const upcomingCustoms = customEvents.filter(
-    (c) =>
-      format(new Date(c.date), "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
+    (c) => format(new Date(c.date), "yyyy-MM-dd") === format(date, "yyyy-MM-dd")
   );
 
   const groupedAssignments = groupBy(assignmentsDue, "courseName");
@@ -142,9 +166,7 @@ const renderPopupContent = (date, assignments, quizzes, customEvents) => {
           {customEvents.map((c) => (
             <div key={c.name}>
               <Typography variant="body1">{c.name}</Typography>
-              <Typography variant="caption">
-                {c.desc}
-              </Typography>
+              <Typography variant="caption">{c.desc}</Typography>
             </div>
           ))}
         </div>
@@ -171,9 +193,9 @@ const CalendarPage = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    getUserRole().then((role)=>{
+    getUserRole().then((role) => {
       setRole(role);
-      getUserCourses(role).then(courses => {
+      getUserCourses(role).then((courses) => {
         setCourses(courses);
         setNewEventCourse(courses[0].databaseId);
       });
@@ -218,10 +240,10 @@ const CalendarPage = () => {
         allDay: true,
         resource: { type: "custom", courseName: e.courseName },
         course: e.courseId,
-        id: e.id
+        id: e.id,
       })),
     ]);
-  }, [assignments, quizzes, customEvents])
+  }, [assignments, quizzes, customEvents]);
 
   const eventStyleGetter = (event) => {
     let backgroundColor = "#ffbb33";
@@ -277,7 +299,12 @@ const CalendarPage = () => {
             }}
           >
             {selectedDate &&
-              renderPopupContent(selectedDate, assignments, quizzes, customEvents)}
+              renderPopupContent(
+                selectedDate,
+                assignments,
+                quizzes,
+                customEvents
+              )}
           </StyledDialog>
 
           <StyledDialog
@@ -291,70 +318,99 @@ const CalendarPage = () => {
                 padding: "10px 50px",
               },
             }}
-            style={{height: "50%"}}
-
+            style={{ height: "50%" }}
           >
-            {selectedDate && <>
-              <DialogTitle style={{padding: "10px"}}>Create New Event</DialogTitle>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                label="Date"
-                slotProps={{ textField: { variant: 'standard', } }}
-                defaultValue={dayjs(selectedDate)}
-                onChange={(date) => setNewEventDate(date.toDate())}
-              />
-              </LocalizationProvider>
-              <FormControl style={{margin: "10px 0"}}>
-                <InputLabel id="course-select-label">Course</InputLabel>
-                <Select
-                  labelId="course-select-label"
-                  label="Age"
+            {selectedDate && (
+              <>
+                <DialogTitle style={{ padding: "10px" }}>
+                  Create New Event
+                </DialogTitle>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    label="Date"
+                    slotProps={{ textField: { variant: "standard" } }}
+                    defaultValue={dayjs(selectedDate)}
+                    onChange={(date) => setNewEventDate(date.toDate())}
+                  />
+                </LocalizationProvider>
+                <FormControl style={{ margin: "10px 0" }}>
+                  <InputLabel id="course-select-label">Course</InputLabel>
+                  <Select
+                    labelId="course-select-label"
+                    label="Age"
+                    variant="standard"
+                    value={newEventCourse}
+                    onChange={(event) => {
+                      setNewEventCourse(event.target.value);
+                    }}
+                  >
+                    {courses.map((course) => (
+                      <MenuItem value={course.databaseId}>
+                        {course.courseTitle} {course.courseId}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <TextField
+                  label="Name"
                   variant="standard"
-                  value={newEventCourse}
-                  onChange={event => {
-                    setNewEventCourse(event.target.value)
+                  onChange={(e) => {
+                    setNewEventName(e.target.value);
                   }}
-                >
-                  {courses.map(course => (
-                    <MenuItem value={course.databaseId}>
-                      {course.courseTitle} {course.courseId}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <TextField
-                label="Name"
-                variant="standard"
-                onChange={e => {setNewEventName(e.target.value)}}
-              />
-              <TextField
-                label="Description"
-                variant="standard"
-                multiline
-                minRows="3"
-                onChange={e => {setNewEventDesc(e.target.value)}}
-              />
-              <DialogActions>
-                <Button style={{width: "50%"}} onClick={()=>{
-                  createEvent(newEventCourse, newEventDate, newEventName, newEventDesc).then(eventId=>{
-                    getCourseDetailsById(newEventCourse).then(courseDetails => {
-                      const newEvent = {
-                        name: newEventName,
-                        desc: newEventDesc,
-                        date: newEventDate,
-                        courseName: courseDetails.courseTitle + " " + courseDetails.courseId,
-                        courseId: newEventCourse,
-                        id: eventId
-                      }
-                      //setEvents([newEvent, ...events])
-                      setCustomEvents([newEvent, ...customEvents])
-                    });
-                  });
-                  setShowEventCreator(false)}}
-                >Add Event</Button>
-                <Button style={{width: "50%"}} onClick={()=>{setShowEventCreator(false)}}>Cancel</Button>
-              </DialogActions>
-            </>}
+                />
+                <TextField
+                  label="Description"
+                  variant="standard"
+                  multiline
+                  minRows="3"
+                  onChange={(e) => {
+                    setNewEventDesc(e.target.value);
+                  }}
+                />
+                <DialogActions>
+                  <Button
+                    style={{ width: "50%" }}
+                    onClick={() => {
+                      createEvent(
+                        newEventCourse,
+                        newEventDate,
+                        newEventName,
+                        newEventDesc
+                      ).then((eventId) => {
+                        getCourseDetailsById(newEventCourse).then(
+                          (courseDetails) => {
+                            const newEvent = {
+                              name: newEventName,
+                              desc: newEventDesc,
+                              date: newEventDate,
+                              courseName:
+                                courseDetails.courseTitle +
+                                " " +
+                                courseDetails.courseId,
+                              courseId: newEventCourse,
+                              id: eventId,
+                            };
+                            //setEvents([newEvent, ...events])
+                            setCustomEvents([newEvent, ...customEvents]);
+                          }
+                        );
+                      });
+                      setShowEventCreator(false);
+                    }}
+                  >
+                    Add Event
+                  </Button>
+                  <Button
+                    style={{ width: "50%" }}
+                    onClick={() => {
+                      setShowEventCreator(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </DialogActions>
+              </>
+            )}
           </StyledDialog>
           <StyledCalendar
             localizer={localizer}
@@ -362,21 +418,21 @@ const CalendarPage = () => {
             startAccessor="start"
             endAccessor="end"
             eventPropGetter={eventStyleGetter}
-            views={{month: true, week: true, agenda: CustomListView}}
-            messages={{agenda: 'List'}}
+            views={{ month: true, week: true, agenda: CustomListView }}
+            messages={{ agenda: "List" }}
             onSelectEvent={(event) => {
               setShowPopup(true);
               setSelectedDate(event.start);
             }}
-            selectable={role==="instructor"}
-            onSelectSlot={(slot)=>{
+            selectable={role === "instructor"}
+            onSelectSlot={(slot) => {
               setSelectedDate(slot.start);
               setNewEventDate(slot.start);
               setShowEventCreator(true);
             }}
-            onDelete={(event)=>{
-              setCustomEvents(customEvents.filter(e => event.id !== e.id));
-              removeEvent(event.course, event.id)
+            onDelete={(event) => {
+              setCustomEvents(customEvents.filter((e) => event.id !== e.id));
+              removeEvent(event.course, event.id);
             }}
             tooltipAccessor={(event) => {
               const date = format(event.start, "h:mm a");
