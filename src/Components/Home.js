@@ -254,10 +254,10 @@ function Homepage() {
                         setEditingId(course.courseId);
                         setEditingDept(course.department);
                         setEditingDesc(course.description);
-                        setNewCourseTitle(editingTitle);
-                        setNewCourseId(editingId);
-                        setNewCourseDept(editingDept);
-                        setNewCourseDesc(editingDesc);
+                        setNewCourseTitle(course.courseTitle);
+                        setNewCourseId(course.courseId);
+                        setNewCourseDept(course.department);
+                        setNewCourseDesc(course.description);
                         openEditDialogue();
                       }}
                     >
@@ -427,8 +427,7 @@ function Homepage() {
         <DialogContent>
           <DialogContentText></DialogContentText>
           <TextField
-            label={editingTitle}
-            defaultValue={editingTitle}
+            label={newCourseTitle}
             sx={{
               margin: "5px",
               width: "50%",
@@ -441,8 +440,7 @@ function Homepage() {
             }}
           />
           <TextField
-            label={editingId}
-            defaultValue={editingId}
+            label={newCourseId}
             sx={{
               margin: "5px",
               width: "25%",
@@ -455,8 +453,7 @@ function Homepage() {
             }}
           />
           <TextField
-            label={editingDept}
-            defaultValue={editingDept}
+            label={newCourseDept}
             sx={{
               margin: "5px",
               "& .MuiInputBase-input": { color: "white !important" },
@@ -469,8 +466,7 @@ function Homepage() {
             }}
           />
           <TextField
-            label={editingDesc}
-            defaultValue={editingDesc}
+            label={newCourseDesc}
             sx={{
               margin: "5px",
               "& .MuiInputBase-input": { color: "white !important" },
