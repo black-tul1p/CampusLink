@@ -17,7 +17,7 @@ import Admin from "./Admin";
 import AssignmentContent from "./CoursePages/AssignmentContent";
 import RegradeRequest from "./CoursePages/RegradeRequest";
 import Navbar from "./Navbar";
-import Bookmarks from "./CoursePages/Bookmarks"
+import Bookmarks from "./CoursePages/Bookmarks";
 import RegradeReply from "./CoursePages/RegradeReply";
 
 const Container = styled.div`
@@ -42,7 +42,7 @@ export const PageList = {
   Calendar: "/calendar",
   Admin: "/adminHome",
   AssignmentContent: "/assignmentContent",
-  Bookmarks : "/bookmarks",
+  Bookmarks: "/bookmarks",
   RegradeRequest: "/regradeRequest",
   RegradeReply: "/regradeReply",
 };
@@ -82,9 +82,9 @@ export default function Landing(props) {
   } else if (props.page === PageList.Bookmarks) {
     content = <Bookmarks theme={props} />;
   } else if (props.page === PageList.RegradeRequest) {
-    content = <RegradeRequest theme={props} />
+    content = <RegradeRequest theme={props} />;
   } else if (props.page == PageList.RegradeReply) {
-    content = <RegradeReply theme={props} />
+    content = <RegradeReply theme={props} />;
   } else {
     content = <p>Invalid page.</p>;
   }
@@ -92,7 +92,9 @@ export default function Landing(props) {
   return (
     <Container>
       <Navbar />
-      <div style={{ width: "100%", minWidth: 1050 }}>{content}</div>
+      <div style={{ width: "100%", minWidth: 1050, overflowX: "auto" }}>
+        {content}
+      </div>
     </Container>
   );
 }
