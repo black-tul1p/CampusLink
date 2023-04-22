@@ -48,7 +48,6 @@ export function QuizCreationDialog(props) {
     const [defaultQuestion, setDefaultQuestion]       = useState({});
     const [attempts, setattempts]             = useState(1);
     const [unlimitedAttempts, setUnlimitedAttempts]   = useState(false);
-    const [attemptedBy, setAttemptedBy] = useState([]);
 
     const resetFields = () => {
       setNewQuizName(props.default.name);
@@ -61,7 +60,6 @@ export function QuizCreationDialog(props) {
       setNoTimeLimit(!Boolean(props.default.timeLimit));
       setNoDeadline(!Boolean(props.default.deadline));
       setUnlimitedAttempts(!Boolean(props.default.attempts));
-      setAttemptedBy(props.default.attemptedBy);
     }
 
     const defaultTrueFalse      = {text: "", points: 0, manual: false, answers: ["true"], choices: null};
@@ -111,7 +109,6 @@ export function QuizCreationDialog(props) {
                 questions:    quizQuestions,
                 timeLimit:    noTimeLimit ? null : Number(timeLimitHours) * 60 + Number(timeLimitMinutes),
                 attempts:     unlimitedAttempts ? null : Number(attempts),
-                attemptedBy: attemptedBy,
               };
               props.onSave(quiz);
             }}>

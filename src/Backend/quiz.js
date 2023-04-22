@@ -20,6 +20,7 @@ export async function createQuiz(courseId, quiz) {
     );
     await addDoc(quizCollection, quiz);
   } catch (error) {
+    console.log(error)
     throw new Error("Error adding quiz:", error);
   }
 }

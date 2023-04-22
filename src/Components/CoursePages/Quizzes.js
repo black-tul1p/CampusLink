@@ -324,6 +324,8 @@ function Quizzes() {
           setOpen(false);
         }}
         onSave={(quiz) => {
+          console.log(courseId);
+          console.log(quiz);
           createQuiz(courseId, quiz).then(() => {
             updateQuizList(courseId);
           });
