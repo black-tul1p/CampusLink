@@ -35,7 +35,6 @@ const Countdown = ({ timestamp, minutes, onEnd }) => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-    console.log(`${minutesLeft}m ${timeLeft.seconds}s`);
     if (!isUnlimited && minutesLeft === 0 && timeLeft.seconds === 0)
       onEnd(true, true);
     return () => clearTimeout(timer);
