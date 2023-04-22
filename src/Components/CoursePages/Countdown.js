@@ -8,16 +8,23 @@ const Countdown = ({ timestamp, minutes, onEnd }) => {
 
   function calculateTimeLeft() {
     const difference = +new Date() - timestamp;
+    const remainingTime = Math.max(0, minutes * 60 * 1000 - difference);
     let timeLeft = {};
 
-    if (difference > 0) {
-      const remainingMinutes = Math.max(0, Math.floor(difference / 1000 / 60));
-      const remainingSeconds = 60 - Math.floor((difference / 1000) % 60);
-      const totalMinutes = Math.max(0, minutes - remainingMinutes);
+    if (remainingTime > 0) {
+      const remainingMinutes = Math.floor(remainingTime / 1000 / 60);
+      const remainingSeconds = Math.floor((remainingTime / 1000) % 60);
+
       timeLeft = {
-        hours: Math.floor(totalMinutes / 60),
-        minutes: totalMinutes % 60,
+        hours: Math.floor(remainingMinutes / 60),
+        minutes: remainingMinutes % 60,
         seconds: remainingSeconds,
+      };
+    } else {
+      timeLeft = {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
       };
     }
 
@@ -28,6 +35,8 @@ const Countdown = ({ timestamp, minutes, onEnd }) => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
+    if (!isUnlimited && minutesLeft === 0 && timeLeft.seconds === 0)
+      onEnd(true, true);
     return () => clearTimeout(timer);
   });
 
@@ -35,10 +44,6 @@ const Countdown = ({ timestamp, minutes, onEnd }) => {
     timeLeft.hours > 0
       ? timeLeft.hours * 60 + timeLeft.minutes
       : timeLeft.minutes;
-
-  useEffect(() => {
-    if (minutesLeft === 0 && !isUnlimited) onEnd(true, true);
-  }, [minutesLeft]);
 
   return (
     <div
@@ -55,7 +60,7 @@ const Countdown = ({ timestamp, minutes, onEnd }) => {
       {isUnlimited ? (
         <Typography>Unlimited</Typography>
       ) : minutesLeft < 10 ? (
-        <div>{`${minutesLeft}m ${timeLeft.seconds}s`}</div>
+        <div>{`${timeLeft.minutes}m ${timeLeft.seconds}s`}</div>
       ) : (
         <div>{`${timeLeft.hours}h ${timeLeft.minutes}m`}</div>
       )}
